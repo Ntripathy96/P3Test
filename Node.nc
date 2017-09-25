@@ -161,7 +161,7 @@ implementation{
             {
                 // This is what causes the flooding
                 
-                //dbg(FLOODING_CHANNEL,"Packet is new and hasn't been seen before by node %d\n",TOS_NODE_ID);
+                dbg(FLOODING_CHANNEL,"Packet is new and hasn't been seen before by node %d\n",TOS_NODE_ID);
                 
                 call Hash.remove(myMsg->src);
                 call Hash.insert(myMsg->src,myMsg->seq);
@@ -193,7 +193,7 @@ implementation{
                         return msg;
                 }
                 
-                //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
+                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
             }
             
