@@ -38,7 +38,7 @@ implementation{
     
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-    //void printNeighbors();
+    void printNeighbors();
     void printCheckList();
     void deleteCheckList();
     void deleteNeighborList();
