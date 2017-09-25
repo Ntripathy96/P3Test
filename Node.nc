@@ -38,18 +38,13 @@ implementation{
     
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-    
-    void printNeighbors()
-    {
-        int i = 0;
-        
-        dbg(NEIGHBOR_CHANNEL,"List of neighbors for node %d\n",TOS_NODE_ID);
-        
-        for(i = 0; i < call NeighborList.size(); i++)
-        {
-            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call NeighborList.get(i));
-        }
-    }
+    //void printNeighbors();
+    void printCheckList();
+    void deleteCheckList();
+    void deleteNeighborList();
+    void compareLists();
+
+   
     
     void printCheckList()
     {
@@ -81,9 +76,6 @@ implementation{
     event void Boot.booted(){
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
-        
-        /////////////////////////////////////////////////
-        ////////////////////////////////////////////////
     }
     
     void compareLists()
@@ -160,7 +152,7 @@ implementation{
             {
                 // This is what causes the flooding
                 
-                dbg(FLOODING_CHANNEL,"Packet is new and hasn't been seen before by node %d\n",TOS_NODE_ID);
+                //dbg(FLOODING_CHANNEL,"Packet is new and hasn't been seen before by node %d\n",TOS_NODE_ID);
                 
                 call Hash.remove(myMsg->src);
                 call Hash.insert(myMsg->src,myMsg->seq);
