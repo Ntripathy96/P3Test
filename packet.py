@@ -470,4 +470,3 @@ class pack(tinyos.message.Message.Message):
                 break
             carr += self.getElement_payload(i)
         return carr
-    
