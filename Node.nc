@@ -44,54 +44,20 @@ implementation{
     void deleteNeighborList();
     void compareLists();
 
+     //void printNeighbors()
+    //{
+    //    int i = 0;
+        
+    //    dbg(NEIGHBOR_CHANNEL,"List of neighbors for node %d\n",TOS_NODE_ID);
+        
+     //   for(i = 0; i < call NeighborList.size(); i++)
+     //   {
+     //       dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call NeighborList.get(i));
+      //  }
+   // }
    
     
-    void printCheckList()
-    {
-        int i = 0;
-        
-        dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
-        
-        for(i = 0; i < call CheckList.size(); i++)
-        {
-            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call CheckList.get(i));
-        }
-    }
     
-    void deleteCheckList()
-    {
-        while(!call CheckList.isEmpty())
-        {
-            call CheckList.popfront();
-        }
-    }
-    void deleteNeighborList()
-    {
-        while(!call NeighborList.isEmpty())
-        {
-            call NeighborList.popfront();
-        }
-    }
-    
-    event void Boot.booted(){
-        call AMControl.start();
-        dbg(GENERAL_CHANNEL, "Booted\n");
-    }
-    
-    void compareLists()
-    {
-        int i = 0;
-        
-        deleteNeighborList();
-        
-        for (i = 0; i < call CheckList.size(); i++)
-        {
-            call NeighborList.pushfront(call CheckList.get(i));
-        }
-        
-        deleteCheckList();
-    }
-    ////////////////////////////////////////////
     event void periodicTimer.fired()
     {
         uint8_t wow[2];
@@ -112,15 +78,8 @@ implementation{
             printTime = TRUE;
             compareLists();
         }
-        
-        //printTime = TRUE;
-        
-        //printNeighbors();
-        //deleteNeighbors();
-        //printTime = FALSE;
-        
     }
-    ////////////////////////////////////////////
+    
     
     
     event void AMControl.startDone(error_t err){
@@ -233,4 +192,51 @@ implementation{
         Package->protocol = protocol;
         memcpy(Package->payload, payload, length);
     }
+
+    void printCheckList()
+    {
+        int i = 0;
+        
+        dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
+        
+        for(i = 0; i < call CheckList.size(); i++)
+        {
+            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call CheckList.get(i));
+        }
+    }
+    
+    void deleteCheckList()
+    {
+        while(!call CheckList.isEmpty())
+        {
+            call CheckList.popfront();
+        }
+    }
+    void deleteNeighborList()
+    {
+        while(!call NeighborList.isEmpty())
+        {
+            call NeighborList.popfront();
+        }
+    }
+    
+    event void Boot.booted(){
+        call AMControl.start();
+        dbg(GENERAL_CHANNEL, "Booted\n");
+    }
+    
+    void compareLists()
+    {
+        int i = 0;
+        
+        deleteNeighborList();
+        
+        for (i = 0; i < call CheckList.size(); i++)
+        {
+            call NeighborList.pushfront(call CheckList.get(i));
+        }
+        
+        deleteCheckList();
+    }
+    
 }
