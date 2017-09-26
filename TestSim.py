@@ -136,23 +136,23 @@ def main():
     s.addChannel(s.FLOODING_CHANNEL);
 
     s.runTime(20);
-    s.ping(1, 19, "Hello, World");
+    s.ping(1, 5, "Hello, World");
     s.runTime(10);
-    s.ping(18, 3, "Hi!");
+    s.ping(18, 14, "Hi!");
     s.runTime(20);
     s.ping(5, 7, "Helloooo!");
     s.runTime(20);
-    s.ping(2, 9, "WOOOOW!");
+    #s.ping(2, 9, "WOOOOW!");
     s.runTime(20);
-    s.ping(19, 1, "HEEEE!");
+    #s.ping(19, 1, "HEEEE!");
     s.runTime(20);
-    s.ping(19, 6, "AAAAAAA!");
+    #s.ping(19, 6, "AAAAAAA!");
     s.runTime(20);
-    s.ping(2, 3, "GGGGGG!");
+    #s.ping(2, 3, "GGGGGG!");
     s.runTime(20);
-    s.ping(5, 9, "SSSSSSS!");
+    #s.ping(5, 9, "SSSSSSS!");
     s.runTime(20);
-    s.ping(11, 13, "POKEEERR!");
+    #s.ping(11, 13, "POKEEERR!");
     s.runTime(20);
     
     i=0;
