@@ -229,7 +229,7 @@ implementation{
 				if(life > 5) {
 					myNeighbor = call NeighborList.remove(i);
 					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", myNeighbor->Node, TOS_NODE_ID);
-					call PoolOfNeighbors.put(myNeighbor);
+					
 					i--;
 					size--;
 				}
