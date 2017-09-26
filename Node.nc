@@ -90,8 +90,8 @@ implementation{
             if (!call Hash.contains(myMsg->src))
                 call Hash.insert(myMsg->src,-1);
             
-            if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
-            //if (myMsg->protocol != PROTOCOL_PINGREPLY)
+            //if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
+            if (myMsg->protocol != PROTOCOL_PINGREPLY)
             {
                 // This is what causes the flooding
                 
