@@ -132,7 +132,7 @@ implementation{
                 
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
-                if(NeighborList.isEmpty()){
+                if(call NeighborList.isEmpty()){
 
                 }
                 FOUND = FALSE; //IF FOUND, we switch to TRUE
