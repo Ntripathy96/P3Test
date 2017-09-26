@@ -90,7 +90,7 @@ implementation{
             if (!call Hash.contains(myMsg->src))
                 call Hash.insert(myMsg->src,-1);
             
-            if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
+            if (myMsg->protocol != PROTOCOL_PINGREPLY)
             {
                 // This is what causes the flooding
                 
@@ -111,7 +111,7 @@ implementation{
                 {
                     //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, sendPackage.seq + 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                 }
             }
