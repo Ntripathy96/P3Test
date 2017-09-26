@@ -108,9 +108,9 @@ implementation{
                 if (myMsg->dest == TOS_NODE_ID)
                 {
                     // This is when the flooding of a packet has finally led it to it's final destination
-                    //if(checkPacket(myMsg)){
-                    //    dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
-                    //}else{
+                    if(checkPacket(myMsg)){
+                       dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
+                    }else{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d with Sequence Number %d\n", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 
@@ -119,11 +119,11 @@ implementation{
                     //seqNum;
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    sendPackage.seq =  sendPackage.seq + 1;
+                    //sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
                     //dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
-                    //}
+                    }
                 }
                 else
                 {
