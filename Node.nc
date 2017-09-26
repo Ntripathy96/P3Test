@@ -280,7 +280,9 @@ implementation{
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
                     if(PacketMatch->payload == Packet->payload && PacketMatch->src == Packet->src && PacketMatch->dest == Packet->dest && PacketMatch->seq == Packet->seq){
+                        call SeenPackList.remove(i);
                         return TRUE; //packet is found in list and has already been seen by node.
+
                     }
 
                 }
