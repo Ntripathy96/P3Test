@@ -135,15 +135,38 @@ implementation{
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                
                 
-                FOUND = FALSE; //IF FOUND, we switch to TRUE
+               
                 
-                Neighbor = &myMsg->src;
-                Neighbor->Node = myMsg->src;
-                Neighbor->Life = 0;
-                call NeighborList.pushfront(Neighbor);
+                //Neighbor = &myMsg->src;
+                //Neighbor->Node = myMsg->src;
+                //Neighbor->Life = 0;
+                //call NeighborList.pushfront(Neighbor);
                 dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
-                   
+                   FOUND = FALSE; //IF FOUND, we switch to TRUE
+                    size = call NeighborList.size();
+
+                    for(i = 0; i < size; i++){
+                        neighbor_ptr = &(call NeighborList.get(i));
+                        if(neighbor_ptr->Node == myMsg->src){
+                            //found neighbor in list, reset life
+                            dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
+                            neighbor_ptr->Life = 0;
+                            FOUND = TRUE;
+                            break;
+                        }
+                    }
+
+                    //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
+                    if(!FOUND){
+                        dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
+                        Neighbor = &myMsg; //get New Neighbor
+                        Neighbor->Node = myMsg->src; //add node source
+                        Neighbor->Life = 0; //reset life
+                        call NeighborList.pushfront(Neighbor); //put into list 
+                        dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
+
+                    }
                 
             }
             
