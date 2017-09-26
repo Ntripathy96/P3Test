@@ -26,7 +26,7 @@ module Node{
     uses interface SplitControl as AMControl;
     uses interface Receive;
     uses interface List<neighbor*> as NeighborList;
-    uses interface List<pack> as SeenPackList;
+    uses interface List<pack*> as SeenPackList;
     uses interface List<int> as CheckList;
     
     uses interface Hashmap<int> as Hash;
@@ -267,25 +267,28 @@ implementation{
     }
 
     bool checkPacket(pack *Packet){
-            pack PacketMatch;
-            pack packk = Packet;
+            pack *PacketMatch;
+            pack* package_PTR = &Packet;
+            //pack Packet = Packet;
             if(call SeenPackList.isEmpty()){
-
-                call SeenPackList.pushfront(packk);
+            //Neighbor = &myMsg->src;   
+                //Neighbor->Node = myMsg->src;
+                //Neighbor->Life = 0;
+                call SeenPackList.pushfront(Packet);
                 return FALSE;
             }else{
                 int i;
                 int size = call SeenPackList.size();
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
-                    if(PacketMatch.src == Packet->src && PacketMatch.dest == Packet->dest && PacketMatch.seq == Packet->seq){
+                    if(PacketMatch->src == Packet->src && PacketMatch->dest == Packet->dest && PacketMatch->seq == Packet->seq){
                         return TRUE; //packet is found in list and has already been seen by node.
                     }
 
                 }
     
                 //other wise packet not found and we need to push it into seen pack list
-                call SeenPackList.pushfront(packk);
+                call SeenPackList.pushfront(Packet);
                 return FALSE;
             }
     }
