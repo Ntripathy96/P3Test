@@ -139,7 +139,7 @@ implementation{
                 
                 Neighbor = &myMsg->src;
                 Neighbor->Node = myMsg->src;
-                //Neighbor->Life = 0;
+                Neighbor->Life = 0;
                 //call NeighborList.pushfront(Neighbor);
                 dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
