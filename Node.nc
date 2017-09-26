@@ -13,10 +13,15 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
+typedef nx_struct neighbor {
+    nx_uint16_t Node;
+    nx_uint8_t Life;
+}neighbor;
+
 module Node{
     uses interface Boot;
     
-    uses interface Timer<TMilli> as periodicTimer; //Interface that was wired above.
+    uses interface Timer<TMilli> as Timer1; //Interface that was wired above.
     
     uses interface SplitControl as AMControl;
     uses interface Receive;
@@ -33,26 +38,24 @@ module Node{
 implementation{
     pack sendPackage;
     int seqNum = 0;
-    bool printTime = FALSE;
-    bool first = TRUE;
+    bool printNodeNeighbors = FALSE;
+    //bool first = TRUE;
     
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
     void printNeighbors();
-    void printCheckList();
+    void printNeighborList();
     void deleteCheckList();
     void deleteNeighborList();
-    void compareLists();
+    void compare();
     void neighborDiscovery();
 
     event void Boot.booted(){
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
-
-        
     }
    
-    event void periodicTimer.fired()
+    event void Timer1.fired()
     {
        neighborDiscovery();
     }
@@ -62,7 +65,7 @@ implementation{
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            call periodicTimer.startPeriodic(100000);
+            call Timer1.startPeriodic(100000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -75,6 +78,7 @@ implementation{
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
         
+
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
             //dbg(GENERAL_CHANNEL, "Packet received from %d\n",myMsg->src);
@@ -110,6 +114,9 @@ implementation{
             }
             else if (myMsg->protocol == PROTOCOL_PINGREPLY)
             {
+                //bool FOUND;
+                //uint16_t i =0, size;
+                //neighbor * Neighbor, *neighbor_ptr;
                 int size = call CheckList.size();
                 int i = 0;
                 
@@ -125,6 +132,8 @@ implementation{
                 
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
+
+                
             }
             
             return msg;
@@ -146,7 +155,7 @@ implementation{
     
     event void CommandHandler.printNeighbors()
     {
-        printCheckList();
+        printNeighborList();
     }
     
     event void CommandHandler.printRouteTable(){}
@@ -174,28 +183,25 @@ implementation{
 
     
     void neighborDiscovery(){
-        //uint8_t wow[2];
-        //wow[0] = 'W';
-        //wow[1] = 'O';
         
         char* dummyMsg = "NULL\n";
 
         makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
-        if (printTime)
+        if (printNodeNeighbors)
         {
-            printTime = FALSE;
-            printCheckList();
+            printNodeNeighbors = FALSE;
+            printNeighborList();
         }
         else
         {
-            printTime = TRUE;
-            compareLists();
+            printNodeNeighbors = TRUE;
+            //compare();
         }
     }
 
-    void printCheckList()
+    void printNeighborList()
     {
         int i = 0;
         
@@ -224,7 +230,7 @@ implementation{
     
     
     
-    void compareLists()
+    void compare()
     {
         int i = 0;
         
