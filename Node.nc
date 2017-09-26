@@ -128,7 +128,7 @@ implementation{
                 else
                 {
                     if(checkPacket(myMsg)){//return true meaning packet found in SeenPackList
-                        dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
+                        dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                     }else{
                         //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
@@ -268,7 +268,7 @@ implementation{
 
     bool checkPacket(pack *Packet){
             pack *PacketMatch;
-            pack* package_PTR = &Packet;
+            //pack* package_PTR = &Packet;
             //pack Packet = Packet;
             if(call SeenPackList.isEmpty()){
             //Neighbor = &myMsg->src;   
