@@ -30,7 +30,7 @@ implementation {
     Node.NeighborList -> List;
     Node.CheckList->List2;
     
-    Node.periodicTimer -> myTimerC; //Wire the interface to the component
+    Node.Timer1 -> myTimerC; //Wire the interface to the component
     
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
