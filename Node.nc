@@ -13,7 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
-typedef nx_struct neighbor {
+ nx_struct neighbor {
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
