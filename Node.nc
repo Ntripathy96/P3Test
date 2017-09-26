@@ -25,7 +25,7 @@ module Node{
     
     uses interface SplitControl as AMControl;
     uses interface Receive;
-    uses interface List<int> as NeighborList;
+    uses interface List<neighbor*> as NeighborList;
     uses interface List<int> as CheckList;
     
     uses interface Hashmap<int> as Hash;
