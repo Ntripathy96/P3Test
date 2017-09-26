@@ -140,8 +140,8 @@ implementation{
                 for (i = 0; i < size; i++)
                 {
                     if (call CheckList.get(i) == myMsg->src){
-                        dbg(NEIGHBOR_CHANNEL,"hello %d\n", msg);
-                       //return msg;
+                       dbg(NEIGHBOR_CHANNEL,"hello %d\n", msg);
+                       return msg;
                     }
                         
                 }
