@@ -26,7 +26,7 @@ module Node{
     uses interface SplitControl as AMControl;
     uses interface Receive;
     uses interface List<neighbor*> as NeighborList;
-    uses interface List<pack*> as SeenPackList;
+    uses interface List<pack> as SeenPackList;
     uses interface List<int> as CheckList;
     
     uses interface Hashmap<int> as Hash;
@@ -50,7 +50,7 @@ implementation{
     void deleteNeighborList();
     void compare();
     void neighborDiscovery();
-    bool checkPacket(pack *Packet);
+    bool checkPacket(pack Packet);
 
     event void Boot.booted(){
         call AMControl.start();
@@ -107,8 +107,9 @@ implementation{
                 
                 if (myMsg->dest == TOS_NODE_ID)
                 {
+                    makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     // This is when the flooding of a packet has finally led it to it's final destination
-                    if(checkPacket(myMsg)){
+                    if(checkPacket(sendPackage)){
                        dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                     }else{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d\n ", myMsg->src,myMsg->dest);
@@ -127,14 +128,16 @@ implementation{
                 }
                 else
                 {
-                    if(checkPacket(myMsg)){//return true meaning packet found in SeenPackList
+                    makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    if(checkPacket(sendPackage)){//return true meaning packet found in SeenPackList
                         //dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                         dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d\n", myMsg->src,myMsg->dest);
                     }else{
                         //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    
+
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                     }
                     
@@ -268,8 +271,8 @@ implementation{
         memcpy(Package->payload, payload, length);
     }
 
-    bool checkPacket(pack *Packet){
-            pack *PacketMatch;
+    bool checkPacket(pack Packet){
+            pack PacketMatch;
             //pack* package_PTR = &Packet;
             //pack Packet = Packet;
             if(call SeenPackList.isEmpty()){
@@ -281,7 +284,7 @@ implementation{
                 int size = call SeenPackList.size();
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
-                    if( (PacketMatch->src == Packet->src) && (PacketMatch->dest == Packet->dest) && (PacketMatch->seq == Packet->seq)){
+                    if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq)){
                         //dbg(FLOODING_CHANNEL,"Packet src %d vs PacketMatch src %d\n", Packet->src,PacketMatch->src);
                         //dbg(FLOODING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
                         //dbg(FLOODING_CHANNEL,"Packet seq %d vs PacketMatch seq %d\n", Packet->seq,PacketMatch->seq);
