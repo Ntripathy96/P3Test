@@ -77,7 +77,9 @@ implementation{
     
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
-        
+         neighbor * Neighbor, *neighbor_ptr;
+                int size = call CheckList.size();
+                int i = 0;
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -116,9 +118,7 @@ implementation{
             {
                 bool FOUND;
                 
-                neighbor * Neighbor, *neighbor_ptr;
-                int size = call CheckList.size();
-                int i = 0;
+               
                 
                 //dbg(FLOODING_CHANNEL,"received pingreply\n");
                 for (i = 0; i < size; i++)
@@ -211,16 +211,16 @@ implementation{
 
     
     void neighborDiscovery(){
-        
-        char* dummyMsg = "NULL\n";
-
-        if(!call NeighborList.isEmpty()) {
-			uint16_t size = call NeighborList.size();
+        uint16_t size = call NeighborList.size();
 			uint16_t i = 0;
 			uint16_t life = 0;
 			neighbor* myNeighbor;
 			neighbor* tempNeighbor;
-            
+    
+        char* dummyMsg = "NULL\n";
+
+        if(!call NeighborList.isEmpty()) {
+			
 			//Increase Life of the NeighborList if not seen, every 5 pings a neighbor isnt seen, we are going to remove it
 			for(i = 0; i < size; i++) {
 				tempNeighbor = call NeighborList.get(i);
