@@ -138,11 +138,11 @@ def main():
     s.runTime(20);
     s.ping(1, 7, "Hello, World");
     s.runTime(10);
-    s.ping(5,19, "Hi!");
+    s.ping(13,19, "Hi!");
     s.runTime(20);
     s.ping(5, 7, "Helloooo!");
     s.runTime(20);
-    #s.ping(2, 9, "WOOOOW!");
+    s.ping(9, 2, "WOOOOW!");
     s.runTime(20);
     #s.ping(19, 1, "HEEEE!");
     s.runTime(20);
