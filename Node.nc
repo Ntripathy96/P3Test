@@ -26,6 +26,7 @@ module Node{
     uses interface SplitControl as AMControl;
     uses interface Receive;
     uses interface List<neighbor*> as NeighborList;
+    uses interface List<pack> as SeenPackList;
     uses interface List<int> as CheckList;
     
     uses interface Hashmap<int> as Hash;
@@ -49,6 +50,7 @@ implementation{
     void deleteNeighborList();
     void compare();
     void neighborDiscovery();
+    bool checkPacket(pack *Packet);
 
     event void Boot.booted(){
         call AMControl.start();
@@ -106,23 +108,35 @@ implementation{
                 if (myMsg->dest == TOS_NODE_ID)
                 {
                     // This is when the flooding of a packet has finally led it to it's final destination
-                    
+                    if(checkPacket(myMsg)){
+                        dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
+                    }else{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d with Sequence Number %d\n", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+
+                    //check if packet has been seen
+                    //checkPacket(myMsg);
                     //seqNum;
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    sendPackage.seq =  myMsg->seq + 1;
+                    sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
                     dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
+                    }
                 }
                 else
                 {
-                    //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
+                    if(checkPacket(myMsg)){//return true meaning packet found in SeenPackList
+                        dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
+                    }else{
+                        //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
                     makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+                    }
+                    
+
                 }
             }
             else if (myMsg->protocol == PROTOCOL_PINGREPLY)
@@ -252,6 +266,30 @@ implementation{
         memcpy(Package->payload, payload, length);
     }
 
+    bool checkPacket(pack *Packet){
+            pack PacketMatch;
+            if(call SeenPackList.isEmpty()){
+
+                call SeenPackList.pushfront(Packet);
+                return FALSE;
+            }else{
+                int i;
+                int size = call SeenPackList.size();
+                for(i = 0; i < size; i++){
+                    PacketMatch = call SeenPackList.get(i);
+                    if(PacketMatch.src == Packet->src && PacketMatch.dest == Packet->dest && PacketMatch.seq == Packet->seq){
+                        return TRUE; //packet is found in list and has already been seen by node.
+                    }
+
+                }
+                if(call SeenPackList.isFull()){ //SeenPacketList is full so lets drop the first packet ever seen
+                    call SeenPacketList.popback();
+                }
+                //other wise packet not found and we need to push it into seen pack list
+                call SeenPackList.pushfront(Packet);
+                return FALSE;
+            }
+    }
     
     void neighborDiscovery(){
         
