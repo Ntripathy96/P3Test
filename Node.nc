@@ -270,7 +270,7 @@ implementation{
             pack PacketMatch;
             if(call SeenPackList.isEmpty()){
 
-                call SeenPackList.pushfront(Packet);
+                call SeenPackList.pushfront(&Packet);
                 return FALSE;
             }else{
                 int i;
@@ -284,7 +284,7 @@ implementation{
                 }
     
                 //other wise packet not found and we need to push it into seen pack list
-                call SeenPackList.pushfront(Packet);
+                call SeenPackList.pushfront(&Packet);
                 return FALSE;
             }
     }
