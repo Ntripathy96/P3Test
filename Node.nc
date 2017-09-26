@@ -283,7 +283,7 @@ implementation{
                         //dbg(FLOODING_CHANNEL,"Packet src %d vs PacketMatch src %d\n", Packet->src,PacketMatch->src);
                         //dbg(FLOODING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
                         //dbg(FLOODING_CHANNEL,"Packet seq %d vs PacketMatch seq %d\n", Packet->seq,PacketMatch->seq);
-                        call SeenPackList.remove(i);
+                        //call SeenPackList.remove(i);
                         return TRUE; //packet is found in list and has already been seen by node.
 
                     }
