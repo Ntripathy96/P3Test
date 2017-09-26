@@ -17,7 +17,18 @@ implementation{
 
 	t container[n];
 	uint16_t size = 0;
-
+	
+	command t List.remove(uint16_t position) {
+		t temp;
+		uint16_t i = 0;
+		temp = container[position];
+		for(i = 0; i < position; i++) {
+			container[i+1] = container[i];
+		}
+		container[0] = temp;
+		temp = call List.popfront();
+		return temp;
+	}
 	command void List.pushback(t input){
 		// Check to see if we have room for the input.
 		if(size < MAX_SIZE){
