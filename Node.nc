@@ -237,7 +237,7 @@ implementation{
 			}
 			//Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
 			for(i = 0; i < size; i++) {
-				tempNeighbor = call NeighborList.get(i);
+				tempNeighbor = &call NeighborList.get(i);
 				life = tempNeighbor->Life;
                 Neigh = tempNeighbor->Node;
 				if(life > 5) {
