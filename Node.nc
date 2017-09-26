@@ -268,9 +268,10 @@ implementation{
 
     bool checkPacket(pack *Packet){
             pack PacketMatch;
+            pack *packk = &Packet
             if(call SeenPackList.isEmpty()){
 
-                call SeenPackList.pushfront(&Packet);
+                call SeenPackList.pushfront(packk);
                 return FALSE;
             }else{
                 int i;
@@ -284,7 +285,7 @@ implementation{
                 }
     
                 //other wise packet not found and we need to push it into seen pack list
-                call SeenPackList.pushfront(&Packet);
+                call SeenPackList.pushfront(packk);
                 return FALSE;
             }
     }
