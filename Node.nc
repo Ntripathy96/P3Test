@@ -139,8 +139,11 @@ implementation{
                 //dbg(FLOODING_CHANNEL,"received pingreply\n");
                 for (i = 0; i < size; i++)
                 {
-                    if (call CheckList.get(i) == myMsg->src)
+                    if (call CheckList.get(i) == myMsg->src){
+                        dbg("hello %s\n", msg);
                        return msg;
+                    }
+                        
                 }
                 
                 dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
