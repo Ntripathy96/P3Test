@@ -226,6 +226,7 @@ implementation{
 			uint16_t size = call NeighborList.size();
 			uint16_t i = 0;
 			uint16_t life = 0;
+            uint16_t Neigh = -1;
 			neighbor* myNeighbor;
 			neighbor* tempNeighbor;
             
@@ -238,9 +239,10 @@ implementation{
 			for(i = 0; i < size; i++) {
 				tempNeighbor = call NeighborList.get(i);
 				life = tempNeighbor->Life;
+                Neigh = tempNeighbor->Node;
 				if(life > 5) {
 					call NeighborList.remove(i);
-					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", call NeighborList.get(i), TOS_NODE_ID);
+					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", Neigh, TOS_NODE_ID);
 					
 					i--;
 					size--;
