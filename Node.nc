@@ -57,7 +57,7 @@ implementation{
    
     event void Timer1.fired()
     {
-       neighborDiscovery();
+       //neighborDiscovery();
     }
     
     
