@@ -147,7 +147,7 @@ implementation{
                     size = call NeighborList.size();
 
                     for(i = 0; i < size; i++){
-                        neighbor_ptr = &(call NeighborList.get(i));
+                        neighbor_ptr = call NeighborList.get(i);
                         if(neighbor_ptr->Node == myMsg->src){
                             //found neighbor in list, reset life
                             dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
@@ -280,7 +280,7 @@ implementation{
         
         for (i = 0; i < call CheckList.size(); i++)
         {
-            call NeighborList.pushfront(call CheckList.get(i));
+            //call NeighborList.pushfront(call CheckList.get(i));
         }
         
         deleteCheckList();
