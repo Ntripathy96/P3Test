@@ -13,7 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
- nx_struct neighbor {
+ typedef nx_struct neighbor {
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
@@ -78,6 +78,8 @@ implementation{
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
          neighbor *Neighbor, *neighbor_ptr;
+         Neighbor->Node =NULL;
+         Neighbor->Life = NULL;
                 int size = call CheckList.size();
                 int i = 0;
                 bool FOUND;
@@ -136,6 +138,7 @@ implementation{
                 
                 FOUND = FALSE; //IF FOUND, we switch to TRUE
                 
+                Neighbor = &myMsg->src;
                 Neighbor->Node = myMsg->src;
                 //Neighbor->Life = 0;
                 //call NeighborList.pushfront(Neighbor);
