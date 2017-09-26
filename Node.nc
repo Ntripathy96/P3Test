@@ -282,9 +282,7 @@ implementation{
                     }
 
                 }
-                if(call SeenPackList.isFull()){ //SeenPacketList is full so lets drop the first packet ever seen
-                    call SeenPacketList.popback();
-                }
+    
                 //other wise packet not found and we need to push it into seen pack list
                 call SeenPackList.pushfront(Packet);
                 return FALSE;

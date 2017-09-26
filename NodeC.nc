@@ -42,5 +42,5 @@ implementation {
     Node.CommandHandler -> CommandHandlerC;
      //add component for seenPacketList
     components new ListC(pack, 64) as PacketListC;
-    Node.SeenPacketList -> PacketListC; //connects seenPacketList with component ListC
+    Node.SeenPackList -> PacketListC; //connects seenPacketList with component ListC
 }
