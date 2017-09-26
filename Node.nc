@@ -77,12 +77,9 @@ implementation{
     
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
-         neighbor *Neighbor, *neighbor_ptr;
-         Neighbor->Node =NULL;
-         Neighbor->Life = NULL;
+         
                 int size = call CheckList.size();
-                int i = 0;
-                bool FOUND;
+                
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -121,8 +118,10 @@ implementation{
             {
                 
                 
-               
+                neighbor *Neighbor, *neighbor_ptr;
                 
+                int i = 0;
+                bool FOUND;
                 //dbg(FLOODING_CHANNEL,"received pingreply\n");
                 for (i = 0; i < size; i++)
                 {
