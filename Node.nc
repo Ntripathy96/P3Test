@@ -132,7 +132,9 @@ implementation{
                 
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
-                
+                if(NeighborList.isEmpty()){
+
+                }
                 FOUND = FALSE; //IF FOUND, we switch to TRUE
                 size = call NeighborList.size();
 
@@ -153,6 +155,7 @@ implementation{
                         //Neighbor = call PoolOfNeighbors.get(); //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
+                        dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
                         call NeighborList.pushfront(Neighbor); //put into list 
 
                     }
