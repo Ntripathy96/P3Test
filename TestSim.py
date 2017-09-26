@@ -12,7 +12,7 @@ class TestSim:
     CMD_PING = 0
     CMD_NEIGHBOR_DUMP = 1
     CMD_ROUTE_DUMP=3
-
+    seqNum = 1;
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
     GENERAL_CHANNEL="general";
@@ -106,10 +106,12 @@ class TestSim:
         self.msg.set_dest(dest);
         self.msg.set_id(ID);
         self.msg.setString_payload(payloadStr)
+        self.msg.set_src(seqNum);
 
         self.pkt.setData(self.msg.data)
         self.pkt.setDestination(dest)
         self.pkt.deliver(dest, self.t.time()+5)
+        seqNum++;
 
     def ping(self, source, dest, msg):
         self.sendCMD(self.CMD_PING, source, "{0}{1}".format(chr(dest),msg));

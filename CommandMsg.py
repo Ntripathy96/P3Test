@@ -294,3 +294,18 @@ class CommandMsg(tinyos.message.Message.Message):
             carr += self.getElement_payload(i)
         return carr
     
+    def offsetBits_src(self):  
+        return 16
+    
+    #
+    # Return the value (as a int) of the field 'src'
+    #
+    def get_src(self):
+        return self.getUIntElement(self.offsetBits_src(), 16, 1)
+    
+    #
+    # Set the value of the field 'src'
+    #
+    def set_src(self, value):
+        self.setUIntElement(self.offsetBits_src(), 16, value, 1)
+    

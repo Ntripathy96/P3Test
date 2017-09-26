@@ -17,7 +17,7 @@
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
-
+int seqNum = 0;
 module Node{
     uses interface Boot;
     
@@ -38,9 +38,9 @@ module Node{
 
 implementation{
     pack sendPackage;
-    int seqNum = 0;
+    //int seqNum = 0;
     bool printNodeNeighbors = FALSE;
-    //bool first = TRUE;
+    
     
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
@@ -122,8 +122,8 @@ implementation{
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
-                    //dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
-                    //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
+                    dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
+                    dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                     }
                 }
                 else
@@ -134,8 +134,8 @@ implementation{
                         dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d\n", myMsg->src,myMsg->dest);
                     }else{
                         //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-                    //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
+                    dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
+                    //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                     
 
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
@@ -234,8 +234,8 @@ implementation{
     
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        sendPackage.seq = sendPackage.seq+1;
-        makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, sendPackage.seq, payload, PACKET_MAX_PAYLOAD_SIZE);
+        //sendPackage.seq = seqNum;
+        makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
         call Hash.insert(TOS_NODE_ID,seqNum);
