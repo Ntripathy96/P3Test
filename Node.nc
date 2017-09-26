@@ -279,7 +279,10 @@ implementation{
                 int size = call SeenPackList.size();
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
-                    if(PacketMatch->payload == Packet->payload && PacketMatch->src == Packet->src && PacketMatch->dest == Packet->dest && PacketMatch->seq == Packet->seq){
+                    if( (PacketMatch->src == Packet->src) && (PacketMatch->dest == Packet->dest) && (PacketMatch->seq == Packet->seq)){
+                        dbg(FLOODING_CHANNEL,"Packet src %d vs PacketMatch src %d\n", Packet->src,PacketMatch->src);
+                        dbg(FLOODING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
+                        dbg(FLOODING_CHANNEL,"Packet seq %d vs PacketMatch seq %d\n", Packet->seq,PacketMatch->seq);
                         call SeenPackList.remove(i);
                         return TRUE; //packet is found in list and has already been seen by node.
 
