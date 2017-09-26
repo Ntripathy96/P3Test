@@ -110,7 +110,7 @@ implementation{
                     makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     sendPackage.seq =  sendPackage.seq + 1;
-                    seqNum = sendPackage.seq;
+                    //seqNum = sendPackage.seq;
                     dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                 }
@@ -118,7 +118,7 @@ implementation{
                 {
                     //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq+1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                 }
             }
