@@ -143,7 +143,7 @@ implementation{
                        return msg;
                 }
                 
-                //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
+                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
             }
             
