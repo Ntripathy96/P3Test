@@ -239,8 +239,8 @@ implementation{
 				tempNeighbor = call NeighborList.get(i);
 				life = tempNeighbor->Life;
 				if(life > 5) {
-					myNeighbor = &(call NeighborList.remove(i));
-					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", myNeighbor->Node, TOS_NODE_ID);
+					call NeighborList.remove(i);
+					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", call NeighborList.get(i), TOS_NODE_ID);
 					
 					i--;
 					size--;
