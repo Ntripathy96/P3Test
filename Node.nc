@@ -32,7 +32,7 @@ module Node{
 
 implementation{
     pack sendPackage;
-    int sequence = 0;
+    int seqNum = 0;
     bool printTime = FALSE;
     bool first = TRUE;
     
@@ -102,7 +102,7 @@ implementation{
                 }
                 else
                 {
-                    //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
+                    //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     
                     makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq, &myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
@@ -137,12 +137,11 @@ implementation{
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
         
-        makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
+        makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
-        call Hash.insert(TOS_NODE_ID,sequence);
-        //printNeighbors();
-        sequence = sequence + 1;
+        call Hash.insert(TOS_NODE_ID,seqNum);
+        seqNum++;
     }
     
     event void CommandHandler.printNeighbors()
@@ -175,12 +174,13 @@ implementation{
 
     
     void neighborDiscovery(){
-         uint8_t wow[2];
-        wow[0] = 'W';
-        wow[1] = 'O';
+        //uint8_t wow[2];
+        //wow[0] = 'W';
+        //wow[1] = 'O';
         
-        
-        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, wow, PACKET_MAX_PAYLOAD_SIZE);
+        char* dummyMsg = "NULL\n";
+
+        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
         if (printTime)
