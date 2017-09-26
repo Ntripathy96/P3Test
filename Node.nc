@@ -153,9 +153,10 @@ implementation{
                     if(!FOUND){
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
                         //Neighbor = call PoolOfNeighbors.get(); //get New Neighbor
-                        Neighbor->Node = myMsg->src; //add node source
-                        Neighbor->Life = 0; //reset life
+                        Neighbor->Node = *myMsg->src; //add node source
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
+                        Neighbor->Life = 0; //reset life
+                        //dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
                         call NeighborList.pushfront(Neighbor); //put into list 
 
                     }
