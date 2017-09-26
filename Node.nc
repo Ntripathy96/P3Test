@@ -107,7 +107,7 @@ implementation{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d with Sequence Number %d\n", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
                     //seqNum;
-                    makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
@@ -212,7 +212,7 @@ implementation{
     
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        //sendPackage.seq = sendPackage.seq+1;
+        sendPackage.seq = sendPackage.seq+1;
         makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sendPackage.seq+1, payload, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
