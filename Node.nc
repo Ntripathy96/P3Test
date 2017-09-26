@@ -80,6 +80,7 @@ implementation{
          neighbor * Neighbor, *neighbor_ptr;
                 int size = call CheckList.size();
                 int i = 0;
+                bool FOUND;
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -116,7 +117,7 @@ implementation{
             }
             else if (myMsg->protocol == PROTOCOL_PINGREPLY)
             {
-                bool FOUND;
+                
                 
                
                 
