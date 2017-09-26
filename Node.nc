@@ -109,7 +109,7 @@ implementation{
                     //seqNum;
                     makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    //sendPackage.seq =  sendPackage.seq + 1;
+                    sendPackage.seq =  sendPackage.seq + 1;
                     seqNum = sendPackage.seq;
                     dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
