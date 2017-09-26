@@ -90,6 +90,7 @@ implementation{
             if (!call Hash.contains(myMsg->src))
                 call Hash.insert(myMsg->src,-1);
             
+            //if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
             if (myMsg->protocol != PROTOCOL_PINGREPLY)
             {
                 // This is what causes the flooding
@@ -205,8 +206,8 @@ implementation{
     
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        sendPackage.seq = sendPackage.seq+1;
-        makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sendPackage.seq, payload, PACKET_MAX_PAYLOAD_SIZE);
+        //sendPackage.seq = sendPackage.seq+1;
+        makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sendPackage.seq + 1, payload, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
         call Hash.insert(TOS_NODE_ID,seqNum);
