@@ -114,9 +114,9 @@ implementation{
             }
             else if (myMsg->protocol == PROTOCOL_PINGREPLY)
             {
-                //bool FOUND;
-                //uint16_t i =0, size;
-                //neighbor * Neighbor, *neighbor_ptr;
+                bool FOUND;
+                
+                neighbor * Neighbor, *neighbor_ptr;
                 int size = call CheckList.size();
                 int i = 0;
                 
@@ -132,7 +132,31 @@ implementation{
                 
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
+                
+                FOUND = FALSE; //IF FOUND, we switch to TRUE
+                size = call NeighborList.size();
 
+                    for(i = 0; i < size; i++){
+                        neighbor_ptr = call NeighborList.get(i);
+                        if(neighbor_ptr->Node == myMsg->src){
+                            //found neighbor in list, reset life
+                            dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
+                            neighbor_ptr->Life = 0;
+                            FOUND = TRUE;
+                            break;
+                        }
+                    }
+
+                    //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
+                    if(!FOUND){
+                        dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
+                        //Neighbor = call PoolOfNeighbors.get(); //get New Neighbor
+                        Neighbor->Node = myMsg->src; //add node source
+                        Neighbor->Life = 0; //reset life
+                        call NeighborList.pushfront(Neighbor); //put into list 
+
+                    }
+                //check if any neighbor life has expired
                 
             }
             
@@ -185,6 +209,32 @@ implementation{
     void neighborDiscovery(){
         
         char* dummyMsg = "NULL\n";
+
+        if(!call NeighborList.isEmpty()) {
+			uint16_t size = call NeighborList.size();
+			uint16_t i = 0;
+			uint16_t life = 0;
+			neighbor* myNeighbor;
+			neighbor* tempNeighbor;
+            
+			//Increase Life of the NeighborList if not seen, every 5 pings a neighbor isnt seen, we are going to remove it
+			for(i = 0; i < size; i++) {
+				tempNeighbor = call NeighborList.get(i);
+				tempNeighbor->Life++;
+			}
+			//Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
+			for(i = 0; i < size; i++) {
+				tempNeighbor = call NeighborList.get(i);
+				life = tempNeighbor->Life;
+				if(life > 5) {
+					myNeighbor = call NeighborList.remove(i);
+					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", myNeighbor->Node, TOS_NODE_ID);
+					call PoolOfNeighbors.put(myNeighbor);
+					i--;
+					size--;
+				}
+			}
+		}
 
         makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
