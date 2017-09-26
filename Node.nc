@@ -145,7 +145,16 @@ implementation{
 
                    FOUND = FALSE; //IF FOUND, we switch to TRUE
                     size = call NeighborList.size();
-
+                    if(!call NeighborList.isEmpty()){
+                            //increase life of neighbors
+                        for(i = 0; i < size; i++) {
+				            neighbor_ptr = call NeighborList.get(i);
+				            neighbor_ptr->Life++;
+			            }
+                    }
+                    
+                    
+                    //check if source of ping reply is in our neighbors list, if it is, we reset its life to 0 
                     for(i = 0; i < size; i++){
                         neighbor_ptr = call NeighborList.get(i);
                         if(neighbor_ptr->Node == myMsg->src){
@@ -164,9 +173,25 @@ implementation{
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
                         call NeighborList.pushfront(Neighbor); //put into list 
+                        size = call NeighborList.size();
                         dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
 
                     }
+                    //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
+                    
+			        for(i = 0; i < size; i++) {
+			        	neighbor_ptr = call NeighborList.get(i);
+				        life = neighbor_ptr->Life;
+                        
+				        if(life > 5) {
+					        call NeighborList.remove(i);
+					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
+					
+					        i--;
+					        size--;
+				}
+			}
+
                 
             }
             
@@ -222,33 +247,9 @@ implementation{
         char* dummyMsg = "NULL\n";
 
        dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery: checking node %d list for its neighbors\n", TOS_NODE_ID);
-		if(!call NeighborList.isEmpty()) {
-			uint16_t size = call NeighborList.size();
-			uint16_t i = 0;
-			uint16_t life = 0;
-            uint16_t Neigh = -1;
-			neighbor* myNeighbor;
-			neighbor* tempNeighbor;
-            
-			//Increase Life of the NeighborList if not seen, every 5 pings a neighbor isnt seen, we are going to remove it
-			for(i = 0; i < size; i++) {
-				tempNeighbor = call NeighborList.get(i);
-				tempNeighbor->Life++;
-			}
-			//Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
-			for(i = 0; i < size; i++) {
-				tempNeighbor = &call NeighborList.get(i);
-				life = tempNeighbor->Life;
-                Neigh = tempNeighbor->Node;
-				if(life > 5) {
-					call NeighborList.remove(i);
-					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", Neigh, TOS_NODE_ID);
-					
-					i--;
-					size--;
-				}
-			}
-		}
+		
+			
+		
 		
 
         makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
