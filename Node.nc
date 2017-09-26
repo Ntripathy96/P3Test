@@ -268,7 +268,7 @@ implementation{
 
     bool checkPacket(pack *Packet){
             pack PacketMatch;
-            pack *packk = &Packet;
+            pack packk = Packet;
             if(call SeenPackList.isEmpty()){
 
                 call SeenPackList.pushfront(packk);
