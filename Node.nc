@@ -94,7 +94,7 @@ implementation{
             {
                 // This is what causes the flooding
                 
-                //dbg(FLOODING_CHANNEL,"Packet is new and hasn't been seen before by node %d\n",TOS_NODE_ID);
+               // dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                 
                 call Hash.remove(myMsg->src);
                 call Hash.insert(myMsg->src,myMsg->seq);
@@ -103,13 +103,13 @@ implementation{
                 {
                     // This is when the flooding of a packet has finally led it to it's final destination
                     
-                    dbg(FLOODING_CHANNEL, "Packet has finally flooded to correct location, from:to, %d:%d\n", myMsg->src,TOS_NODE_ID);
+                    dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d with Sequence Number %d\n", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
                 }
                 else
                 {
                     //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-                    
+                    dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
                     makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                 }
@@ -122,7 +122,7 @@ implementation{
                 
                 int i = 0;
                 bool FOUND;
-                //dbg(FLOODING_CHANNEL,"received pingreply\n");
+                dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
                 for (i = 0; i < size; i++)
                 {
                     if (call CheckList.get(i) == myMsg->src){
