@@ -169,7 +169,7 @@ implementation{
                     //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
                     if(!FOUND){
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
-                        Neighbor = &myMsg; //get New Neighbor
+                        Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
                         call NeighborList.pushfront(Neighbor); //put into list 
