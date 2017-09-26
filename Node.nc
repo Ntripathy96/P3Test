@@ -43,41 +43,19 @@ implementation{
     void deleteCheckList();
     void deleteNeighborList();
     void compareLists();
+    void neighborDiscovery();
 
-     //void printNeighbors()
-    //{
-    //    int i = 0;
-        
-    //    dbg(NEIGHBOR_CHANNEL,"List of neighbors for node %d\n",TOS_NODE_ID);
-        
-     //   for(i = 0; i < call NeighborList.size(); i++)
-     //   {
-     //       dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call NeighborList.get(i));
-      //  }
-   // }
+    event void Boot.booted(){
+        call AMControl.start();
+        dbg(GENERAL_CHANNEL, "Booted\n");
+
+        call periodicTimer.startPeriodicAt(1,1500);
+        dbg(NEIGHBOR_CHANNEL,"Timer started");
+    }
    
-    
-    
     event void periodicTimer.fired()
     {
-        uint8_t wow[2];
-        wow[0] = 'W';
-        wow[1] = 'O';
-        
-        
-        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, wow, PACKET_MAX_PAYLOAD_SIZE);
-        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-        
-        if (printTime)
-        {
-            printTime = FALSE;
-            printCheckList();
-        }
-        else
-        {
-            printTime = TRUE;
-            compareLists();
-        }
+       neighborDiscovery();
     }
     
     
@@ -85,7 +63,7 @@ implementation{
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            call periodicTimer.startPeriodic(100000);
+            //call periodicTimer.startPeriodic(100000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -146,7 +124,7 @@ implementation{
                         
                 }
                 
-                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
+                //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
             }
             
@@ -196,6 +174,28 @@ implementation{
         memcpy(Package->payload, payload, length);
     }
 
+    
+    void neighborDiscovery(){
+         uint8_t wow[2];
+        wow[0] = 'W';
+        wow[1] = 'O';
+        
+        
+        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, wow, PACKET_MAX_PAYLOAD_SIZE);
+        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+        
+        if (printTime)
+        {
+            printTime = FALSE;
+            printCheckList();
+        }
+        else
+        {
+            printTime = TRUE;
+            compareLists();
+        }
+    }
+
     void printCheckList()
     {
         int i = 0;
@@ -223,10 +223,7 @@ implementation{
         }
     }
     
-    event void Boot.booted(){
-        call AMControl.start();
-        dbg(GENERAL_CHANNEL, "Booted\n");
-    }
+    
     
     void compareLists()
     {
