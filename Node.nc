@@ -130,14 +130,14 @@ implementation{
                     }
                         
                 }
-                
-                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                 call CheckList.pushfront(myMsg->src);
+                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
+               
                 
                 FOUND = FALSE; //IF FOUND, we switch to TRUE
                 
                 Neighbor->Node = myMsg->src;
-                Neighbor->Life = 0;
+                //Neighbor->Life = 0;
                 //call NeighborList.pushfront(Neighbor);
                 dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
