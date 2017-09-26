@@ -178,12 +178,12 @@ implementation{
 
                     }
                     //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
-                    
+
 			        for(i = 0; i < size; i++) {
 			        	neighbor_ptr = call NeighborList.get(i);
-				        life = neighbor_ptr->Life;
+				        
                         
-				        if(life > 5) {
+				        if(neighbor_ptr->Life > 5) {
 					        call NeighborList.remove(i);
 					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
 					
