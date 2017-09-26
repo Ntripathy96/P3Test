@@ -132,7 +132,7 @@ implementation{
                         
                 }
                 call CheckList.pushfront(myMsg->src);
-                dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
+                //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                
                 
                 FOUND = FALSE; //IF FOUND, we switch to TRUE
