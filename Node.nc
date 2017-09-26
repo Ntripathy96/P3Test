@@ -285,10 +285,11 @@ implementation{
 
                 }
     
-                //other wise packet not found and we need to push it into seen pack list
+                
+            }
+            //other wise packet not found and we need to push it into seen pack list
                 call SeenPackList.pushfront(Packet);
                 return FALSE;
-            }
     }
     
     void neighborDiscovery(){
