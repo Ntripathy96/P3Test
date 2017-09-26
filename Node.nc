@@ -106,8 +106,9 @@ implementation{
                     
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d with Sequence Number %d\n", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-                    seqNum++;
+                    //seqNum;
                     sendPackage.seq =  sendPackage.seq + 1;
+                    seqNum = sendPackage.seq;
                     dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                 }
