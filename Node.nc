@@ -49,7 +49,7 @@ implementation{
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
 
-        call periodicTimer.startPeriodicAt(1,1500);
+        call periodicTimer.startPeriodic(150000);
         dbg(NEIGHBOR_CHANNEL,"Timer started");
     }
    
