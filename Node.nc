@@ -89,13 +89,16 @@ implementation{
             
             if (!call Hash.contains(myMsg->src))
                 call Hash.insert(myMsg->src,-1);
-            
-            if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
+
+            if(myMsg->TTL == 0){ //check life of packet
+                dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet");
+            }
+            else if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
             //if (myMsg->protocol != PROTOCOL_PINGREPLY)
             {
                 // This is what causes the flooding
                 
-               // dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
+               // dbg(FLOODING_CHANNEL,"Packet Received from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                 
                 call Hash.remove(myMsg->src);
                 call Hash.insert(myMsg->src,myMsg->seq);
@@ -118,7 +121,7 @@ implementation{
                 {
                     //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d with Sequence Number %d... Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, 0, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                 }
             }
@@ -213,7 +216,7 @@ implementation{
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
         sendPackage.seq = sendPackage.seq+1;
-        makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, sendPackage.seq, payload, PACKET_MAX_PAYLOAD_SIZE);
+        makePack(&sendPackage, TOS_NODE_ID, destination, 3, PROTOCOL_PING, sendPackage.seq, payload, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
         call Hash.insert(TOS_NODE_ID,seqNum);
