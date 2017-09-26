@@ -217,15 +217,36 @@ implementation{
 
     
     void neighborDiscovery(){
-        uint16_t size = call NeighborList.size();
+        
+    
+        char* dummyMsg = "NULL\n";
+
+       dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery: checking node %d list for its neighbors\n", TOS_NODE_ID);
+		if(!call NeighborList.isEmpty()) {
+			uint16_t size = call NeighborList.size();
 			uint16_t i = 0;
 			uint16_t life = 0;
 			neighbor* myNeighbor;
 			neighbor* tempNeighbor;
-    
-        char* dummyMsg = "NULL\n";
-
-       
+            
+			//Increase Life of the NeighborList if not seen, every 5 pings a neighbor isnt seen, we are going to remove it
+			for(i = 0; i < size; i++) {
+				tempNeighbor = call NeighborList.get(i);
+				tempNeighbor->Life++;
+			}
+			//Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
+			for(i = 0; i < size; i++) {
+				tempNeighbor = call NeighborList.get(i);
+				life = tempNeighbor->Life;
+				if(life > 5) {
+					myNeighbor = call NeighborList.remove(i);
+					dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", myNeighbor->Node, TOS_NODE_ID);
+					
+					i--;
+					size--;
+				}
+			}
+		}
 		
 
         makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 0, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
