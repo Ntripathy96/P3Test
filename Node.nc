@@ -77,7 +77,7 @@ implementation{
     
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
-         neighbor * Neighbor, *neighbor_ptr;
+         neighbor *Neighbor, *neighbor_ptr;
                 int size = call CheckList.size();
                 int i = 0;
                 bool FOUND;
