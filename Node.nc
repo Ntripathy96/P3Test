@@ -122,7 +122,7 @@ implementation{
                 
                 int i = 0;
                 bool FOUND;
-                dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
+                //dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
                 for (i = 0; i < size; i++)
                 {
                     if (call CheckList.get(i) == myMsg->src){

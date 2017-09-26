@@ -140,6 +140,20 @@ def main():
     s.runTime(10);
     s.ping(18, 3, "Hi!");
     s.runTime(20);
+    s.ping(5, 7, "Helloooo!");
+    s.runTime(20);
+    s.ping(2, 9, "WOOOOW!");
+    s.runTime(20);
+    s.ping(19, 1, "HEEEE!");
+    s.runTime(20);
+    s.ping(19, 6, "AAAAAAA!");
+    s.runTime(20);
+    s.ping(2, 3, "GGGGGG!");
+    s.runTime(20);
+    s.ping(5, 9, "SSSSSSS!");
+    s.runTime(20);
+    s.ping(11, 13, "POKEEERR!");
+    s.runTime(20);
     
     i=0;
     for i in range(1, s.numMote+1):
