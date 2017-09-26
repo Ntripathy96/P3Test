@@ -49,8 +49,7 @@ implementation{
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
 
-        call periodicTimer.startPeriodic(150000);
-        dbg(NEIGHBOR_CHANNEL,"Timer started");
+        
     }
    
     event void periodicTimer.fired()
@@ -63,7 +62,7 @@ implementation{
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            //call periodicTimer.startPeriodic(100000);
+            call periodicTimer.startPeriodic(500000);
         }else{
             //Retry until successful
             call AMControl.start();
