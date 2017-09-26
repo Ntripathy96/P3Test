@@ -17,7 +17,7 @@
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
-int seqNum = 0;
+int seqNum = 1;
 module Node{
     uses interface Boot;
     
@@ -123,19 +123,19 @@ implementation{
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
-                    dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
-                    dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
+                    //dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
+                    //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                     }
                 }
                 else
                 {
                     makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     if(checkPacket(sendPackage)){//return true meaning packet found in SeenPackList
-                        //dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
+                        dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                         //dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d\n", myMsg->src,myMsg->dest);
                     }else{
                         //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-                    //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d, Sequence Number %d...Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
+                    dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d, Sequence Number %d...Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
                     //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                     
 
