@@ -271,9 +271,7 @@ implementation{
             //pack* package_PTR = &Packet;
             //pack Packet = Packet;
             if(call SeenPackList.isEmpty()){
-            //Neighbor = &myMsg->src;   
-                //Neighbor->Node = myMsg->src;
-                //Neighbor->Life = 0;
+            
                 call SeenPackList.pushfront(Packet);
                 return FALSE;
             }else{
@@ -281,7 +279,7 @@ implementation{
                 int size = call SeenPackList.size();
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
-                    if(PacketMatch->src == Packet->src && PacketMatch->dest == Packet->dest && PacketMatch->seq == Packet->seq){
+                    if(PacketMatch->payload == Packet->payload && PacketMatch->src == Packet->src && PacketMatch->dest == Packet->dest && PacketMatch->seq == Packet->seq){
                         return TRUE; //packet is found in list and has already been seen by node.
                     }
 
