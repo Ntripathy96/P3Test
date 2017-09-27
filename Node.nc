@@ -17,7 +17,7 @@
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
-int seqNum = 1;
+    int seqNum = 1;
 module Node{
     uses interface Boot;
     
@@ -85,7 +85,7 @@ implementation{
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
-            dbg(GENERAL_CHANNEL, "Packet received from %d\n",myMsg->src);
+            //dbg(GENERAL_CHANNEL, "Packet received from %d\n",myMsg->src);
             
             //dbg(FLOODING_CHANNEL, "Packet being flooded to %d\n",myMsg->dest);
             
