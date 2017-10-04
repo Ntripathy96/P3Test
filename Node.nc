@@ -59,7 +59,7 @@ implementation{
    
     event void Timer1.fired()
     {
-       neighborDiscovery();
+       //neighborDiscovery();
     }
     
     
@@ -67,7 +67,7 @@ implementation{
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            call Timer1.startPeriodic(100000);
+            //call Timer1.startPeriodic(100000);
         }else{
             //Retry until successful
             call AMControl.start();
