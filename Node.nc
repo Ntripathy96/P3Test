@@ -228,7 +228,7 @@ implementation{
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
                   if(myMsg->dest == TOS_NODE_ID){
                       //dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
-                      if(checkPacket(sendPackage)){
+                      if(!checkPacket(sendPackage)){
                           dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
                        //dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                     }
