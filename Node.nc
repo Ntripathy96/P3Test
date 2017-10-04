@@ -93,7 +93,7 @@ implementation{
                 call Hash.insert(myMsg->src,-1);
 
             if(myMsg->TTL == 0){ //check life of packet
-                dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
+                //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
             }
             //else if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
             else if (myMsg->protocol != PROTOCOL_PINGREPLY)
