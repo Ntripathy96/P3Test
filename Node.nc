@@ -93,7 +93,7 @@ implementation{
                 call Hash.insert(myMsg->src,-1);
 
             if(myMsg->TTL == 0){ //check life of packet
-                //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
+                dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
             }
             //else if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
             else if (myMsg->protocol != PROTOCOL_PINGREPLY)
@@ -234,8 +234,8 @@ implementation{
                        //dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
                     }
                   }else{
-                        //makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                        //call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+                        makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                   }
 
             }
