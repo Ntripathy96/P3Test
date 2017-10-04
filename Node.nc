@@ -227,10 +227,10 @@ implementation{
                 
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
                   if(myMsg->dest == TOS_NODE_ID){
-                      dbg(FLOODING_CHANNEL,"ACK recieved from %d", myMsg->src);
+                      dbg(FLOODING_CHANNEL,"Node %d recieved ACK  from %d\n", TOS_NODE_ID,myMsg->src);
                   }else{
-                   //   makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                     // call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+                        makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                   }
 
             }
