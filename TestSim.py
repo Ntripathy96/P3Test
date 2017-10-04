@@ -143,7 +143,7 @@ def main():
     s.ping(13,19, "Hi!");
     s.runTime(20);
     s.ping(5, 7, "Helloooo!");
-    s.runTime(5);
+    s.runTime(20);
     #s.ping(9, 2, "WOOOOW!");
     #s.runTime(20);
     s.ping(19, 1, "HEEEE!");
