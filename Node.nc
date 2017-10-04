@@ -227,6 +227,7 @@ implementation{
                 
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
                   if(myMsg->dest == TOS_NODE_ID){
+                      makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PINGREPLY, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                       //dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
                       if(!checkPacket(sendPackage)){
                           dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
