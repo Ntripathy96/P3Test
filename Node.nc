@@ -119,7 +119,8 @@ implementation{
                     //check if packet has been seen
                     //checkPacket(myMsg);
                     //seqNum;
-                    //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,myMsg->seq,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                     //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     //sendPackage.seq =  sendPackage.seq + 1;
                     //seqNum = sendPackage.seq;
@@ -145,7 +146,7 @@ implementation{
 
                 }
             }
-            else if (myMsg->protocol == PROTOCOL_PINGREPLY)
+            else if (myMsg->dest == AM_BROADCAST_ADDR)
             {
                 
                 
@@ -221,7 +222,12 @@ implementation{
 					        i--;
 					        size--;
 				}
-			}
+			}else if(myMsg->protocol == PROTOCOL_PINGREPLY){
+                  if(myMsg->dest == TOS_NODE_ID){
+                      dbg(FLOODING_CHANNEL,"ACK recieved from %d", myMsg->src);
+                  }
+
+            }
 
                 
             }
