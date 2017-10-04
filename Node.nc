@@ -229,7 +229,7 @@ implementation{
                   if(myMsg->dest == TOS_NODE_ID){
                       dbg(FLOODING_CHANNEL,"ACK recieved from %d", myMsg->src);
                   }else{
-                      makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                      //makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
                   }
 
