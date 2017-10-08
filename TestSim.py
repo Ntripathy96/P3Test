@@ -141,7 +141,7 @@ def main():
     s.ping(19, 8, "Hello, World");
     s.runTime(40);
     s.ping(1,19, "Hi!");
-    #s.runTime(20);
+    s.runTime(20);
     #s.ping(5, 7, "Helloooo!");
     #s.runTime(1000); #runtime correspons to piing under it
     #s.ping(9, 2, "WOOOOW!");
