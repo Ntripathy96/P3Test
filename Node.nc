@@ -47,8 +47,6 @@ implementation{
     void printNeighbors();
     void printNeighborList();
     void deleteCheckList();
-    void deleteNeighborList();
-    void compare();
     void neighborDiscovery();
     bool checkPacket(pack Packet);
 
@@ -339,7 +337,7 @@ implementation{
         else
         {
             printNodeNeighbors = TRUE;
-            //compare();
+            
         }
     }
 
@@ -362,28 +360,9 @@ implementation{
             call CheckList.popfront();
         }
     }
-    void deleteNeighborList()
-    {
-        while(!call NeighborList.isEmpty())
-        {
-            call NeighborList.popfront();
-        }
-    }
     
     
     
-    void compare()
-    {
-        int i = 0;
-        
-        deleteNeighborList();
-        
-        for (i = 0; i < call CheckList.size(); i++)
-        {
-            //call NeighborList.pushfront(call CheckList.get(i));
-        }
-        
-        deleteCheckList();
-    }
+   
     
 }
