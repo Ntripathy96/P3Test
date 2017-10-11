@@ -79,7 +79,7 @@ implementation{
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
          
-                int size = call CheckList.size();
+                int size = call NeighborList.size();
                 
 
         if(len==sizeof(pack)){
@@ -218,7 +218,7 @@ implementation{
 					        call NeighborList.remove(i);
 					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
 					
-					        i--;
+					        //i--;
 					        size--;
 				        }
 			        }
@@ -345,13 +345,20 @@ implementation{
     void printNeighborList()
     {
         int i = 0;
-        
-        dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
+        neighbor* neighPtr;
+        if(call NeighborList.size() == 0 ){
+            dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
+
+        }else{
+            dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
         
         for(i = 0; i < call NeighborList.size(); i++)
         {
-            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call NeighborList.get(i));
+            neighPtr = call NeighborList.get(i);
+            dbg(NEIGHBOR_CHANNEL,"Node: %d\n", neighPtr->Node);
         }
+        }
+        
     }
     
     void deleteCheckList()
