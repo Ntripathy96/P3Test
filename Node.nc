@@ -203,7 +203,7 @@ implementation{
                         //Neighbor = new neighbor();
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
-                        //Neighbor->Life = 0; //reset life
+                        Neighbor->Life = 0; //reset life
                         call NeighborList.pushfront(Neighbor); //put into list 
                         size = call NeighborList.size();
                         dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
