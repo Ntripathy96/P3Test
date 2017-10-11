@@ -149,7 +149,8 @@ implementation{
             {
                 
                 
-                neighbor *Neighbor, *neighbor_ptr;
+                neighbor *Neighbor = new neighbor();
+                neighbor *neighbor_ptr;
                 
                 int i = 0;
                 bool FOUND;
