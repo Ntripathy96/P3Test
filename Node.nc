@@ -80,7 +80,7 @@ implementation{
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
          
                 //int size = call NeighborList.size();
-                
+                uint16_t size = call NeighborList.size();
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -175,7 +175,7 @@ implementation{
                 //dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
                    FOUND = FALSE; //IF FOUND, we switch to TRUE
-                    uint16_t size = call NeighborList.size();
+                     size = call NeighborList.size();
                     if(!call NeighborList.isEmpty()){
                             //increase life of neighbors
                         for(i = 0; i < size; i++) {
