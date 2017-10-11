@@ -79,7 +79,7 @@ implementation{
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
          
-                int size = call NeighborList.size();
+                //int size = call NeighborList.size();
                 
 
         if(len==sizeof(pack)){
@@ -175,7 +175,7 @@ implementation{
                 //dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
                    FOUND = FALSE; //IF FOUND, we switch to TRUE
-                    size = call NeighborList.size();
+                    int size = call NeighborList.size();
                     if(!call NeighborList.isEmpty()){
                             //increase life of neighbors
                         for(i = 0; i < size; i++) {
@@ -220,7 +220,7 @@ implementation{
 					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
 					
 					        //i--;
-					        size--;
+					        //size--;
 				        }
 			        }
 
