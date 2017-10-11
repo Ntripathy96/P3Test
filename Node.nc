@@ -81,7 +81,7 @@ implementation{
          
                 //int size = call NeighborList.size();
                 uint16_t size = call NeighborList.size();
-                neighbor *Neighbor = new neighbor();
+                
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -150,7 +150,7 @@ implementation{
             {
                 
                 
-                //neighbor *Neighbor = new neighbor();
+                neighbor *Neighbor;
                 neighbor *neighbor_ptr;
                 
                 int i = 0;
@@ -206,8 +206,10 @@ implementation{
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
+                        dbg(NEIGHBOR_CHANNEL,"SIZE BEFORE %d\n," size);
                         call NeighborList.pushfront(Neighbor); //put into list 
                         size = call NeighborList.size();
+                         dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n," size);
                         dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
 
                     }
