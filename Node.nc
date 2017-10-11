@@ -209,7 +209,7 @@ implementation{
                         dbg(NEIGHBOR_CHANNEL,"SIZE BEFORE %d\n", size);
                         call NeighborList.pushfront(Neighbor); //put into list 
                         size = call NeighborList.size();
-                         dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n," size);
+                         dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n", size);
                         dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
 
                     }
