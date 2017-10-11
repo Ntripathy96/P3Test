@@ -200,6 +200,7 @@ implementation{
                     //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
                     if(!FOUND){
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
+                        Neighbor = new neighbor();
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
@@ -344,7 +345,7 @@ implementation{
 
     void printNeighborList()
     {
-        int i = 0;
+        int i;
         neighbor* neighPtr;
         if(call NeighborList.size() == 0 ){
             dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
@@ -352,7 +353,7 @@ implementation{
         }else{
             dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
         
-        for(i = 0; i <= call NeighborList.size(); i++)
+        for(i = 0; i < call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
             dbg(NEIGHBOR_CHANNEL,"Node: %d\n", neighPtr->Node);
