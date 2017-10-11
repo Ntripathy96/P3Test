@@ -81,6 +81,7 @@ implementation{
          
                 //int size = call NeighborList.size();
                 uint16_t size = call NeighborList.size();
+                neighbor *Neighbor = new neighbor();
 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
@@ -149,7 +150,7 @@ implementation{
             {
                 
                 
-                neighbor *Neighbor = new neighbor();
+                //neighbor *Neighbor = new neighbor();
                 neighbor *neighbor_ptr;
                 
                 int i = 0;
