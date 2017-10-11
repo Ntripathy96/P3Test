@@ -18,6 +18,7 @@
     nx_uint8_t Life;
 }neighbor;
     int seqNum = 1;
+    bool printNodeNeighbors = FALSE;
 module Node{
     uses interface Boot;
     
@@ -39,7 +40,7 @@ module Node{
 implementation{
     pack sendPackage;
     //int seqNum = 0;
-    bool printNodeNeighbors = FALSE;
+    //bool printNodeNeighbors = FALSE;
     
     
     // Prototypes
@@ -57,7 +58,7 @@ implementation{
    
     event void Timer1.fired()
     {
-       //neighborDiscovery();
+       neighborDiscovery();
     }
     
     
@@ -93,8 +94,8 @@ implementation{
             if(myMsg->TTL == 0){ //check life of packet
                 //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
             }
-            //else if (call Hash.get(myMsg->src) < myMsg->seq && myMsg->protocol != PROTOCOL_PINGREPLY)
-            else if (myMsg->protocol != PROTOCOL_PINGREPLY)
+            
+            else if (myMsg->protocol == PROTOCOL_PING) //flooding
             {
                 // This is what causes the flooding
                 
@@ -103,7 +104,7 @@ implementation{
                 call Hash.remove(myMsg->src);
                 call Hash.insert(myMsg->src,myMsg->seq);
                 
-                if (myMsg->dest == TOS_NODE_ID)
+                if (myMsg->dest == TOS_NODE_ID) //resend with protocol pingreply for ACK
                 {
                     makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     // This is when the flooding of a packet has finally led it to it's final destination
@@ -126,7 +127,7 @@ implementation{
                     //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                     }
                 }
-                else
+                else //not meant for this node
                 {
                     makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     if(checkPacket(sendPackage)){//return true meaning packet found in SeenPackList
@@ -144,7 +145,7 @@ implementation{
 
                 }
             }
-            else if (myMsg->dest == AM_BROADCAST_ADDR)
+            else if (myMsg->dest == AM_BROADCAST_ADDR) //neigbor discovery
             {
                 
                 
@@ -153,15 +154,15 @@ implementation{
                 int i = 0;
                 bool FOUND;
                 //dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
-                for (i = 0; i < size; i++)
-                {
-                    if (call CheckList.get(i) == myMsg->src){
+                //for (i = 0; i < size; i++)
+               // {
+                    //if (call CheckList.get(i) == myMsg->src){
                        //dbg(NEIGHBOR_CHANNEL,"hello %d\n", msg);
-                       return msg;
-                    }
+                     //  return msg;
+                  ///  }
                         
-                }
-                call CheckList.pushfront(myMsg->src);
+                //}
+                //call CheckList.pushfront(myMsg->src);
                 //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
                
                 
@@ -223,8 +224,8 @@ implementation{
 			        }
 
                 
-            }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
-                  if(myMsg->dest == TOS_NODE_ID){
+            }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
+                  if(myMsg->dest == TOS_NODE_ID){ //ACK reached source
                       makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PINGREPLY, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                       //dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
                       if(!checkPacket(sendPackage)){
@@ -347,9 +348,9 @@ implementation{
         
         dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
         
-        for(i = 0; i < call CheckList.size(); i++)
+        for(i = 0; i < call NeighborList.size(); i++)
         {
-            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call CheckList.get(i));
+            dbg(NEIGHBOR_CHANNEL,"Node: %d\n",call NeighborList.get(i));
         }
     }
     
