@@ -18,7 +18,7 @@
     nx_uint8_t Life;
 }neighbor;
     int seqNum = 1;
-    bool printNodeNeighbors = FALSE;
+    //bool printNodeNeighbors = FALSE;
 module Node{
     uses interface Boot;
     
@@ -40,7 +40,7 @@ module Node{
 implementation{
     pack sendPackage;
     //int seqNum = 0;
-    //bool printNodeNeighbors = FALSE;
+    bool printNodeNeighbors = FALSE;
     
     
     // Prototypes
@@ -200,7 +200,7 @@ implementation{
                     //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
                     if(!FOUND){
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
-                        Neighbor = new neighbor();
+                        //Neighbor = new neighbor();
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
