@@ -352,7 +352,7 @@ implementation{
         }else{
             dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
         
-        for(i = 0; i < call NeighborList.size(); i++)
+        for(i = 0; i <= call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
             dbg(NEIGHBOR_CHANNEL,"Node: %d\n", neighPtr->Node);
