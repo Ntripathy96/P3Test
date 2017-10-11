@@ -191,7 +191,7 @@ implementation{
                     for(i = 1; i < call NeighborList.size(); i++){
                         neighbor_ptr = call NeighborList.get(i);
                         dbg(NEIGHBOR_CHANNEL,"nEIGHBOR LIST COTNAINS %d\n", neighbor_ptr->Node);
-                        if(neighbor_ptr->Node == call NeighborList.get(0)){//changed
+                        if(neighbor_ptr->Node == call NeighborList.get(0)->Node){//changed
                             //found neighbor in list, reset life
                             dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
                             dbg(NEIGHBOR_CHANNEL,"SIZE FOUND IN  %d\n", call NeighborList.size());
