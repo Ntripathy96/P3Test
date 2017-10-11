@@ -157,11 +157,13 @@ def main():
     #s.ping(5, 9, "SSSSSSS!");
     #s.runTime(1);
     #s.ping(11, 13, "POKEEERR!");
-    #s.runTime(2);
+    s.runTime(2);
+    s.neighborDMP(3);
+    s.runTime(5);
     
-    i=0;
-    for i in range(1, s.numMote+1):
-            s.neighborDMP(i);
+    #i=0;
+    #for i in range(1, s.numMote+1):
+    #        s.neighborDMP(i);
 
 if __name__ == '__main__':
     main()
