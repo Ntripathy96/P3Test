@@ -175,7 +175,7 @@ implementation{
                 //dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
 
                    FOUND = FALSE; //IF FOUND, we switch to TRUE
-                    int size = call NeighborList.size();
+                    uint16_t size = call NeighborList.size();
                     if(!call NeighborList.isEmpty()){
                             //increase life of neighbors
                         for(i = 0; i < size; i++) {
