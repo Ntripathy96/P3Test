@@ -190,10 +190,12 @@ implementation{
                     //check if source of ping reply is in our neighbors list, if it is, we reset its life to 0 
                     for(i = 0; i < call NeighborList.size(); i++){
                         neighbor_ptr = call NeighborList.get(i);
+                        dbg(NEIGHBOR_CHANNEL,"nEIGHBOR LIST COTNAINS %d\n", neighbor_ptr->Node);
                         if(neighbor_ptr->Node == myMsg->src){
                             //found neighbor in list, reset life
                             dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
                              dbg(NEIGHBOR_CHANNEL,"SIZE FOUND IN  %d\n", call NeighborList.size());
+
                             neighbor_ptr->Life = 0;
                             FOUND = TRUE;
                             break;
@@ -358,7 +360,7 @@ implementation{
         }else{
             dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
              
-        for(i = 0; i < call NeighborList.size()+1; i++)
+        for(i = 0; i < call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
             dbg(NEIGHBOR_CHANNEL,"Node: %d\n", neighPtr->Node);
