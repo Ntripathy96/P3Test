@@ -146,7 +146,7 @@ implementation{
 
                 }
             }
-            else if (myMsg->dest == AM_BROADCAST_ADDR) //neigbor discovery
+            else if (myMsg->dest == AM_BROADCAST_ADDR && myMsg->protocol != PROTOCOL_PING) //neigbor discovery
             {
                 
                 
