@@ -193,6 +193,7 @@ implementation{
                         if(neighbor_ptr->Node == myMsg->src){
                             //found neighbor in list, reset life
                             dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
+                             dbg(NEIGHBOR_CHANNEL,"SIZE FOUND IN  %d\n", size);
                             neighbor_ptr->Life = 0;
                             FOUND = TRUE;
                             break;
