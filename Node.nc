@@ -200,7 +200,7 @@ implementation{
                     //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
                     if(!FOUND){
                         dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
-                        //Neighbor = new neighbor();
+                        Neighbor = new neighbor();
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
@@ -211,18 +211,18 @@ implementation{
                     }
                     //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
 
-			        //for(i = 0; i < size; i++) {
-			        //	neighbor_ptr = call NeighborList.get(i);
-				      //  
-                        //
-				        //if(neighbor_ptr->Life > 5) {
-					      //  call NeighborList.remove(i);
-					      //  dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
-					//
-					 //       //i--;
+			        for(i = 0; i < size; i++) {
+			        	neighbor_ptr = call NeighborList.get(i);
+				        
+                        
+				        if(neighbor_ptr->Life > 5) {
+					        call NeighborList.remove(i);
+					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
+					
+					        //i--;
 					        //size--;
-				     //   }
-			        //}
+				        }
+			        }
 
                 
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
@@ -352,8 +352,7 @@ implementation{
 
         }else{
             dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
-            dbg(NEIGHBOR_CHANNEL,"Neighbors size %d\n",call NeighborList.size());
-            
+             
         for(i = 0; i < call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
