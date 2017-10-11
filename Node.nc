@@ -211,6 +211,7 @@ implementation{
 			        	neighbor_ptr = call NeighborList.get(i);
                         dbg(NEIGHBOR_CHANNEL,"%d ", neighbor_ptr->Node);
                         }
+                        dbg(NEIGHBOR_CHANNEL,"\n");
                         //Neighbor = new neighbor();
                         //Neighbor = &myMsg->src; //get New Neighbor
                         //Neighbor->Node = myMsg->src; //add node source
