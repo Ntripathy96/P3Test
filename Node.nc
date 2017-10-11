@@ -180,7 +180,7 @@ implementation{
                      size = call NeighborList.size();
                     if(!call NeighborList.isEmpty()){
                             //increase life of neighbors
-                        for(i = 0; i < size; i++) {
+                        for(i = 0; i < call NeighborList.size(); i++) {
 				            neighbor_ptr = call NeighborList.get(i);
 				            neighbor_ptr->Life++;
 			            }
@@ -188,7 +188,7 @@ implementation{
                     
                     
                     //check if source of ping reply is in our neighbors list, if it is, we reset its life to 0 
-                    for(i = 0; i < size; i++){
+                    for(i = 0; i < call NeighborList.size(); i++){
                         neighbor_ptr = call NeighborList.get(i);
                         if(neighbor_ptr->Node == myMsg->src){
                             //found neighbor in list, reset life
@@ -207,16 +207,16 @@ implementation{
                         Neighbor = &myMsg->src; //get New Neighbor
                         Neighbor->Node = myMsg->src; //add node source
                         Neighbor->Life = 0; //reset life
-                        dbg(NEIGHBOR_CHANNEL,"SIZE BEFORE %d\n", size);
+                        dbg(NEIGHBOR_CHANNEL,"SIZE BEFORE %d\n", call NeighborList.size());
                         call NeighborList.pushfront(Neighbor); //put into list 
                         size = call NeighborList.size();
-                         dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n", size);
+                         dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n", call NeighborList.size());
                         dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
 
                     }
                     //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
 
-			        for(i = 0; i < size; i++) {
+			        for(i = 0; i < call NeighborList.size(); i++) {
 			        	neighbor_ptr = call NeighborList.get(i);
 				        
                         
