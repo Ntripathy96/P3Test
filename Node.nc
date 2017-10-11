@@ -222,7 +222,7 @@ implementation{
 					        //i--;
 					        //size--;
 				        }
-			        }
+			        }=
 
                 
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
@@ -352,7 +352,8 @@ implementation{
 
         }else{
             dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
-        
+            dbg(NEIGHBOR_CHANNEL,"Neighbors size %d\n",call NeighborList.size(););
+            
         for(i = 0; i < call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
