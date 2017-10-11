@@ -222,7 +222,7 @@ implementation{
 					        //i--;
 					        //size--;
 				        }
-			        }=
+			        }
 
                 
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
