@@ -170,7 +170,7 @@ implementation{
                 
                
                 
-                Neighbor = &myMsg->src;
+                //Neighbor = &myMsg->src;
                 Neighbor->Node = myMsg->src;
                 Neighbor->Life = 0;
                 call NeighborList.pushfront(Neighbor); //at index 0
