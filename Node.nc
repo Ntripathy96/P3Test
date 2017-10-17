@@ -13,17 +13,23 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
- typedef nx_struct neighbor {
+int MAX_NODES = 20;
+typedef nx_struct lspMap{ //holds a complete map of entire graph for each node
+    uint8_t cost[MAX_NODES+1];
+}lspMap;
+typedef nx_struct neighbor {
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
     int seqNum = 1;
     //bool printNodeNeighbors = FALSE;
+
 module Node{
     uses interface Boot;
     
     uses interface Timer<TMilli> as Timer1; //Interface that was wired above.
-    
+    uses interface Timer<TMilli> as lspTimer; //link state timer 
+
     uses interface SplitControl as AMControl;
     uses interface Receive;
     uses interface List<neighbor> as NeighborList;
@@ -52,6 +58,14 @@ implementation{
     void neighborDiscovery();
     bool checkPacket(pack Packet);
 
+    //project 2
+    void lspMapInit(lspMap*, int);
+    void lspNeighborDiscoveryPacket();
+    lspMap lspMap[MAX_NODES+1]; //change NAME, overall map of network stored at every node
+
+
+
+
     event void Boot.booted(){
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
@@ -61,13 +75,16 @@ implementation{
     {
        neighborDiscovery();
     }
-    
+    event void lspTimer.fired(){
+        lspNeighborDiscoveryPacket(); //change name
+    }
     
     
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            call Timer1.startPeriodic(100000);
+            call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
+            call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200))
         }else{
             //Retry until successful
             call AMControl.start();
@@ -80,7 +97,7 @@ implementation{
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
          
-                //int size = call NeighborList.size();
+                
                 uint16_t size = call NeighborList.size();
                 
 
@@ -90,8 +107,7 @@ implementation{
             
             //dbg(FLOODING_CHANNEL, "Packet being flooded to %d\n",myMsg->dest);
             
-            //if (!call Hash.contains(myMsg->src))
-              //  call Hash.insert(myMsg->src,-1);
+            
 
             if(myMsg->TTL == 0){ //check life of packet
                 //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
@@ -103,8 +119,7 @@ implementation{
                 
                // dbg(FLOODING_CHANNEL,"Packet Received from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                 
-                //call Hash.remove(myMsg->src);
-                //call Hash.insert(myMsg->src,myMsg->seq);
+                
                 
                 if (myMsg->dest == TOS_NODE_ID) //resend with protocol pingreply for ACK
                 {
@@ -117,14 +132,11 @@ implementation{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d seq num: %d\n ", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 
-                    //check if packet has been seen
-                    //checkPacket(myMsg);
-                    //seqNum;
+                    
+                    
                     makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-                    //makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL,PROTOCOL_PINGREPLY,sendPackage.seq+1,&myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    //sendPackage.seq =  sendPackage.seq + 1;
-                    //seqNum = sendPackage.seq;
+                    
                     //dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
                     //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
                     }
@@ -347,7 +359,27 @@ implementation{
         }
         
     }
+    void lspMapInit(lspMap* list, int TOS_NODE_ID){
+        for(int i = 0; i < MAX_NODES; i++){
+            list[TOS_NODE_ID].cost[i] = -1; //initialize to "infinity" 
+        }
+    }
     
+    void lspNeighborDiscoveryPacket(){
+        //initialize cost of every node to TOS_NODE_ID to "infinity"
+        uint8_t lspCostList[MAX_NODES+1] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
+        //initialize table for this node
+        lspMapInit(&lspMap, TOS_NODE_ID);
+        //get neighbors to Node
+        for(int i  =0; i < call NeighborList.size(); i++){
+            lspCostList[call NeighborList.get(i).Node] = 1;
+            dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", call NeighborList.get(i).Node,lspCostList[call NeighborList.get(i).Node]);
+            //put into overall mapping
+            lspMap[TOS_NODE_ID].cost[call NeighborList.get(i).Node] = 1;
+            dbg("Project2L", "Printing neighbors: %d cost: %d\n",call NeighborList.get(i).Node, lspMap[TOS_NODE_ID].cost[call NeighborList.get(i).Node]);
+        }
+
+    }
     
     
     
