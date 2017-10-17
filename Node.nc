@@ -179,8 +179,8 @@ implementation{
 
                         //send packet decreasing TTL 
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
-                        makePack(sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
-                        Sender.send(sendPackage,AM_BROADCAST_ADDR);
+                        makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
+                        call Sender.send(sendPackage,AM_BROADCAST_ADDR);
 
 
                     }else{ //LSPpacket already seen
