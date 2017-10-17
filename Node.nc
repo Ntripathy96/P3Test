@@ -93,9 +93,9 @@ implementation{
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call Timer1.startPeriodic(100);
+            call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(200);
+            call lspTimer.startPeriodic(2000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -433,7 +433,7 @@ implementation{
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
             lspCostList[Neighbor.Node] = 1;
-            dbg(ROUTING_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
+            //dbg(ROUTING_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
             dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
