@@ -398,7 +398,7 @@ implementation{
     void lspNeighborDiscoveryPacket(){
         int i;
         //initialize cost of every node to TOS_NODE_ID to "infinity"
-        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
+        int lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
         lspMapInit(&lspMAP, TOS_NODE_ID);
         
@@ -413,7 +413,8 @@ implementation{
         }
 
        // send lspPacket to neighbors 
-       makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,MAX_TTL, PROTOCOL_LINKSTATE, lspSeqNum++, (uint8_t *) lspCostList, 20);
+       lspSeqNum++;
+       makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,MAX_TTL, PROTOCOL_LINKSTATE, lspSeqNum,  lspCostList, 20);
        call Sender.send(sendPackage,AM_BROADCAST_ADDR);
        dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
 
