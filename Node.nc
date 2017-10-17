@@ -59,7 +59,7 @@ implementation{
     bool checkPacket(pack Packet);
 
     //project 2
-    void lspMapInit(lspMap*, int);
+    void lspMapInit(lspMap *list, int TOS_NODE_ID);
     void lspNeighborDiscoveryPacket();
     lspMap lspMap[MAX_NODES+1]; //change NAME, overall map of network stored at every node
 
