@@ -95,7 +95,7 @@ implementation{
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(10000);
+            call lspTimer.startPeriodic(2000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -208,7 +208,7 @@ implementation{
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
                         call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-                            
+                            }   
                         
 
 
