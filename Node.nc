@@ -413,7 +413,7 @@ implementation{
         }
 
        // send lspPacket to neighbors 
-       if(!call NeighborList,isEmpty()){
+       if(!call NeighborList.isEmpty()){
            lspSeqNum++;
        dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,MAX_TTL, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
