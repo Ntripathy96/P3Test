@@ -21,10 +21,12 @@ implementation {
     components new ListC(int,100) as List2;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
+    components new TimerMilliC() as lspTimer;
     components RandomC as Random;
-    
+
     Node -> MainC.Boot;
-    
+    Node.Random -> Random;
+    Node.lspTimer -> lspTimer;
     Node.Receive -> GeneralReceive;
     
     //Node.Hash -> HashC;
