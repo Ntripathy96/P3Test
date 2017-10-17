@@ -17,7 +17,7 @@ implementation {
     components MainC;
     components Node;
     //components new HashmapC(int,100) as HashC;
-    components new ListC(neighbor*,100) as List;
+    components new ListC(neighbor,100) as List;
     components new ListC(int,100) as List2;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
