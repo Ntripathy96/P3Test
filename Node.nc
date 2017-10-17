@@ -173,7 +173,7 @@ implementation{
                             
                         for(j = 0; j <20; j++){ //put neigbors and cost node knows
                         lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
-                            if(lspMAP[myMsg->src].cost[j] != 255 ){
+                            if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
                                 //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
@@ -182,7 +182,7 @@ implementation{
                             for(l = 1; l < 20; l++){
                                 for(j = 1; j <20; j++){ //put neigbors and cost node knows
                                     
-                            if(lspMAP[myMsg->src].cost[j] != 255 ){
+                            if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0){
                                 dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
                             }
 
