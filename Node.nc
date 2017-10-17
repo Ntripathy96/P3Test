@@ -82,7 +82,7 @@ implementation{
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
-            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call Timer1.getNow());
+            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
         //}
         
         
@@ -95,7 +95,7 @@ implementation{
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(100000);
+            call lspTimer.startPeriodic(10000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -432,7 +432,7 @@ implementation{
             //dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
-            //dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
+            dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
         }
 
        // send lspPacket to neighbors 
