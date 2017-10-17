@@ -26,11 +26,12 @@ module Node{
     
     uses interface SplitControl as AMControl;
     uses interface Receive;
-    uses interface List<neighbor*> as NeighborList;
+    uses interface List<neighbor> as NeighborList;
     uses interface List<pack> as SeenPackList;
     uses interface List<int> as CheckList;
     
-    uses interface Hashmap<int> as Hash;
+    //uses interface Hashmap<int> as NeighborList;
+    
     
     uses interface SimpleSend as Sender;
     
@@ -89,8 +90,8 @@ implementation{
             
             //dbg(FLOODING_CHANNEL, "Packet being flooded to %d\n",myMsg->dest);
             
-            if (!call Hash.contains(myMsg->src))
-                call Hash.insert(myMsg->src,-1);
+            //if (!call Hash.contains(myMsg->src))
+              //  call Hash.insert(myMsg->src,-1);
 
             if(myMsg->TTL == 0){ //check life of packet
                 //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
@@ -102,8 +103,8 @@ implementation{
                 
                // dbg(FLOODING_CHANNEL,"Packet Received from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
                 
-                call Hash.remove(myMsg->src);
-                call Hash.insert(myMsg->src,myMsg->seq);
+                //call Hash.remove(myMsg->src);
+                //call Hash.insert(myMsg->src,myMsg->seq);
                 
                 if (myMsg->dest == TOS_NODE_ID) //resend with protocol pingreply for ACK
                 {
@@ -150,8 +151,8 @@ implementation{
             {
                 
                 
-                neighbor *Neighbor;
-                neighbor *neighbor_ptr;
+                neighbor Neighbor;
+                neighbor neighbor_ptr;
                 
                 int i = 0;
                 bool FOUND;
@@ -170,54 +171,67 @@ implementation{
                 
                
                 
-                //Neighbor = &myMsg->src;
-                Neighbor->Node = myMsg->src;
-                Neighbor->Life = 0;
-                call NeighborList.pushfront(Neighbor); //at index 0
-                //dbg(FLOODING_CHANNEL,"Neighbor: %d and Life %d\n",Neighbor->Node,Neighbor->Life);
+               // Neighbor = &myMsg->src;
+                
 
                     FOUND = FALSE; //IF FOUND, we switch to TRUE
                     size = call NeighborList.size();
-                    if(!call NeighborList.isEmpty()){
+                    
                             //increase life of neighbors
                         for(i = 0; i < call NeighborList.size(); i++) {
 				            neighbor_ptr = call NeighborList.get(i);
-				            neighbor_ptr->Life++;
+				            neighbor_ptr.Life++;
+                            if(neighbor_ptr.Node == myMsg->src){
+                                FOUND = TRUE;
+                                neighbor_ptr.Life = 0;
+                            }
 			            }
+
+                        //call NeighborList.remove(myMsg->src);
+                        //call NeighborList.insert(myMsg->src, 0);
+                    
+                    if(FOUND){
+                        dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
+                    }else{
+                        Neighbor.Node = myMsg->src;
+                        Neighbor.Life = 0;
+                        call NeighborList.pushfront(Neighbor); //at index 0
+                        //dbg(FLOODING_CHANNEL,"NEW Neighbor: %d and Life %d\n",Neighbor.Node,Neighbor.Life);
+                         //dbg(NEIGHBOR_CHANNEL,"")
                     }
                     
                     
                     //check if source of ping reply is in our neighbors list, if it is, we reset its life to 0 
-                    for(i = 1; i < call NeighborList.size(); i++){
-                        neighbor_ptr = call NeighborList.get(i);
+                    //for(i = 1; i < call NeighborList.size(); i++){
+                      //  neighbor_ptr = call NeighborList.get(i);
                         //dbg(NEIGHBOR_CHANNEL,"nEIGHBOR LIST COTNAINS %d\n", neighbor_ptr->Node);
-                        if(neighbor_ptr->Node == Neighbor->Node){//changed
+                       // if(neighbor_ptr->Node == Neighbor->Node){//changed
                             //found neighbor in list, reset life
-                            dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
-                            dbg(NEIGHBOR_CHANNEL,"SIZE before remove %d\n", call NeighborList.size());
-                            dbg(NEIGHBOR_CHANNEL,"NeighborList: \n");
-                        for(i = 0; i < call NeighborList.size(); i++) {
+                         //   dbg(NEIGHBOR_CHANNEL, "Node %d found in neighbor list\n", myMsg->src);
+                          //  dbg(NEIGHBOR_CHANNEL,"SIZE before remove %d\n", call NeighborList.size());
+                           // dbg(NEIGHBOR_CHANNEL,"NeighborList: \n");
+                        //for(i = 0; i < call NeighborList.size(); i++) {
 
-			        	neighbor_ptr = call NeighborList.get(i);
-                        dbg(NEIGHBOR_CHANNEL,"%d\n", neighbor_ptr->Node);
-                        }
-                            call NeighborList.remove(i);
-                            dbg(NEIGHBOR_CHANNEL,"SIZE after remove %d\n", call NeighborList.size());
+			        	//neighbor_ptr = call NeighborList.get(i);
+                        //dbg(NEIGHBOR_CHANNEL,"%d\n", neighbor_ptr->Node);
+                        //}
+                          //  call NeighborList.remove(i);
+                            //dbg(NEIGHBOR_CHANNEL,"SIZE after remove %d\n", call NeighborList.size());
                             //neighbor_ptr->Life = 0;
-                            FOUND = TRUE;
-                            break;
-                        }
-                    }
+                           // FOUND = TRUE;
+                            //break;
+                        //}
+                    //}
 
                     //if the neighbor is not found it means it is a new neighbor to the node and thus we must add it onto the list by calling an allocation pool for memory PoolOfNeighbors
-                    if(!FOUND){
-                        dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
-                        dbg(NEIGHBOR_CHANNEL,"NeighborList: \n");
-                        for(i = 0; i < call NeighborList.size(); i++) {
+                    //if(!FOUND){
+                      //  dbg(NEIGHBOR_CHANNEL, "NEW Neighbor: %d added to neighbor list\n", myMsg->src);
+                        //dbg(NEIGHBOR_CHANNEL,"NeighborList: \n");
+                        //for(i = 0; i < call NeighborList.size(); i++) {
 
-			        	neighbor_ptr = call NeighborList.get(i);
-                        dbg(NEIGHBOR_CHANNEL,"%d\n", neighbor_ptr->Node);
-                        }
+			        	//neighbor_ptr = call NeighborList.get(i);
+                        //dbg(NEIGHBOR_CHANNEL,"%d\n", neighbor_ptr->Node);
+                        //}
                         
                         //Neighbor = new neighbor();
                         //Neighbor = &myMsg->src; //get New Neighbor
@@ -229,16 +243,16 @@ implementation{
                         //dbg(NEIGHBOR_CHANNEL,"SIZE AFTER %d\n", call NeighborList.size());
                         //dbg(NEIGHBOR_CHANNEL,"Neighbor ADDED %d, and life %d\n", Neighbor->Node, Neighbor->Life);
 
-                    }
+                    //}
                     //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
 
 			        for(i = 0; i < call NeighborList.size(); i++) {
 			        	neighbor_ptr = call NeighborList.get(i);
 				        
                         
-				        if(neighbor_ptr->Life > 5) {
+				        if(neighbor_ptr.Life > 5) {
 					        call NeighborList.remove(i);
-					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr->Node, TOS_NODE_ID);
+					        dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
 					
 					        //i--;
 					        //size--;
@@ -367,7 +381,7 @@ implementation{
     void printNeighborList()
     {
         int i;
-        neighbor* neighPtr;
+        neighbor neighPtr;
         if(call NeighborList.size() == 0 ){
             dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
 
@@ -377,7 +391,7 @@ implementation{
         for(i = 0; i < call NeighborList.size(); i++)
         {
             neighPtr = call NeighborList.get(i);
-            dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr->Node);
+            dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr.Node);
         }
         }
         
