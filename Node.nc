@@ -76,7 +76,7 @@ implementation{
        neighborDiscovery();
     }
     event void lspTimer.fired(){
-        if(!Timer1.isRunning()){
+        if(!call Timer1.isRunning()){
             lspNeighborDiscoveryPacket(); //change name
         }
         
