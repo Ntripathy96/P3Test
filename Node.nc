@@ -15,7 +15,7 @@
 
 int MAX_NODES = 20;
 typedef nx_struct lspMap{ //holds a complete map of entire graph for each node
-    uint8_t cost[MAX_NODES+1];
+    nx_uint8_t cost[MAX_NODES+1];
 }lspMap;
 typedef nx_struct neighbor {
     nx_uint16_t Node;
@@ -61,7 +61,7 @@ implementation{
     //project 2
     void lspMapInit(lspMap *list, int TOS_NODE_ID);
     void lspNeighborDiscoveryPacket();
-    lspMap lspMap[MAX_NODES+1]; //change NAME, overall map of network stored at every node
+    lspMap lspMAP[MAX_NODES+1]; //change NAME, overall map of network stored at every node
 
 
 
@@ -370,13 +370,13 @@ implementation{
         //initialize cost of every node to TOS_NODE_ID to "infinity"
         uint8_t lspCostList[MAX_NODES+1] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
-        lspMapInit(&lspMap, TOS_NODE_ID);
+        lspMapInit(&lspMAP, TOS_NODE_ID);
         //get neighbors to Node
         for(int i  =0; i < call NeighborList.size(); i++){
             lspCostList[call NeighborList.get(i).Node] = 1;
             dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", call NeighborList.get(i).Node,lspCostList[call NeighborList.get(i).Node]);
             //put into overall mapping
-            lspMap[TOS_NODE_ID].cost[call NeighborList.get(i).Node] = 1;
+            lspMAP[TOS_NODE_ID].cost[call NeighborList.get(i).Node] = 1;
             dbg("Project2L", "Printing neighbors: %d cost: %d\n",call NeighborList.get(i).Node, lspMap[TOS_NODE_ID].cost[call NeighborList.get(i).Node]);
         }
 
