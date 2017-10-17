@@ -161,9 +161,11 @@ implementation{
             }
             else if (myMsg->dest == AM_BROADCAST_ADDR) //neigbor discovery OR LSP
             {
-                int i;
+                
                 switch(myMsg->protocol){
+                    
                     case PROTOCOL_LINKSTATE:
+                    int i;
                     if(!checkSeenLspPacks(sendPackage)){ 
                         //initialize table for src 
                         lspMapInit(&lspMAP, myMsg->src);
