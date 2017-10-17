@@ -418,7 +418,7 @@ implementation{
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
             lspCostList[Neighbor.Node] = 1;
-            dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
+            //dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
             //dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
