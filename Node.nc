@@ -49,7 +49,7 @@ implementation{
     //int seqNum = 0;
     bool printNodeNeighbors = FALSE;
     
-    int MAX_NODES = 20;
+    //int MAX_NODES = 20;
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
     void printNeighbors();
@@ -61,7 +61,7 @@ implementation{
     //project 2
     void lspMapInit(lspMap *list, int id);
     void lspNeighborDiscoveryPacket();
-    lspMap lspMAP[MAX_NODES]; //change NAME, overall map of network stored at every node
+    lspMap lspMAP[20]; //change NAME, overall map of network stored at every node
 
 
 
@@ -369,12 +369,10 @@ implementation{
     void lspNeighborDiscoveryPacket(){
         int i;
         //initialize cost of every node to TOS_NODE_ID to "infinity"
-        uint8_t lspCostList[21] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
+        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
         lspMapInit(&lspMAP, TOS_NODE_ID);
-        //for(i = 0; i < 21; i++){
-          //  lspMAP[TOS_NODE_ID].cost[i] = -1; //initialize to "infinity" 
-        //}
+        
         //get neighbors to Node
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
