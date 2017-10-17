@@ -77,13 +77,13 @@ implementation{
        neighborDiscovery();
     }
     event void lspTimer.fired(){
-        if(!call Timer1.isRunning()){
+        //if(!call Timer1.isRunning()){
             lspNeighborDiscoveryPacket(); //change name
-        }else{
+        //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
-            dbg(ROUTING_CHANNEL,"Timer1.Time %d\n", call Timer1.getNow());
-        }
+            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call Timer1.getNow());
+        //}
         
         
     }
