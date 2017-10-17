@@ -162,19 +162,19 @@ implementation{
             else if (myMsg->dest == AM_BROADCAST_ADDR) //neigbor discovery OR LSP
             {
                 
-                switch(myMsg->protocol){
+                if(myMsg->protocol == PROTOCOL_LINKSTATE){
                     
-                    case PROTOCOL_LINKSTATE:
+                    int j;
                     
                     if(!checkSeenLspPacks(sendPackage)){ 
                         //initialize table for src 
                         lspMapInit(&lspMAP, myMsg->src);
                         dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
-                            int i;
-                        for(i = 0; i <20; i++){ //put neigbors and cost node knows
-                        lspMAP[myMsg->src].cost[i] = myMsg->payload[i];
-                            if(lspMAP[myMsg->src].cost[i] != -1 ){
-                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, i,lspMAP[myMsg->src].cost[i] );
+                            
+                        for(j = 0; j <20; j++){ //put neigbors and cost node knows
+                        lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
+                            if(lspMAP[myMsg->src].cost[j] != -1 ){
+                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
                         }
@@ -188,16 +188,11 @@ implementation{
                     }else{ //LSPpacket already seen
                             dbg(ROUTING_CHANNEL,"LSPPacket already recieved from %d\n", myMsg->src);
                     }
-
-
-
-                    break;
-                    case PROTOCOL_PINGREPLY:
-
-                                neighbor Neighbor;
+                }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
+                        neighbor Neighbor;
                                 neighbor neighbor_ptr;
                 
-                                int i = 0;
+                                int k = 0;
                                 bool FOUND;
                                 //dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
                 
@@ -213,8 +208,8 @@ implementation{
                                 size = call NeighborList.size();
                     
                                 //increase life of neighbors
-                                for(i = 0; i < call NeighborList.size(); i++) {
-				                    neighbor_ptr = call NeighborList.get(i);
+                                for(k = 0; k < call NeighborList.size(); k++) {
+				                    neighbor_ptr = call NeighborList.get(k);
 				                    neighbor_ptr.Life++;
                                     if(neighbor_ptr.Node == myMsg->src){
                                         FOUND = TRUE;
@@ -240,24 +235,22 @@ implementation{
                     
                                 //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
 
-			                    for(i = 0; i < call NeighborList.size(); i++) {
-			        	                neighbor_ptr = call NeighborList.get(i);
+			                    for(k = 0; k < call NeighborList.size(); k++) {
+			        	                neighbor_ptr = call NeighborList.get(k);
 				        
                         
 				                        if(neighbor_ptr.Life > 5) {
-					                    call NeighborList.remove(i);
+					                    call NeighborList.remove(k);
 					                    dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
 					
 					                    //i--;
 					                    //size--;
 				                        }
 			                    }
-
-
-                    break;
-                    default:
+                }else{
                         dbg(ROUTING_CHANNEL, "ERROR\n");
-                    break;
+                }   
+                    
                 }
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
                   if(myMsg->dest == TOS_NODE_ID){ //ACK reached source
