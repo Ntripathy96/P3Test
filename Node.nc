@@ -181,8 +181,10 @@ implementation{
                         //initialize table for src 
                         lspMapInit(&lspMAP, myMsg->src);
                         dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
-                            
-                        for(j = 0; j <20; j++){ //put neigbors and cost node knows
+                            if(myMsg->src == TOS_NODE_ID){
+
+                            }else{
+                                for(j = 0; j <20; j++){ //put neigbors and cost node knows
                         lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
                             if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
                                 //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
@@ -206,6 +208,8 @@ implementation{
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
                         call Sender.send(sendPackage,AM_BROADCAST_ADDR);
+                            }
+                        
 
 
                     }else{ //LSPpacket already seen
