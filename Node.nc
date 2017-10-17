@@ -48,7 +48,7 @@ implementation{
     pack sendPackage;
     //int seqNum = 0;
     bool printNodeNeighbors = FALSE;
-    
+    bool netChange = FALSE;
     //int MAX_NODES = 20;
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
@@ -74,11 +74,11 @@ implementation{
     event void Timer1.fired()
     {
         dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
-       neighborDiscovery();
+       if(!netChange) neighborDiscovery();
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
-            lspNeighborDiscoveryPacket(); //change name
+           if(netChange) lspNeighborDiscoveryPacket(); //change name
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
@@ -233,7 +233,7 @@ implementation{
 
                                 FOUND = FALSE; //IF FOUND, we switch to TRUE
                                 size = call NeighborList.size();
-                    
+
                                 //increase life of neighbors
                                 for(k = 0; k < call NeighborList.size(); k++) {
 				                    neighbor_ptr = call NeighborList.get(k);
@@ -248,11 +248,15 @@ implementation{
                     
                                 if(FOUND){
                                         dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
+                                        netChange = FALSE;
                                 }else{
                                         Neighbor.Node = myMsg->src;
                                         Neighbor.Life = 0;
                                         call NeighborList.pushfront(Neighbor); //at index 0
                                         dbg(FLOODING_CHANNEL,"NEW Neighbor: %d and Life %d\n",Neighbor.Node,Neighbor.Life);
+                                        netChange = TRUE; //network change!
+                                        dbg(ROUTING_CHANNEL,"NETWORK CHANGE\n");
+                                        
                                         
                                 }
                     
@@ -269,6 +273,8 @@ implementation{
 				                        if(neighbor_ptr.Life > 5) {
 					                    call NeighborList.remove(k);
 					                    dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
+                                        dbg(ROUTING_CHANNEL, "CHANGE IN TOPOLOGY\n");
+                                        netChange = TRUE;
 					
 					                    //i--;
 					                    //size--;
