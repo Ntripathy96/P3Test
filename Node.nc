@@ -76,15 +76,20 @@ implementation{
        neighborDiscovery();
     }
     event void lspTimer.fired(){
-        lspNeighborDiscoveryPacket(); //change name
+        if(!Timer1.isRunning()){
+            lspNeighborDiscoveryPacket(); //change name
+        }
+        
     }
     
     
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
+            //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
+            call Timer1.startPeriodic(1000);
+            //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
+            call lspTimer.startPeriodic(5000);
         }else{
             //Retry until successful
             call AMControl.start();

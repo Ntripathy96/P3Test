@@ -137,17 +137,18 @@ def main():
     s.addChannel(s.NEIGHBOR_CHANNEL);
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.ROUTING_CHANNEL);
+
     s.runTime(40);
     s.ping(19, 8, "Hello, World");
     s.runTime(100);
     
     #s.ping(1,19, "Hi!");
-    s.runTime(2000);
+    #s.runTime(2000);
     #s.runTime(20);
-    s.ping(5, 7, "Helloooo!");
-    s.runTime(10000); #runtime correspons to piing under it
-    s.ping(9, 2, "WOOOOW!");
-    s.runTime(20);
+    #s.ping(5, 7, "Helloooo!");
+    #s.runTime(10000); #runtime correspons to piing under it
+    #s.ping(9, 2, "WOOOOW!");
+    #s.runTime(20);
     #s.ping(19, 1, "HEEEE!");
     #s.runTime(20);
     #s.ping(19, 6, "AAAAAAA!");
