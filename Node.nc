@@ -13,7 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
-int MAX_NODES = 20;
+
 typedef nx_struct lspMap{ //holds a complete map of entire graph for each node
     nx_uint8_t cost[21];
 }lspMap;
@@ -49,7 +49,7 @@ implementation{
     //int seqNum = 0;
     bool printNodeNeighbors = FALSE;
     
-    
+    int MAX_NODES = 20;
     // Prototypes
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
     void printNeighbors();
@@ -61,7 +61,7 @@ implementation{
     //project 2
     void lspMapInit(lspMap *list, int id);
     void lspNeighborDiscoveryPacket();
-    lspMap lspMAP[21]; //change NAME, overall map of network stored at every node
+    lspMap lspMAP[MAX_NODES]; //change NAME, overall map of network stored at every node
 
 
 
@@ -361,7 +361,7 @@ implementation{
     }
     void lspMapInit(lspMap* list, int id){
         int i;
-        for(i = 0; i < 21; i++){
+        for(i = 0; i < 20; i++){
             list[id].cost[i] = -1; //initialize to "infinity" 
         }
     }
