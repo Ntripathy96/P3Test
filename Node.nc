@@ -164,7 +164,7 @@ implementation{
                 
                 if(myMsg->protocol == PROTOCOL_LINKSTATE){
                     
-                    int j;
+                    int j, l;
                     
                     if(!checkSeenLspPacks(sendPackage)){ 
                         //initialize table for src 
@@ -174,10 +174,21 @@ implementation{
                         for(j = 0; j <20; j++){ //put neigbors and cost node knows
                         lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
                             if(lspMAP[myMsg->src].cost[j] != 255 ){
-                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
+                                //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
                         }
+                        if(TOS_NODE_ID == 19){
+                            for(l = 1; l < 20; l++){
+                                for(j = 1; j <20; j++){ //put neigbors and cost node knows
+                                    
+                            //if(lspMAP[myMsg->src].cost[j] != 255 ){
+                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+                            //}
+
+                        }
+                            }
+                            
 
                         //send packet decreasing TTL 
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
