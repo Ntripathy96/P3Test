@@ -29,7 +29,7 @@ module Node{
     
     uses interface Timer<TMilli> as Timer1; //Interface that was wired above.
     uses interface Timer<TMilli> as lspTimer; //link state timer 
-
+    uses interface Random as Random;
     uses interface SplitControl as AMControl;
     uses interface Receive;
     uses interface List<neighbor> as NeighborList;
