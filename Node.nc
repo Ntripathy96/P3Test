@@ -371,7 +371,10 @@ implementation{
         //initialize cost of every node to TOS_NODE_ID to "infinity"
         uint8_t lspCostList[MAX_NODES+1] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
-        lspMapInit(&lspMAP, TOS_NODE_ID);
+        //lspMapInit(&lspMAP, TOS_NODE_ID);
+        for(i = 0; i < MAX_NODES+1; i++){
+            lspMAP[TOS_NODE_ID].cost[i] = -1; //initialize to "infinity" 
+        }
         //get neighbors to Node
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
