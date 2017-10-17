@@ -78,7 +78,10 @@ implementation{
     event void lspTimer.fired(){
         if(!call Timer1.isRunning()){
             lspNeighborDiscoveryPacket(); //change name
+        }else{
+            dbg(ROUTING_CHANNEL,"Timer1.Time %d\n", call Timer1.getNow());
         }
+        
         
     }
     
@@ -87,9 +90,9 @@ implementation{
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            //call Timer1.startPeriodic(100);
+            call Timer1.startPeriodic(100);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            //call lspTimer.startPeriodic(500);
+            call lspTimer.startPeriodic(500);
         }else{
             //Retry until successful
             call AMControl.start();
