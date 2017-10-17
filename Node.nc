@@ -182,11 +182,11 @@ implementation{
                         lspMapInit(&lspMAP, myMsg->src);
                         dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
                             if(myMsg->src == TOS_NODE_ID){
-
+                                dbg(ROUTING_CHANNEL,"Drop\n");
                             }else{
                                 for(j = 0; j <20; j++){ //put neigbors and cost node knows
-                        lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
-                            if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
+                                    lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
+                                    if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
                                 //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
@@ -195,11 +195,11 @@ implementation{
                             for(l = 1; l < 20; l++){
                                 for(j = 1; j <20; j++){ //put neigbors and cost node knows
                                     
-                            if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
-                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
-                            }
+                                    if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
+                                        dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+                                    }
 
-                        }
+                                 }
                             }
                         //}
                             
@@ -208,7 +208,7 @@ implementation{
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
                         call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-                            }
+                            
                         
 
 
@@ -433,7 +433,7 @@ implementation{
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
             lspCostList[Neighbor.Node] = 1;
-            //dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
+            dbg(ROUTING_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
             dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
