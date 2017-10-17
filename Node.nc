@@ -110,7 +110,7 @@ implementation{
             
 
             if(myMsg->TTL == 0){ //check life of packet
-                //dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
+                dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
             }
             
             else if (myMsg->protocol == PROTOCOL_PING) //flooding
@@ -173,7 +173,7 @@ implementation{
                             
                         for(j = 0; j <20; j++){ //put neigbors and cost node knows
                         lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
-                            if(lspMAP[myMsg->src].cost[j] != -1 ){
+                            if(lspMAP[myMsg->src].cost[j] != 255 ){
                                 dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
@@ -398,7 +398,7 @@ implementation{
     void lspNeighborDiscoveryPacket(){
         int i;
         //initialize cost of every node to TOS_NODE_ID to "infinity"
-        int lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
+        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
         lspMapInit(&lspMAP, TOS_NODE_ID);
         
@@ -414,7 +414,7 @@ implementation{
 
        // send lspPacket to neighbors 
        lspSeqNum++;
-       makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,MAX_TTL, PROTOCOL_LINKSTATE, lspSeqNum,  lspCostList, 20);
+       makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,MAX_TTL, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
        call Sender.send(sendPackage,AM_BROADCAST_ADDR);
        dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
 
