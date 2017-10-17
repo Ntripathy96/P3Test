@@ -165,12 +165,12 @@ implementation{
                 switch(myMsg->protocol){
                     
                     case PROTOCOL_LINKSTATE:
-                    int i;
+                    
                     if(!checkSeenLspPacks(sendPackage)){ 
                         //initialize table for src 
                         lspMapInit(&lspMAP, myMsg->src);
                         dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
-
+                            int i;
                         for(i = 0; i <20; i++){ //put neigbors and cost node knows
                         lspMAP[myMsg->src].cost[i] = myMsg->payload[i];
                             if(lspMAP[myMsg->src].cost[i] != -1 ){
