@@ -87,9 +87,9 @@ implementation{
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call Timer1.startPeriodic(100);
+            //call Timer1.startPeriodic(100);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(500);
+            //call lspTimer.startPeriodic(500);
         }else{
             //Retry until successful
             call AMControl.start();
