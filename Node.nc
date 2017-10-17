@@ -15,7 +15,7 @@
 
 int MAX_NODES = 20;
 typedef nx_struct lspMap{ //holds a complete map of entire graph for each node
-    nx_uint8_t cost[MAX_NODES+1];
+    nx_uint8_t cost[21];
 }lspMap;
 typedef nx_struct neighbor {
     nx_uint16_t Node;
@@ -61,7 +61,7 @@ implementation{
     //project 2
     void lspMapInit(lspMap *list, int id);
     void lspNeighborDiscoveryPacket();
-    lspMap lspMAP[MAX_NODES+1]; //change NAME, overall map of network stored at every node
+    lspMap lspMAP[21]; //change NAME, overall map of network stored at every node
 
 
 
