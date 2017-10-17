@@ -31,7 +31,7 @@ implementation {
     
     //Node.Hash -> HashC;
     Node.NeighborList -> List;
-    Node.CheckList->List2;
+    Node.SeenLspPackList->List2;
     
     Node.Timer1 -> myTimerC; //Wire the interface to the component
     
