@@ -251,7 +251,7 @@ implementation{
                         dbg(ROUTING_CHANNEL, "ERROR\n");
                 }   
                     
-                }
+                
             }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
                   if(myMsg->dest == TOS_NODE_ID){ //ACK reached source
                       makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PINGREPLY, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
@@ -259,7 +259,7 @@ implementation{
                       if(!checkPacket(sendPackage)){
                           dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
                        //dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
-                    }
+                        }
                   }else{
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
