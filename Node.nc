@@ -360,7 +360,8 @@ implementation{
         
     }
     void lspMapInit(lspMap* list, int TOS_NODE_ID){
-        for(int i = 0; i < MAX_NODES; i++){
+        int i;
+        for(i = 0; i < MAX_NODES; i++){
             list[TOS_NODE_ID].cost[i] = -1; //initialize to "infinity" 
         }
     }
