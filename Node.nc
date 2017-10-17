@@ -188,6 +188,7 @@ implementation{
 
                         }
                             }
+                        }
                             
 
                         //send packet decreasing TTL 
