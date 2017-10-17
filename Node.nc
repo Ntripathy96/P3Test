@@ -59,7 +59,7 @@ implementation{
     bool checkPacket(pack Packet);
 
     //project 2
-    void lspMapInit(lspMap *list, int TOS_NODE_ID);
+    void lspMapInit(lspMap *list, int id);
     void lspNeighborDiscoveryPacket();
     lspMap lspMAP[MAX_NODES+1]; //change NAME, overall map of network stored at every node
 
@@ -359,25 +359,27 @@ implementation{
         }
         
     }
-    void lspMapInit(lspMap* list, int TOS_NODE_ID){
+    void lspMapInit(lspMap* list, int id){
         int i;
         for(i = 0; i < MAX_NODES; i++){
-            list[TOS_NODE_ID].cost[i] = -1; //initialize to "infinity" 
+            list[id].cost[i] = -1; //initialize to "infinity" 
         }
     }
     
     void lspNeighborDiscoveryPacket(){
+        int i;
         //initialize cost of every node to TOS_NODE_ID to "infinity"
         uint8_t lspCostList[MAX_NODES+1] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
         //initialize table for this node
         lspMapInit(&lspMAP, TOS_NODE_ID);
         //get neighbors to Node
-        for(int i  =0; i < call NeighborList.size(); i++){
-            lspCostList[call NeighborList.get(i).Node] = 1;
-            dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", call NeighborList.get(i).Node,lspCostList[call NeighborList.get(i).Node]);
+        for(i  =0; i < call NeighborList.size(); i++){
+            neighbor Neighbor = call NeighborList.get(i);
+            lspCostList[Neighbor.Node] = 1;
+            dbg(ROUTING_CHANNEL,"Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
-            lspMAP[TOS_NODE_ID].cost[call NeighborList.get(i).Node] = 1;
-            dbg("Project2L", "Printing neighbors: %d cost: %d\n",call NeighborList.get(i).Node, lspMap[TOS_NODE_ID].cost[call NeighborList.get(i).Node]);
+            lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
+            dbg("Project2L", "Printing neighbors: %d cost: %d\n",Neighbor.Node, lspMap[TOS_NODE_ID].cost[Neighbor.Node]);
         }
 
     }
