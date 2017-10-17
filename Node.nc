@@ -183,7 +183,7 @@ implementation{
                                 for(j = 1; j <20; j++){ //put neigbors and cost node knows
                                     
                             if(lspMAP[l].cost[j] != 255 || lspMAP[l].cost[j] != 0){
-                                dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+                                dbg(ROUTING_CHANNEL, "%d Neighb5or %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
                             }
 
                         }
