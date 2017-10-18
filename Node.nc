@@ -73,10 +73,12 @@ implementation{
    
     event void Timer1.fired()
     {
-        dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
+        
        if(!netChange){
+           dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
        }else{
+           dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
             lspNeighborDiscoveryPacket();
             netChange = FALSE;
        } 
@@ -98,7 +100,7 @@ implementation{
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call Timer1.startPeriodic(1000);
+            call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
             //call lspTimer.startPeriodic(2000);
         }else{
