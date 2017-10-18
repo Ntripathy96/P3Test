@@ -474,9 +474,9 @@ implementation{
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
                     if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){
-                        dbg(ROUTING_CHANNEL,"LspPacket src %d vs LspPacketMatch src %d\n", Packet.src,PacketMatch.src);
+                        //dbg(ROUTING_CHANNEL,"LspPacket src %d vs LspPacketMatch src %d\n", Packet.src,PacketMatch.src);
                         //dbg(ROUTING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
-                        dbg(ROUTING_CHANNEL,"LSPPacket seq %d vs LSPPacketMatch seq %d\n", Packet.seq,PacketMatch.seq);
+                        //dbg(ROUTING_CHANNEL,"LSPPacket seq %d vs LSPPacketMatch seq %d\n", Packet.seq,PacketMatch.seq);
                         //call SeenPackList.remove(i);
                         //check if current lsp seqnum is greater or less 
                         if(PacketMatch.seq == Packet.seq) return TRUE;//already in list
