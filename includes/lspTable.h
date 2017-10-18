@@ -136,7 +136,7 @@ typedef struct lspMap{
 	uint8_t cost[20];
 }lspMap;
 
-void lspMapinitialize(lspMap *list, int TOS_NODE_ID){
+void lspMapinit(lspMap *list, int TOS_NODE_ID){
 	int i;	
 	for(i = 0; i < MAXNODES; i++){
 		list[TOS_NODE_ID].cost[i] = -1;	
