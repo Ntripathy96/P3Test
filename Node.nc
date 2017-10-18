@@ -12,7 +12,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#include "includes/list.h"
+//#include "includes/list.h"
 #include "includes/lspTable.h"
 
 
