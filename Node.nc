@@ -101,7 +101,7 @@ implementation{
             //check if time gets too great
             if(call Timer1.getNow() >= (2*1000)){
             dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
-            lspNeighborDiscoveryPacket();
+            //lspNeighborDiscoveryPacket();
             call Timer1.stop();
         }
         
@@ -116,7 +116,7 @@ implementation{
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(1000);
+            //call lspTimer.startPeriodic(1000);
         }else{
             //Retry until successful
             call AMControl.start();
