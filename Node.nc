@@ -73,18 +73,19 @@ implementation{
     event void Timer1.fired()
     {
         
-       if(!netChange){
+       //if(!netChange){
            dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
-       }else{
+       //}else{
            //dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
             //lspNeighborDiscoveryPacket();
             netChange = FALSE;
-       } 
+       //} 
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
-          if(netChange) lspNeighborDiscoveryPacket(); //change name
+          //if(netChange) lspNeighborDiscoveryPacket(); //change name
+          lspNeighborDiscoveryPacket(); 
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
