@@ -85,10 +85,10 @@ implementation{
     {
         
        //if(!netChange){
-           dbg(ROUTING__CHANNEL_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
+           dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
        //}else{
-           //dbg(ROUTING__CHANNEL_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
+           //dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
             //lspNeighborDiscoveryPacket();
             netChange = FALSE;
        //} 
@@ -100,7 +100,7 @@ implementation{
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
-            dbg(ROUTING__CHANNEL_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
+            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
         //}
         
         
@@ -161,12 +161,12 @@ implementation{
                     dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d seq num: %d\n ", myMsg->src,myMsg->dest, myMsg->seq);
                     dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
                         dbg(FLOODING_CHANNEL, "Sending Ping Reply to %d! \n\n", myMsg->src);
-					dbg(ROUTING__CHANNEL,"Running dijkstra\n");
+					dbg(ROUTING_CHANNEL,"Running dijkstra\n");
 					dijkstra();
-					dbg(ROUTING__CHANNEL,"END\n\n"); 
+					dbg(ROUTING_CHANNEL,"END\n\n"); 
 					forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
                     
-                    dbg(ROUTING__CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
                     makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     call Sender.send(sendPackage, forwardTo);
                     
@@ -185,26 +185,26 @@ implementation{
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d, Sequence Number %d...Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
                     int forwardTo;
 				       
-				        dbg(ROUTING__CHANNEL_CHANNEL,"Running dijkstra\n");
+				        dbg(ROUTING_CHANNEL,"Running dijkstra\n");
 				            dijkstra();
-				        dbg(ROUTING__CHANNEL_CHANNEL,"END\n\n"); 
+				        dbg(ROUTING_CHANNEL,"END\n\n"); 
 				        forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-				        dbg(ROUTING__CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, myMsg->src);
+				        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, myMsg->src);
 				        if(forwardTo == 0) printCostList(&lspMAP, TOS_NODE_ID);
 				        if(forwardTo == -1){
-					        dbg(ROUTING__CHANNEL, "rechecking \n");
+					        dbg(ROUTING_CHANNEL, "rechecking \n");
 					        dijkstra();
 					        forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
 					        if(forwardTo == -1)
-						        dbg(ROUTING__CHANNEL, "Dropping for reals\n");
+						        dbg(ROUTING_CHANNEL, "Dropping for reals\n");
 					        else{
-						        dbg(ROUTING__CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+						        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 						        Sender.send(sendPackage, forwardTo);
 						        
 					        }
 				        }
 				    else{
-					        dbg(ROUTING__CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+					        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 					        Sender.send(sendPackage, forwardTo);
 					        
 				    }
@@ -227,14 +227,14 @@ implementation{
                     if(!checkSeenLspPacks(sendPackage)){ 
                         //initialize table for src 
                         lspMapInit(&lspMAP, myMsg->src);
-                        dbg(ROUTING__CHANNEL_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
+                        dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
                             if(myMsg->src == TOS_NODE_ID){
-                                dbg(ROUTING__CHANNEL_CHANNEL,"Drop\n");
+                                dbg(ROUTING_CHANNEL,"Drop\n");
                             }else{
                                 for(j = 0; j <20; j++){ //put neigbors and cost node knows
                                     lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
                                     if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
-                                //dbg(ROUTING__CHANNEL_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
+                                //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
                             }
 
                         }
@@ -243,7 +243,7 @@ implementation{
                                 for(j = 1; j <20; j++){ //put neigbors and cost node knows
                                     
                                     if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
-                                        dbg(ROUTING__CHANNEL_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+                                        dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
                                     }
 
                                  }
@@ -252,7 +252,7 @@ implementation{
                             
 
                         //send packet decreasing TTL 
-                        dbg(ROUTING__CHANNEL_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
+                        dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
                         call Sender.send(sendPackage,AM_BROADCAST_ADDR);
                             }   
@@ -260,7 +260,7 @@ implementation{
 
 
                     }else{ //LSPpacket already seen
-                            dbg(ROUTING__CHANNEL_CHANNEL,"LSPPacket already recieved from %d\n", myMsg->src);
+                            dbg(ROUTING_CHANNEL,"LSPPacket already recieved from %d\n", myMsg->src);
                     }
                 }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
                         neighbor Neighbor;
@@ -302,7 +302,7 @@ implementation{
                                         call NeighborList.pushfront(Neighbor); //at index 0
                                         dbg(FLOODING_CHANNEL,"NEW Neighbor: %d and Life %d\n",Neighbor.Node,Neighbor.Life);
                                         netChange = TRUE; //network change!
-                                        dbg(ROUTING__CHANNEL_CHANNEL,"NETWORK CHANGE\n");
+                                        dbg(ROUTING_CHANNEL,"NETWORK CHANGE\n");
                                         
                                         
                                 }
@@ -320,7 +320,7 @@ implementation{
 				                        if(neighbor_ptr.Life > 5) {
 					                    call NeighborList.remove(k);
 					                    dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
-                                        dbg(ROUTING__CHANNEL_CHANNEL, "CHANGE IN TOPOLOGY\n");
+                                        dbg(ROUTING_CHANNEL, "CHANGE IN TOPOLOGY\n");
                                         netChange = TRUE;
 					
 					                    //i--;
@@ -328,7 +328,7 @@ implementation{
 				                        }
 			                    }
                 }else{
-                        dbg(ROUTING__CHANNEL_CHANNEL, "ERROR\n");
+                        dbg(ROUTING_CHANNEL, "ERROR\n");
                 }   
                     
                 
@@ -343,11 +343,11 @@ implementation{
                         }
                   }else{
                       dbg(FLOODING_CHANNEL, "Sending Ping Reply to %d! \n\n", myMsg->src);
-					dbg(ROUTING__CHANNEL,"Running dijkstra\n");
+					dbg(ROUTING_CHANNEL,"Running dijkstra\n");
 					dijkstra();
-					dbg(ROUTING__CHANNEL,"END\n\n"); 
+					dbg(ROUTING_CHANNEL,"END\n\n"); 
 					forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
-                    dbg(ROUTING__CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                         call Sender.send(sendPackage, forwardTo);
                   }
@@ -488,20 +488,20 @@ implementation{
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
             lspCostList[Neighbor.Node] = 1;
-            //dbg(ROUTING__CHANNEL_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
+            //dbg(ROUTING_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
             //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
-            dbg(ROUTING__CHANNEL_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
+            dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
         }
 
        // send lspPacket to neighbors 
        if(!call NeighborList.isEmpty()){
            lspSeqNum++;
-       dbg(ROUTING__CHANNEL_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
+       dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
        call Sender.send(sendPackage,AM_BROADCAST_ADDR);
        }else{
-           dbg(ROUTING__CHANNEL_CHANNEL,"No neighbors so cant create LSP\n");
+           dbg(ROUTING_CHANNEL,"No neighbors so cant create LSP\n");
        }
        
        
@@ -523,9 +523,9 @@ implementation{
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
                     if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){
-                        //dbg(ROUTING__CHANNEL_CHANNEL,"LspPacket src %d vs LspPacketMatch src %d\n", Packet.src,PacketMatch.src);
-                        //dbg(ROUTING__CHANNEL_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
-                        //dbg(ROUTING__CHANNEL_CHANNEL,"LSPPacket seq %d vs LSPPacketMatch seq %d\n", Packet.seq,PacketMatch.seq);
+                        //dbg(ROUTING_CHANNEL,"LspPacket src %d vs LspPacketMatch src %d\n", Packet.src,PacketMatch.src);
+                        //dbg(ROUTING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
+                        //dbg(ROUTING_CHANNEL,"LSPPacket seq %d vs LSPPacketMatch seq %d\n", Packet.seq,PacketMatch.seq);
                         //call SeenPackList.remove(i);
                         //check if current lsp seqnum is greater or less 
                         if(PacketMatch.seq == Packet.seq) return TRUE;//already in list
@@ -551,25 +551,25 @@ implementation{
 		int i;	
 		lspTuple lspTup, temp;
 		lspTableinit(&tentativeList); lspTableinit(&confirmedList);
-		dbg(ROUTING__CHANNEL_CHANNEL,"start of dijkstra \n");
+		dbg(ROUTING_CHANNEL,"start of dijkstra \n");
 		lspTablePushBack(&tentativeList, temp = (lspTuple){TOS_NODE_ID,0,TOS_NODE_ID});
-		dbg(ROUTING__CHANNEL_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+		dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 		while(!lspTableIsEmpty(&tentativeList)){
 			if(!lspTableContains(&confirmedList,lspTup = lspTupleRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(lspTablePushBack(&confirmedList,lspTup))
-					dbg(ROUTING__CHANNEL_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
-			for(i = 1; i < totalNodes; i++){
+					dbg(ROUTING_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
+			for(i = 1; i < 20; i++){
 				temp = (lspTuple){i,lspMAP[lspTup.dest].cost[i]+lspTup.nodeNcost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
 				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspTupleReplace(&tentativeList,temp,temp.nodeNcost))
-						dbg(ROUTING__CHANNEL_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.nodeNcost, temp.nextHop);
+						dbg(ROUTING_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.nodeNcost, temp.nextHop);
 				else if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspTablePushBack(&tentativeList, temp))
-						dbg(ROUTING__CHANNEL_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+						dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 			}
 		}
-		dbg(ROUTING__CHANNEL_CHANNEL, "Printing the ROUTING__CHANNEL table! \n");
+		dbg(ROUTING_CHANNEL, "Printing the ROUTING_CHANNEL table! \n");
 		for(i = 0; i < confirmedList.numValues; i++)
-			dbg(ROUTING__CHANNEL_CHANNEL, "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
-		dbg(ROUTING__CHANNEL_CHANNEL, "End of dijkstra! \n");
+			dbg(ROUTING_CHANNEL, "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
+		dbg(ROUTING_CHANNEL, "End of dijkstra! \n");
 	}
 
 	int forwardPacketTo(lspTable* list, int dest){	
@@ -591,19 +591,19 @@ implementation{
 
     void printlspMap(lspMap *list){
 		int i,j;
-		for(i = 0; i < totalNodes; i++){
-			for(j = 0; j < totalNodes; j++){
+		for(i = 0; i < 20; i++){
+			for(j = 0; j < 20; j++){
 				if(list[i].cost[j] != 0 && list[i].cost[j] != 255)
-					dbg(ROUTING__CHANNEL_CHANNEL, "src: %d  neighbor: %d cost: %d \n", i, j, list[i].cost[j]);
+					dbg(ROUTING_CHANNEL, "src: %d  neighbor: %d cost: %d \n", i, j, list[i].cost[j]);
 			}	
 		}
-		dbg(ROUTING__CHANNEL_CHANNEL, "END \n\n");
+		dbg(ROUTING_CHANNEL, "END \n\n");
 	}
 	
 	void printCostList(lspMap *list, uint8_t nodeID) {
 		uint8_t i;
-		for(i = 0; i < totalNodes; i++) {
-			dbg(ROUTING__CHANNEL_CHANNEL, "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
+		for(i = 0; i < 20; i++) {
+			dbg(ROUTING_CHANNEL, "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
 		}
 	}
     
