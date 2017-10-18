@@ -97,13 +97,13 @@ implementation{
         //if(!call Timer1.isRunning()){
           //if(netChange) lspNeighborDiscoveryPacket(); //change name
            
-        //}else{
+        //}else
             //check if time gets too great
             //if(call Timer1.getNow() >= (2*1000)){
-            //dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
+            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
             lspNeighborDiscoveryPacket();
             //call Timer1.stop();
-        }
+        //}
         
         
         
