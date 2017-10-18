@@ -84,15 +84,15 @@ implementation{
     event void Timer1.fired()
     {
         
-       if(!netChange){
+       //if(!netChange){
            dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
-            netChange = TRUE;
-       }else{
-           dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
-            lspNeighborDiscoveryPacket();
-            netChange = FALSE;
-       } 
+            //netChange = TRUE;
+       //}else{
+         //  dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
+           // lspNeighborDiscoveryPacket();
+            //netChange = FALSE;
+       //} 
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
@@ -116,7 +116,7 @@ implementation{
             dbg(GENERAL_CHANNEL, "Radio On\n");
             call Timer1.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
             //call Timer1.startPeriodic(100000);
-            //call lspTimer.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
+            call lspTimer.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
             //call lspTimer.startPeriodic(100000);
         }else{
             //Retry until successful
