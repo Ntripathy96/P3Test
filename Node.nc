@@ -175,7 +175,7 @@ implementation{
                     }
                 }
                 else //not meant for this node forward to correct nextHop
-                {
+                {   int forwardTo;
                     makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     if(checkPacket(sendPackage)){//return true meaning packet found in SeenPackList
                         dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
@@ -183,7 +183,7 @@ implementation{
                     }else{ //
                         //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
                     dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d, Sequence Number %d...Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    int forwardTo;
+                    //int forwardTo;
 				       
 				        dbg(ROUTING_CHANNEL,"Running dijkstra\n");
 				            dijkstra();
@@ -199,13 +199,13 @@ implementation{
 						        dbg(ROUTING_CHANNEL, "Dropping for reals\n");
 					        else{
 						        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-						        Sender.send(sendPackage, forwardTo);
+						        call Sender.send(sendPackage, forwardTo);
 						        
 					        }
 				        }
 				    else{
 					        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-					        Sender.send(sendPackage, forwardTo);
+					        call Sender.send(sendPackage, forwardTo);
 					        
 				    }
                     //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
