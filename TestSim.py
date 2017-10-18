@@ -129,8 +129,8 @@ class TestSim:
 def main():
     s = TestSim();
     s.runTime(20);
-    s.loadTopo("long_line.topo");
-    #s.loadTopo("RingTopo.topo");
+    #s.loadTopo("long_line.topo");
+    s.loadTopo("RingTopology.topo");
     s.loadNoise("no_noise.txt");
     s.bootAll();
     s.addChannel(s.COMMAND_CHANNEL);
