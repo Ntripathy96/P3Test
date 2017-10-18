@@ -87,6 +87,7 @@ implementation{
        if(!netChange){
            dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
+            netChange = TRUE;
        }else{
            dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
             lspNeighborDiscoveryPacket();
