@@ -113,10 +113,10 @@ implementation{
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call Timer1.startPeriodic(10000);
-            //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(10000);
+            call Timer1.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
+            //call Timer1.startPeriodic(10000);
+            call lspTimer.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
+            //call lspTimer.startPeriodic(10000);
         }else{
             //Retry until successful
             call AMControl.start();
