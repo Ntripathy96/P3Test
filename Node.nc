@@ -74,11 +74,16 @@ implementation{
     event void Timer1.fired()
     {
         dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
-       if(!netChange) neighborDiscovery();
+       if(!netChange){
+            neighborDiscovery();
+       }else{
+            lspNeighborDiscoveryPacket();
+            netChange = FALSE;
+       } 
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
-           if(netChange) lspNeighborDiscoveryPacket(); //change name
+          // if(netChange) lspNeighborDiscoveryPacket(); //change name
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
@@ -95,7 +100,7 @@ implementation{
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(2000);
+            //call lspTimer.startPeriodic(2000);
         }else{
             //Retry until successful
             call AMControl.start();
