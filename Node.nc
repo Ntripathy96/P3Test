@@ -365,13 +365,18 @@ implementation{
     
     
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+        int forwardTo;
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        //sendPackage.seq = seqNum;
-        makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
-        //call Hash.insert(TOS_NODE_ID,seqNum);
-        //dbg(FLOODING_CHANNEL, "seqNumAfter: %d\n", seqNum);
+        makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
+        dbg(ROUTING_CHANNEL,"Running dijkstra\n");
+					dijkstra();
+					dbg(ROUTING_CHANNEL,"END\n\n\n\n\n"); 
+					forwardTo = forwardPacketTo(&confirmedList,destination);
+                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+        call Sender.send(sendPackage, forwardTo);
+        
+        
         seqNum++;
     }
     
