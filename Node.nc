@@ -12,11 +12,10 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+#include "includes/list.h"
 
 
-typedef nx_struct lspMap{ //holds a complete map of entire graph for each node
-    nx_uint8_t cost[21];
-}lspMap;
+
 typedef nx_struct neighbor {
     nx_uint16_t Node;
     nx_uint8_t Life;
@@ -59,7 +58,7 @@ implementation{
     bool checkPacket(pack Packet);
 
     //project 2
-    void lspMapInit(lspMap *list, int id);
+    
     void lspNeighborDiscoveryPacket();
     lspMap lspMAP[20]; //change NAME, overall map of network stored at every node
     int lspSeqNum = 0;
@@ -78,14 +77,14 @@ implementation{
            dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
             neighborDiscovery();
        }else{
-           dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
-            lspNeighborDiscoveryPacket();
+           //dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
+            //lspNeighborDiscoveryPacket();
             netChange = FALSE;
        } 
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
-          // if(netChange) lspNeighborDiscoveryPacket(); //change name
+          if(netChange) lspNeighborDiscoveryPacket(); //change name
         //}else{
             //check if time gets too great
             //if(call Timer1.getNow() > (3*100))
@@ -102,7 +101,7 @@ implementation{
             //call Timer1.startPeriodic((uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(1000);
             //call lspTimer.startPeriodic((uint16_t)((call Random.rand16())%200));
-            //call lspTimer.startPeriodic(2000);
+            call lspTimer.startPeriodic(3000);
         }else{
             //Retry until successful
             call AMControl.start();
@@ -428,12 +427,7 @@ implementation{
         }
         
     }
-    void lspMapInit(lspMap* list, int id){
-        int i;
-        for(i = 0; i < 20; i++){
-            list[id].cost[i] = -1; //initialize to "infinity" 
-        }
-    }
+    
     
     void lspNeighborDiscoveryPacket(){
         int i;
