@@ -82,59 +82,36 @@ implementation
     {
 	neighborDiscovery();
     }
-    event void lspTimer.fired(){
-        //if(!call Timer1.isRunning()){
-          //if(netChange) lspNeighborDiscoveryPacket(); //change name
-           
-        //}else
-            //check if time gets too great
-            //if(call Timer1.getNow() >= (2*1000)){
-            dbg(ROUTING_CHANNEL,"lspTimer1.Time %d\n", call lspTimer.getNow());
-            lspNeighborDiscoveryPacket();
-            //call Timer1.stop();
-        //}
-        
-        
-        
+    
+    event void lspTimer.fired()
+    {
+            lspNeighborDiscoveryPacket(); 
     }
     
     
     event void AMControl.startDone(error_t err){
         if(err == SUCCESS){
             dbg(GENERAL_CHANNEL, "Radio On\n");
-            //call Timer1.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
             call Timer1.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
-            //call Timer1.startPeriodic(100000);
-            //call lspTimer.startPeriodic(5333 + (uint16_t)((call Random.rand16())%200));
             call lspTimer.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
-            //call lspTimer.startPeriodic(100000);
         }else{
             //Retry until successful
             call AMControl.start();
         }
     }
     
-    event void AMControl.stopDone(error_t err){
-    }
+    event void AMControl.stopDone(error_t err){}
     
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
-         
+	
+	uint16_t size = call NeighborList.size();
                 
-                uint16_t size = call NeighborList.size();
-                
-
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
-            //dbg(GENERAL_CHANNEL, "Packet received from %d\n",myMsg->src);
-            
-            //dbg(FLOODING_CHANNEL, "Packet being flooded to %d\n",myMsg->dest);
-            
-            
-
-            if(myMsg->TTL == 0){ //check life of packet
+	    
+            if(myMsg->TTL == 0)
                 dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
-            }
             
             else if (myMsg->protocol == PROTOCOL_PING) //flooding
             {
