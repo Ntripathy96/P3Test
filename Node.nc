@@ -58,41 +58,29 @@ implementation
 	void neighborDiscovery();
 	bool checkPacket(pack Packet);
 
-    	//project 2 START 
     	void lspNeighborDiscoveryPacket();
     	lspMap lspMAP[20];
     	int lspSeqNum = 0;
     	bool checkSeenLspPacks(pack Packet);
     	lspTable confirmedList;
 	lspTable tentativeList;
-    float cost[20];
+    	float cost[20];
 	int lastSequenceTracker[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-    void printlspMap(lspMap *list);
-	
+	void printlspMap(lspMap *list);
 	void dijkstra();
 	int forwardPacketTo(lspTable* list, int dest);
 	void printCostList(lspMap *list, uint8_t nodeID);
 	float EMA(float prevEMA, float now,float weight);
-    //------Project 2-------//END
 
-    event void Boot.booted(){
+    event void Boot.booted()
+    {
         call AMControl.start();
         dbg(GENERAL_CHANNEL, "Booted\n");
     }
    
     event void Timer1.fired()
     {
-        
-       //if(!netChange){
-           dbg(ROUTING_CHANNEL,"NEIGBOR: Timer1.Time %d\n", call Timer1.getNow());
-            neighborDiscovery();
-            //netChange = TRUE;
-       //}else{
-         //  dbg(ROUTING_CHANNEL,"LSP Timer1.Time %d\n", call Timer1.getNow());
-           // lspNeighborDiscoveryPacket();
-            //netChange = FALSE;
-       //} 
+	neighborDiscovery();
     }
     event void lspTimer.fired(){
         //if(!call Timer1.isRunning()){
