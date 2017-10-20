@@ -183,6 +183,7 @@ implementation
                    
 	    		int j, l;
                     
+		    	// If this packet hasn't been seen yet.
                     	if(!checkSeenLspPacks(sendPackage))
 			{ 
                         	lspMapInit(&lspMAP, myMsg->src);
@@ -206,62 +207,44 @@ implementation
 
                                  	}
                            	 }
-                            
-                        //send packet decreasing TTL 
-                        dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
-                        makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
-                        call Sender.send(sendPackage,AM_BROADCAST_ADDR);
+                        		makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
+                        		call Sender.send(sendPackage,AM_BROADCAST_ADDR);
                             }   
                         
-
-
-                    }else{ //LSPpacket already seen
-                            dbg(ROUTING_CHANNEL,"LSPPacket already recieved from %d\n", myMsg->src);
-                    }
-                }else if(myMsg->protocol == PROTOCOL_PINGREPLY){
+			}			
+                }
+		
+		else if(myMsg->protocol == PROTOCOL_PINGREPLY)
+		{
                         neighbor Neighbor;
-                                neighbor neighbor_ptr;
-                
-                                int k = 0;
-                                bool FOUND;
-                                //dbg(FLOODING_CHANNEL,"received pingreply from %d\n", myMsg->src);
-                
-                                //dbg(FLOODING_CHANNEL,"%d received from %d\n",TOS_NODE_ID,myMsg->src);
-               
-                
-               
-                
-               
-                
+			neighbor neighbor_ptr;
 
-                                FOUND = FALSE; //IF FOUND, we switch to TRUE
-                                size = call NeighborList.size();
+			int k = 0;
+			bool FOUND;
+			FOUND = FALSE;
+			size = call NeighborList.size();
 
-                                //increase life of neighbors
-                                for(k = 0; k < call NeighborList.size(); k++) {
-				                    neighbor_ptr = call NeighborList.get(k);
-				                    neighbor_ptr.Life++;
-                                    if(neighbor_ptr.Node == myMsg->src){
-                                        FOUND = TRUE;
-                                        neighbor_ptr.Life = 0;
-                                    }
-			                    }
+			for(k = 0; k < call NeighborList.size(); k++) 
+			{
+			    neighbor_ptr = call NeighborList.get(k);
+			    neighbor_ptr.Life++;
+			    if(neighbor_ptr.Node == myMsg->src){
+				FOUND = TRUE;
+				neighbor_ptr.Life = 0;
+			    }
+		    	}
 
                         
                     
-                                if(FOUND){
-                                        dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
-                                        netChange = FALSE;
-                                }else{
-                                        Neighbor.Node = myMsg->src;
-                                        Neighbor.Life = 0;
-                                        call NeighborList.pushfront(Neighbor); //at index 0
-                                        dbg(FLOODING_CHANNEL,"NEW Neighbor: %d and Life %d\n",Neighbor.Node,Neighbor.Life);
-                                        netChange = TRUE; //network change!
-                                        dbg(ROUTING_CHANNEL,"NETWORK CHANGE\n");
-                                        
-                                        
-                                }
+			if(FOUND){
+				dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
+				netChange = FALSE;
+			}else{
+				Neighbor.Node = myMsg->src;
+				Neighbor.Life = 0;
+				call NeighborList.pushfront(Neighbor); //at index 0
+				netChange = TRUE; //network change!
+			}
                     
                     
                     
@@ -320,16 +303,10 @@ implementation
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
         int forwardTo;
         dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        
         makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-        dbg(ROUTING_CHANNEL,"Running dijkstra\n");
-					dijkstra();
-					dbg(ROUTING_CHANNEL,"END\n\n\n\n\n"); 
-					forwardTo = forwardPacketTo(&confirmedList,destination);
-                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+	dijkstra();
+	forwardTo = forwardPacketTo(&confirmedList,destination);
         call Sender.send(sendPackage, forwardTo);
-        
-        
         seqNum++;
     }
     
@@ -363,10 +340,7 @@ implementation
 
     bool checkPacket(pack Packet){
             pack PacketMatch;
-            //pack* package_PTR = &Packet;
-            //pack Packet = Packet;
             if(call SeenPackList.isEmpty()){
-            
                 call SeenPackList.pushfront(Packet);
                 return FALSE;
             }else{
@@ -375,10 +349,6 @@ implementation
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenPackList.get(i);
                     if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq) && (PacketMatch.protocol== Packet.protocol)){
-                        //dbg(FLOODING_CHANNEL,"Packet src %d vs PacketMatch src %d\n", Packet->src,PacketMatch->src);
-                        //dbg(FLOODING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
-                        //dbg(FLOODING_CHANNEL,"Packet seq %d vs PacketMatch seq %d\n", Packet->seq,PacketMatch->seq);
-                        //call SeenPackList.remove(i);
                         return TRUE; //packet is found in list and has already been seen by node.
 
                     }
@@ -387,22 +357,13 @@ implementation
     
                 
             }
-            //other wise packet not found and we need to push it into seen pack list
                 call SeenPackList.pushfront(Packet);
                 return FALSE;
     }
     
     void neighborDiscovery(){
-        
-    
         char* dummyMsg = "NULL\n";
-
-       dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery: checking node %d list for its neighbors\n", TOS_NODE_ID);
 		
-			
-		
-		
-
         makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, MAX_TTL, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
         call Sender.send(sendPackage, AM_BROADCAST_ADDR);
         
@@ -440,40 +401,24 @@ implementation
     
     void lspNeighborDiscoveryPacket(){
         int i;
-        //initialize cost of every node to TOS_NODE_ID to "infinity"
-        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1}; //CHANGE NAME
-        //initialize table for this node
+        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
         lspMapInit(&lspMAP, TOS_NODE_ID);
-        
-        //get neighbors to Node
         for(i  =0; i < call NeighborList.size(); i++){
             neighbor Neighbor = call NeighborList.get(i);
             lspCostList[Neighbor.Node] = 1;
-            //dbg(ROUTING_CHANNEL,"LSPCOSTLIST: Cost to Neighbor %d: %d\n", Neighbor.Node,lspCostList[Neighbor.Node]);
-            //put into overall mapping
             lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
-            dbg(ROUTING_CHANNEL, "Printing neighbor: %d cost: %d\n",Neighbor.Node, lspMAP[TOS_NODE_ID].cost[Neighbor.Node]);
         }
-
-       // send lspPacket to neighbors 
        if(!call NeighborList.isEmpty()){
-           lspSeqNum++;
-       dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
-       makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
-       call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-       }else{
-           dbg(ROUTING_CHANNEL,"No neighbors so cant create LSP\n");
+           	lspSeqNum++;
+	       dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
+       		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
+      		call Sender.send(sendPackage,AM_BROADCAST_ADDR);
        }
-       
-       
-
     }
     
     
     bool checkSeenLspPacks(pack Packet){
-        pack PacketMatch;
-            //pack* package_PTR = &Packet;
-            //pack Packet = Packet;
+        	pack PacketMatch;
             if(call SeenLspPackList.isEmpty()){
             
                 call SeenLspPackList.pushfront(Packet);
@@ -483,14 +428,9 @@ implementation
                 int size = call SeenLspPackList.size();
                 for(i = 0; i < size; i++){
                     PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
-                    if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){
-                        //dbg(ROUTING_CHANNEL,"LspPacket src %d vs LspPacketMatch src %d\n", Packet.src,PacketMatch.src);
-                        //dbg(ROUTING_CHANNEL,"Packet destination %d vs PacketMatch dest %d\n", Packet->dest,PacketMatch->dest);
-                        //dbg(ROUTING_CHANNEL,"LSPPacket seq %d vs LSPPacketMatch seq %d\n", Packet.seq,PacketMatch.seq);
-                        //call SeenPackList.remove(i);
-                        //check if current lsp seqnum is greater or less 
-                        if(PacketMatch.seq == Packet.seq) return TRUE;//already in list
-                        if(PacketMatch.seq < Packet.seq){//we got a new and updated lsp add to list     
+                    if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){ 
+                        if(PacketMatch.seq == Packet.seq) return TRUE;
+                        if(PacketMatch.seq < Packet.seq){   
                             call SeenLspPackList.remove(i);
                             call SeenLspPackList.pushback(Packet);
                             return FALSE;
@@ -503,7 +443,6 @@ implementation
     
                 
             }
-            //other wise packet not found and we need to push it into seen pack list
                 call SeenLspPackList.pushfront(Packet);
                 return FALSE;
     }
