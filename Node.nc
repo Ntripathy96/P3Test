@@ -117,10 +117,10 @@ implementation
 	    
 	    // If the message has a TTL of 0, do nothing with it.
             if(myMsg->TTL == 0) {}
-            
+	    
+	    // Flooding or Forwarding.
             else if (myMsg->protocol == PROTOCOL_PING)
             {
-	    	// This will store the TOS_NODE_ID of the node that this node needs to forward the message to.
                 int forwardTo;
                 
 		// Messaged received succesfully, reply with an ACK.
@@ -140,83 +140,73 @@ implementation
                     	call Sender.send(sendPackage, forwardTo);
                     }
                 }
-                else //not meant for this node forward to correct nextHop
-                {   int forwardTo;
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    if(checkPacket(sendPackage)){//return true meaning packet found in SeenPackList
-                        dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
-                        //dbg(FLOODING_CHANNEL,"ALREADY SEEN: Dropping Packet from src: %d to dest: %d\n", myMsg->src,myMsg->dest);
-                    }else{ //
-                        //makePack(&sendPackage, TOS_NODE_ID, destination, 0, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-                    dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d, Sequence Number %d...Rebroadcasting\n",myMsg->src, myMsg->dest, myMsg->seq);
-                    //int forwardTo;
-				       
-				        dbg(ROUTING_CHANNEL,"Running dijkstra\n");
-				            dijkstra();
-				        dbg(ROUTING_CHANNEL,"END\n\n"); 
-				        forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-				        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, myMsg->src);
-				        if(forwardTo == 0) printCostList(&lspMAP, TOS_NODE_ID);
-				        if(forwardTo == -1){
-					        dbg(ROUTING_CHANNEL, "rechecking \n");
-					        dijkstra();
-					        forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-					        if(forwardTo == -1)
-						        dbg(ROUTING_CHANNEL, "Dropping for reals\n");
-					        else{
-						        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-						        call Sender.send(sendPackage, forwardTo);
-						        
-					        }
-				        }
-				    else{
-					        dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-					        call Sender.send(sendPackage, forwardTo);
-					        
-				    }
-                    //dbg(FLOODING_CHANNEL,"Packet Recieved from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
-                    
-
-                    
-                    }
-                    
-
+		
+		// Message isn't meant for this node, therefore forward it.
+                else
+                {   
+			int forwardTo;
+                    	makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                   	if(checkPacket(sendPackage)){}
+			
+			else
+			{
+				dijkstra();
+				forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+				if(forwardTo == 0) 
+					printCostList(&lspMAP, TOS_NODE_ID);
+				        
+				if(forwardTo == -1)
+				{
+					dbg(ROUTING_CHANNEL, "rechecking \n");
+					dijkstra();
+					forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+					if(forwardTo == -1){}
+					else
+					{
+						dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+						call Sender.send(sendPackage, forwardTo);
+					}
+				}
+			    else
+			    {
+					dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+					call Sender.send(sendPackage, forwardTo); 
+			    }
+                    	}
                 }
             }
-            else if (myMsg->dest == AM_BROADCAST_ADDR) //neigbor discovery OR LSP
+	    
+	    // Neighbor Discovery or Link State.
+            else if (myMsg->dest == AM_BROADCAST_ADDR) 
             {
-                
-                if(myMsg->protocol == PROTOCOL_LINKSTATE){
+			if(myMsg->protocol == PROTOCOL_LINKSTATE){
+                   
+	    		int j, l;
                     
-                    int j, l;
-                    
-                    if(!checkSeenLspPacks(sendPackage)){ 
-                        //initialize table for src 
-                        lspMapInit(&lspMAP, myMsg->src);
-                        dbg(ROUTING_CHANNEL,"LSP from %d, seqNum: %d\n", myMsg->src, myMsg->seq);
-                            if(myMsg->src == TOS_NODE_ID){
-                                dbg(ROUTING_CHANNEL,"Drop\n");
-                            }else{
-                                for(j = 0; j <20; j++){ //put neigbors and cost node knows
-                                    lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
-                                    if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){
-                                //dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n", myMsg->src, j,lspMAP[myMsg->src].cost[j] );
-                            }
+                    	if(!checkSeenLspPacks(sendPackage))
+			{ 
+                        	lspMapInit(&lspMAP, myMsg->src);
+				
+                            	if(myMsg->src == TOS_NODE_ID){}
+				
+				else
+				{
+                                	for(j = 0; j <20; j++)
+					{
+                                    		lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
+                                    		if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){}
+                        		}
+                            		for(l = 1; l < 20; l++)
+					{
+                                		for(j = 1; j <20; j++)
+						{ 
+                                    			if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
+                                        			dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+                                    		}
 
-                        }
-                        //if(TOS_NODE_ID == 19){
-                            for(l = 1; l < 20; l++){
-                                for(j = 1; j <20; j++){ //put neigbors and cost node knows
-                                    
-                                    if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
-                                        dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
-                                    }
-
-                                 }
-                            }
-                        //}
+                                 	}
+                           	 }
                             
-
                         //send packet decreasing TTL 
                         dbg(ROUTING_CHANNEL,"Moving LSP from source %d forward, seqNum:%d TTL:%d\n" ,myMsg->src, myMsg->seq, myMsg->TTL-1);
                         makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
