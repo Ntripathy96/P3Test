@@ -12,7 +12,6 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-//#include "includes/list.h"
 #include "includes/lspTable.h"
 
 
@@ -20,50 +19,51 @@ typedef nx_struct neighbor {
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
-    int seqNum = 1;
-    //bool printNodeNeighbors = FALSE;
 
-module Node{
-    uses interface Boot;
-    
-    uses interface Timer<TMilli> as Timer1; //Interface that was wired above.
-    uses interface Timer<TMilli> as lspTimer; //link state timer 
-    uses interface Random as Random;
-    uses interface SplitControl as AMControl;
-    uses interface Receive;
-    uses interface List<neighbor> as NeighborList;
-    uses interface List<pack> as SeenPackList;
-    uses interface List<pack> as SeenLspPackList;
-    
-    //uses interface Hashmap<int> as NeighborList;
-    
-    
-    uses interface SimpleSend as Sender;
-    
-    uses interface CommandHandler;
+
+int seqNum = 1;
+
+module Node
+{
+	uses interface Boot;
+	uses interface SplitControl as AMControl;
+	uses interface Receive;
+	uses interface SimpleSend as Sender;
+	uses interface CommandHandler;
+
+	// Timers.
+	uses interface Timer<TMilli> as Timer1;
+	uses interface Timer<TMilli> as lspTimer;
+	uses interface Random as Random;
+
+	// Data Structures.
+	uses interface List<neighbor> as NeighborList;
+	uses interface List<pack> as SeenPackList;
+	uses interface List<pack> as SeenLspPackList;
 }
 
-implementation{
-    pack sendPackage;
-    //int seqNum = 0;
-    bool printNodeNeighbors = FALSE;
-    bool netChange = FALSE;
-    //int MAX_NODES = 20;
-    // Prototypes
-    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-    void printNeighbors();
-    void printNeighborList();
-    
-    void neighborDiscovery();
-    bool checkPacket(pack Packet);
+implementation
+{
+	pack sendPackage;
 
-    //project 2 START 
+	// Checks for printing.
+	bool printNodeNeighbors = FALSE;
+	bool netChange = FALSE;
     
-    void lspNeighborDiscoveryPacket();
-    lspMap lspMAP[20]; //change NAME, overall map of network stored at every node
-    int lspSeqNum = 0;
-    bool checkSeenLspPacks(pack Packet);
-    lspTable confirmedList;
+    
+	// Prototypes
+	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+	void printNeighbors();
+	void printNeighborList();
+	void neighborDiscovery();
+	bool checkPacket(pack Packet);
+
+    	//project 2 START 
+    	void lspNeighborDiscoveryPacket();
+    	lspMap lspMAP[20];
+    	int lspSeqNum = 0;
+    	bool checkSeenLspPacks(pack Packet);
+    	lspTable confirmedList;
 	lspTable tentativeList;
     float cost[20];
 	int lastSequenceTracker[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
