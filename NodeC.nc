@@ -11,16 +11,14 @@
 #include "includes/CommandMsg.h"
 #include "includes/packet.h"
 
-configuration NodeC{
-}
+configuration NodeC{}
 implementation {
     components MainC;
     components Node;
-    //components new HashmapC(int,100) as HashC;
     components new ListC(neighbor,100) as List;
     components new ListC(pack,100) as List2;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
-    components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
+    components new TimerMilliC() as myTimerC;
     components new TimerMilliC() as lspTimer;
     components RandomC as Random;
 
@@ -33,7 +31,7 @@ implementation {
     Node.NeighborList -> List;
     Node.SeenLspPackList->List2;
     
-    Node.Timer1 -> myTimerC; //Wire the interface to the component
+    Node.Timer1 -> myTimerC;
     
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
@@ -45,5 +43,5 @@ implementation {
     Node.CommandHandler -> CommandHandlerC;
      //add component for seenPacketList
     components new ListC(pack, 64) as PacketListC;
-    Node.SeenPackList -> PacketListC; //connects seenPacketList with component ListC
+    Node.SeenPackList -> PacketListC;
 }
