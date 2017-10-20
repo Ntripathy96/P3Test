@@ -53,11 +53,14 @@ implementation
     
 	// Prototypes
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+	
+	// Project 1 functions: Neighbor Discovery.
 	void printNeighbors();
 	void printNeighborList();
 	void neighborDiscovery();
 	bool checkPacket(pack Packet);
 
+	// Project 2 functions: Link State.
     	void lspNeighborDiscoveryPacket();
     	lspMap lspMAP[20];
     	int lspSeqNum = 0;
@@ -105,44 +108,36 @@ implementation
     event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
 	
+	// Temporary Variable for use of the size of the list of Neighbors.
 	uint16_t size = call NeighborList.size();
                 
         if(len==sizeof(pack)){
             pack* myMsg=(pack*) payload;
 	    
-            if(myMsg->TTL == 0)
-                dbg(FLOODING_CHANNEL,"TTL=0: Dropping Packet\n");
+	    
+	    // If the message has a TTL of 0, do nothing with it.
+            if(myMsg->TTL == 0) {}
             
-            else if (myMsg->protocol == PROTOCOL_PING) //flooding
+            else if (myMsg->protocol == PROTOCOL_PING)
             {
-                // This is what causes the flooding
-                
-               // dbg(FLOODING_CHANNEL,"Packet Received from %d meant for %d... Rebroadcasting\n",myMsg->src, myMsg->dest);
+	    	// This will store the TOS_NODE_ID of the node that this node needs to forward the message to.
                 int forwardTo;
                 
-                
-                if (myMsg->dest == TOS_NODE_ID) //resend with protocol pingreply for ACK
+		// Messaged received succesfully, reply with an ACK.
+                if (myMsg->dest == TOS_NODE_ID)
                 {
                     makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    // This is when the flooding of a packet has finally led it to it's final destination
-                    if(checkPacket(sendPackage)){
-                       //dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
-                    }else{
-                    //dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d\n ", myMsg->src,myMsg->dest);
-                    dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! %d -> %d seq num: %d\n ", myMsg->src,myMsg->dest, myMsg->seq);
-                    dbg(FLOODING_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-                        dbg(FLOODING_CHANNEL, "Sending Ping Reply to %d! \n\n", myMsg->src);
-					dbg(ROUTING_CHANNEL,"Running dijkstra\n");
-					dijkstra();
-					dbg(ROUTING_CHANNEL,"END\n\n"); 
-					forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
                     
-                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-                    makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    call Sender.send(sendPackage, forwardTo);
-                    
-                    //dbg(FLOODING_CHANNEL, "SendPackage: %d\n", sendPackage.seq);
-                    //dbg(FLOODING_CHANNEL, "seqNum: %d\n", seqNum);
+		    // Message already received, drop it.
+		    if(checkPacket(sendPackage)){}
+		    
+		    else
+		    {
+                    	dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! Sending ACK.");
+			dijkstra();
+			forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
+                    	makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                    	call Sender.send(sendPackage, forwardTo);
                     }
                 }
                 else //not meant for this node forward to correct nextHop
