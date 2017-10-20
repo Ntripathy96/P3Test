@@ -15,8 +15,11 @@ configuration NodeC{}
 implementation {
     components MainC;
     components Node;
-    components new ListC(neighbor,100) as List;
-    components new ListC(pack,100) as List2;
+    
+    
+    
+    components new ListC(neighbor,100) as NeighborListComp;
+    components new ListC(pack,100) as SeenLSPPackListComp;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as myTimerC;
     components new TimerMilliC() as lspTimer;
@@ -26,10 +29,10 @@ implementation {
     Node.Random -> Random;
     Node.lspTimer -> lspTimer;
     Node.Receive -> GeneralReceive;
-    
-    //Node.Hash -> HashC;
-    Node.NeighborList -> List;
-    Node.SeenLspPackList->List2;
+ 
+ 
+    Node.NeighborList -> NeighborListComp;
+    Node.SeenLspPackList->SeenLSPPackListComp;
     
     Node.Timer1 -> myTimerC;
     
