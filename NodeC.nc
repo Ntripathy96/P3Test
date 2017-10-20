@@ -15,36 +15,37 @@ configuration NodeC{}
 implementation {
     components MainC;
     components Node;
+    components new AMReceiverC(AM_PACK) as GeneralReceive;
+    components ActiveMessageC;
+    components new SimpleSendC(AM_PACK);
+    components CommandHandlerC;
     
     
+    Node -> MainC.Boot;
+    Node.Receive -> GeneralReceive;
+    Node.AMControl -> ActiveMessageC;
+    Node.Sender -> SimpleSendC;
+    Node.CommandHandler -> CommandHandlerC;
     
+    
+    // Data Structure Component Aliases.
     components new ListC(neighbor,100) as NeighborListComp;
     components new ListC(pack,100) as SeenLSPPackListComp;
-    components new AMReceiverC(AM_PACK) as GeneralReceive;
+    components new ListC(pack, 64) as PacketListC;
+    
+    // Timer Component Aliases.
     components new TimerMilliC() as myTimerC;
     components new TimerMilliC() as lspTimer;
     components RandomC as Random;
-
-    Node -> MainC.Boot;
-    Node.Random -> Random;
-    Node.lspTimer -> lspTimer;
-    Node.Receive -> GeneralReceive;
- 
- 
+    
+    // Data Structure Component Wiring.
     Node.NeighborList -> NeighborListComp;
     Node.SeenLspPackList->SeenLSPPackListComp;
-    
-    Node.Timer1 -> myTimerC;
-    
-    components ActiveMessageC;
-    Node.AMControl -> ActiveMessageC;
-    
-    components new SimpleSendC(AM_PACK);
-    Node.Sender -> SimpleSendC;
-    
-    components CommandHandlerC;
-    Node.CommandHandler -> CommandHandlerC;
-     //add component for seenPacketList
-    components new ListC(pack, 64) as PacketListC;
     Node.SeenPackList -> PacketListC;
+    
+    // Timer Component Wiring.
+    Node.Random -> Random;
+    Node.lspTimer -> lspTimer;
+    Node.Timer1 -> myTimerC;
+        
 }
