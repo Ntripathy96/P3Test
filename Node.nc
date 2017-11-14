@@ -18,8 +18,8 @@
 // Neighbor structure for Neighbor Discovery.
 typedef nx_struct neighbor 
 {
-    nx_uint16_t Node;
-    nx_uint8_t Life;
+	nx_uint16_t Node;
+	nx_uint8_t Life;
 }neighbor;
 
 // Sequence number of this node.
@@ -52,11 +52,11 @@ implementation
 	// Checks for printing.
 	bool printNodeNeighbors = FALSE;
 	bool netChange = FALSE;
-    
-    
+
+
 	// Prototypes
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-	
+
 	// Project 1 functions: Neighbor Discovery.
 	void printNeighbors();
 	void printNeighborList();
@@ -78,135 +78,135 @@ implementation
 	void printCostList(lspMap *list, uint8_t nodeID);
 	float EMA(float prevEMA, float now,float weight);
 
-    event void Boot.booted()
-    {
-        call AMControl.start();
-        dbg(GENERAL_CHANNEL, "Booted\n");
-    }
-   
-    event void Timer1.fired()
-    {
+	event void Boot.booted()
+	{
+		call AMControl.start();
+		dbg(GENERAL_CHANNEL, "Booted\n");
+	}
+
+	event void Timer1.fired()
+	{
 		neighborDiscovery();
-    }
-    
-    event void lspTimer.fired()
-    {
-            lspNeighborDiscoveryPacket(); 
-    }
-    
-    
-    event void AMControl.startDone(error_t err)
+	}
+
+	event void lspTimer.fired()
+	{
+			lspNeighborDiscoveryPacket(); 
+	}
+
+
+	event void AMControl.startDone(error_t err)
 	{
 		if(err == SUCCESS)
 		{
 			dbg(GENERAL_CHANNEL, "Radio On\n");
-            call Timer1.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
-            call lspTimer.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
-        }
+			call Timer1.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
+			call lspTimer.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
+		}
 		else
 		{
-            //Retry until successful
-            call AMControl.start();
-        }
-    }
-    
-    event void AMControl.stopDone(error_t err){}
-    
-    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len)
-    {
-        //dbg(GENERAL_CHANNEL, "Packet Received\n");
-	
+			//Retry until successful
+			call AMControl.start();
+		}
+	}
+
+	event void AMControl.stopDone(error_t err){}
+
+	event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len)
+	{
+		//dbg(GENERAL_CHANNEL, "Packet Received\n");
+
 		// Temporary Variable for use of the size of the list of Neighbors.
 		uint16_t size = call NeighborList.size();
-                
-        if(len==sizeof(pack))
+
+		if(len==sizeof(pack))
 		{
 			pack* myMsg=(pack*) payload;
-	    
-	    
-	    	// If the message has a TTL of 0, do nothing with it.
-            if(myMsg->TTL == 0) {}
-	    
-	    	// Flooding or Forwarding.
-            else if (myMsg->protocol == PROTOCOL_PING)
-            {
-                int forwardTo;
-                
+
+
+			// If the message has a TTL of 0, do nothing with it.
+			if(myMsg->TTL == 0) {}
+
+			// Flooding or Forwarding.
+			else if (myMsg->protocol == PROTOCOL_PING)
+			{
+				int forwardTo;
+
 				// Messaged received succesfully, reply with an ACK.
-                if (myMsg->dest == TOS_NODE_ID)
-                {
-                    makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    
-		 			// Message already received, drop it.
-		    		if(checkPacket(sendPackage)){}
-		    
-		    		else // Else 1.
-		    		{
+				if (myMsg->dest == TOS_NODE_ID)
+				{
+					makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+
+					// Message already received, drop it.
+					if(checkPacket(sendPackage)){}
+
+					else // Else 1.
+					{
 						dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! Sending ACK.");
 						dijkstra();
 						forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
 						makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 						call Sender.send(sendPackage, forwardTo);
-						
+
 					} // End Else 1.
-                } // End if (myMsg->dest == TOS_NODE_ID)
-		
+				} // End if (myMsg->dest == TOS_NODE_ID)
+
 				// Message isn't meant for this node, therefore forward it.
-                else // Else 2.
-                {   
+				else // Else 2.
+				{   
 					int forwardTo;
 					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                   	
+
 					if(checkPacket(sendPackage)){}
-			
+
 					else // Else 3.
 					{
 						dijkstra();
 						forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-						
+
 						if(forwardTo == 0) 
 							printCostList(&lspMAP, TOS_NODE_ID);
-				        
+
 						if(forwardTo == -1)
 						{
 							dbg(ROUTING_CHANNEL, "rechecking \n");
 							dijkstra();
 							forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-							
+
 							if(forwardTo == -1){}
-							
+
 							else // Else 4.
 							{
 								dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 								call Sender.send(sendPackage, forwardTo);
-								
+
 							} // End Else 4.
 						} // End if(forwardTo == -1)
-						
+
 						else // Else 5.
-			    		{
+						{
 							dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 							call Sender.send(sendPackage, forwardTo); 
-							
-			    		} // End Else 5.
-                    }// End Else 3.
-                } // End Else 2.
-            } // End else if (myMsg->protocol == PROTOCOL_PING)
-	    
-	    	// Neighbor Discovery or Link State.
-            else if (myMsg->dest == AM_BROADCAST_ADDR) 
-            {
+
+						} // End Else 5.
+					}// End Else 3.
+				} // End Else 2.
+			} // End else if (myMsg->protocol == PROTOCOL_PING)
+
+			// Neighbor Discovery or Link State.
+			else if (myMsg->dest == AM_BROADCAST_ADDR) 
+			{
 				if(myMsg->protocol == PROTOCOL_LINKSTATE)
 				{
-	    			int j, l;
-                    
-		    		// If this packet hasn't been seen yet.
+					int j, l;
+
+					// If this packet hasn't been seen yet.
 					if(!checkSeenLspPacks(sendPackage))
 					{ 
 						lspMapInit(&lspMAP, myMsg->src);
-				
+
 						if(myMsg->src == TOS_NODE_ID){}
-				
+
 						else // Else 6.
 						{
 							for(j = 0; j <20; j++)
@@ -214,23 +214,23 @@ implementation
 								lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
 								if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){}
 							} // End j loop.
-                            
+
 							for(l = 1; l < 20; l++)
 							{
-						   		for(j = 1; j <20; j++)
+								for(j = 1; j <20; j++)
 								{ 
 									if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0)
 										dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
-										
+
 								} // End j loop.
-                           	 } // End l loop.
-							
+							 } // End l loop.
+
 							makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
 							call Sender.send(sendPackage,AM_BROADCAST_ADDR);
 						} // End Else 6.     
 					} // End if(!checkSeenLspPacks(sendPackage)).		
-                } //End if(myMsg->protocol == PROTOCOL_LINKSTATE).
-		
+				} //End if(myMsg->protocol == PROTOCOL_LINKSTATE).
+
 				else if(myMsg->protocol == PROTOCOL_PINGREPLY)
 				{
 					neighbor Neighbor;
@@ -308,163 +308,163 @@ implementation
 			} // End else if(myMsg->protocol == PROTOCOL_PINGREPLY).
 
 			return msg;
-			
+
 		} // End if(len==sizeof(pack)).
-		
-        dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
+
+		dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
 		return msg;
-		
-    } // End event.
-    
-    
-    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-        int forwardTo;
-        dbg(GENERAL_CHANNEL, "PING EVENT \n");
-        makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
+
+	} // End event.
+
+
+	event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+		int forwardTo;
+		dbg(GENERAL_CHANNEL, "PING EVENT \n");
+		makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
 	dijkstra();
 	forwardTo = forwardPacketTo(&confirmedList,destination);
-        call Sender.send(sendPackage, forwardTo);
-        seqNum++;
-    }
-    
-    event void CommandHandler.printNeighbors()
-    {
-        printNeighborList();
-    }
-    
-    event void CommandHandler.printRouteTable(){}
-    
-    event void CommandHandler.printLinkState(){}
-    
-    event void CommandHandler.printDistanceVector(){}
-    
-    event void CommandHandler.setTestServer(){}
-    
-    event void CommandHandler.setTestClient(){}
-    
-    event void CommandHandler.setAppServer(){}
-    
-    event void CommandHandler.setAppClient(){}
-    
-    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
-        Package->src = src;
-        Package->dest = dest;
-        Package->TTL = TTL;
-        Package->seq = seq;
-        Package->protocol = protocol;
-        memcpy(Package->payload, payload, length);
-    }
+		call Sender.send(sendPackage, forwardTo);
+		seqNum++;
+	}
 
-    bool checkPacket(pack Packet){
-            pack PacketMatch;
-            if(call SeenPackList.isEmpty()){
-                call SeenPackList.pushfront(Packet);
-                return FALSE;
-            }else{
-                int i;
-                int size = call SeenPackList.size();
-                for(i = 0; i < size; i++){
-                    PacketMatch = call SeenPackList.get(i);
-                    if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq) && (PacketMatch.protocol== Packet.protocol)){
-                        return TRUE; //packet is found in list and has already been seen by node.
+	event void CommandHandler.printNeighbors()
+	{
+		printNeighborList();
+	}
 
-                    }
+	event void CommandHandler.printRouteTable(){}
 
-                }
-    
-                
-            }
-                call SeenPackList.pushfront(Packet);
-                return FALSE;
-    }
-    
-    void neighborDiscovery(){
-        char* dummyMsg = "NULL\n";
-		
-        makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, MAX_TTL, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
-        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-        
-        if (printNodeNeighbors)
-        {
-            printNodeNeighbors = FALSE;
-            printNeighborList();
-        }
-        else
-        {
-            printNodeNeighbors = TRUE;
-            
-        }
-    }
+	event void CommandHandler.printLinkState(){}
 
-    void printNeighborList()
-    {
-        int i;
-        neighbor neighPtr;
-        if(call NeighborList.size() == 0 ){
-            dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
+	event void CommandHandler.printDistanceVector(){}
 
-        }else{
-            dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
-             
-        for(i = 0; i < call NeighborList.size(); i++)
-        {
-            neighPtr = call NeighborList.get(i);
-            dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr.Node);
-        }
-        }
-        
-    }
-    
-    
-    void lspNeighborDiscoveryPacket(){
-        int i;
-        uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-        lspMapInit(&lspMAP, TOS_NODE_ID);
-        for(i  =0; i < call NeighborList.size(); i++){
-            neighbor Neighbor = call NeighborList.get(i);
-            lspCostList[Neighbor.Node] = 1;
-            lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
-        }
-       if(!call NeighborList.isEmpty()){
-           	lspSeqNum++;
-	       dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
-       		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
-      		call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-       }
-    }
-    
-    
-    bool checkSeenLspPacks(pack Packet){
-        	pack PacketMatch;
-            if(call SeenLspPackList.isEmpty()){
-            
-                call SeenLspPackList.pushfront(Packet);
-                return FALSE;
-            }else{
-                int i;
-                int size = call SeenLspPackList.size();
-                for(i = 0; i < size; i++){
-                    PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
-                    if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){ 
-                        if(PacketMatch.seq == Packet.seq) return TRUE;
-                        if(PacketMatch.seq < Packet.seq){   
-                            call SeenLspPackList.remove(i);
-                            call SeenLspPackList.pushback(Packet);
-                            return FALSE;
-                        }
-                        return TRUE; //packet is found in list and has already been seen by node.
+	event void CommandHandler.setTestServer(){}
 
-                    }
+	event void CommandHandler.setTestClient(){}
 
-                }
-    
-                
-            }
-                call SeenLspPackList.pushfront(Packet);
-                return FALSE;
-    }
-    
-    void dijkstra(){
+	event void CommandHandler.setAppServer(){}
+
+	event void CommandHandler.setAppClient(){}
+
+	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
+		Package->src = src;
+		Package->dest = dest;
+		Package->TTL = TTL;
+		Package->seq = seq;
+		Package->protocol = protocol;
+		memcpy(Package->payload, payload, length);
+	}
+
+	bool checkPacket(pack Packet){
+			pack PacketMatch;
+			if(call SeenPackList.isEmpty()){
+				call SeenPackList.pushfront(Packet);
+				return FALSE;
+			}else{
+				int i;
+				int size = call SeenPackList.size();
+				for(i = 0; i < size; i++){
+					PacketMatch = call SeenPackList.get(i);
+					if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq) && (PacketMatch.protocol== Packet.protocol)){
+						return TRUE; //packet is found in list and has already been seen by node.
+
+					}
+
+				}
+
+
+			}
+				call SeenPackList.pushfront(Packet);
+				return FALSE;
+	}
+
+	void neighborDiscovery(){
+		char* dummyMsg = "NULL\n";
+
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, MAX_TTL, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+
+		if (printNodeNeighbors)
+		{
+			printNodeNeighbors = FALSE;
+			printNeighborList();
+		}
+		else
+		{
+			printNodeNeighbors = TRUE;
+
+		}
+	}
+
+	void printNeighborList()
+	{
+		int i;
+		neighbor neighPtr;
+		if(call NeighborList.size() == 0 ){
+			dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
+
+		}else{
+			dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
+
+		for(i = 0; i < call NeighborList.size(); i++)
+		{
+			neighPtr = call NeighborList.get(i);
+			dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr.Node);
+		}
+		}
+
+	}
+
+
+	void lspNeighborDiscoveryPacket(){
+		int i;
+		uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+		lspMapInit(&lspMAP, TOS_NODE_ID);
+		for(i  =0; i < call NeighborList.size(); i++){
+			neighbor Neighbor = call NeighborList.get(i);
+			lspCostList[Neighbor.Node] = 1;
+			lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
+		}
+	   if(!call NeighborList.isEmpty()){
+			lspSeqNum++;
+		   dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
+			makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
+			call Sender.send(sendPackage,AM_BROADCAST_ADDR);
+	   }
+	}
+
+
+	bool checkSeenLspPacks(pack Packet){
+			pack PacketMatch;
+			if(call SeenLspPackList.isEmpty()){
+
+				call SeenLspPackList.pushfront(Packet);
+				return FALSE;
+			}else{
+				int i;
+				int size = call SeenLspPackList.size();
+				for(i = 0; i < size; i++){
+					PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
+					if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){ 
+						if(PacketMatch.seq == Packet.seq) return TRUE;
+						if(PacketMatch.seq < Packet.seq){   
+							call SeenLspPackList.remove(i);
+							call SeenLspPackList.pushback(Packet);
+							return FALSE;
+						}
+						return TRUE; //packet is found in list and has already been seen by node.
+
+					}
+
+				}
+
+
+			}
+				call SeenLspPackList.pushfront(Packet);
+				return FALSE;
+	}
+
+	void dijkstra(){
 		int i;	
 		lspTuple lspTup, temp;
 		lspTableinit(&tentativeList); lspTableinit(&confirmedList);
@@ -492,8 +492,8 @@ implementation
 	int forwardPacketTo(lspTable* list, int dest){	
 		return lspTableLookUp(list,dest);
 	}
-	
-	
+
+
 	/**
 	 * let S_1 = Y_1
 	 * Exponential Moving Average
@@ -506,7 +506,7 @@ implementation
 	}
 
 
-    void printlspMap(lspMap *list){
+	void printlspMap(lspMap *list){
 		int i,j;
 		for(i = 0; i < 20; i++){
 			for(j = 0; j < 20; j++){
@@ -516,12 +516,12 @@ implementation
 		}
 		dbg(ROUTING_CHANNEL, "END \n\n");
 	}
-	
+
 	void printCostList(lspMap *list, uint8_t nodeID) {
 		uint8_t i;
 		for(i = 0; i < 20; i++) {
 			dbg(ROUTING_CHANNEL, "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
 		}
 	}
-    
+
 }
