@@ -22,13 +22,6 @@ typedef struct lspSrc{
 	uint8_t indexNumber;
 }lspSrc;
 
-void lspTableinit(lspTable* list){
-	int i;
-	for(i = 0; i < MAXNODES; i++)
-		list->lspTuples[i].nodeNcost = -1;
-	list->numValues = 0;
-}
-
 bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
 	int i;
 	for(i = 0; i<list->numValues; i++){
@@ -75,35 +68,6 @@ bool lspTableContainsDest(lspTable* list, int node){
 		}
 	}
 	return FALSE;
-}
-
-lspTuple lspTableGet(lspTable* list, int node){
-	uint8_t i;
-	lspTuple derp;
-	for(i = 0; i<list->numValues; i++){
-		if(node == list->lspTuples[i].dest) return list->lspTuples[i];
-	}
-	return derp;
-}
-
-lspTuple lspTableRemove(lspTable* list, int node){
-	uint8_t i;
-	lspTuple temp;
-	for(i = 0; i<=list->numValues; i++){
-		if(i == node){
-			if(list->numValues > 1){
-				temp = list->lspTuples[i];
-				list->lspTuples[i] = list->lspTuples[list->numValues-1];		
-				list->numValues--;
-				i--;
-				return temp;
-			}
-			else{
-				list->numValues = 0;
-				return list->lspTuples[0];
-			}
-		}
-	}	
 }
 
 lspTuple lspTupleRemoveMinCost(lspTable* cur){
