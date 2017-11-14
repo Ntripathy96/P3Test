@@ -4,23 +4,22 @@
 #define MAXNODES 20
 #define MAXNODEVAL MAXNODES
 
-typedef struct lspTuple{
+// lspTuple defines an entry in an LSP Table.
+// Contains a destination node's associated cost and next hop.
+typedef struct lspTuple
+{
 	uint8_t dest;
 	uint8_t nodeNcost;
 	uint8_t nextHop;	
 }lspTuple;
 
-typedef struct lspTable{
-
+// An LSP table, full of lspTuples.
+// Also contains a variable storing the number of entries currently in the struct.
+typedef struct lspTable
+{
 	lspTuple lspTuples[MAXNODES];
 	uint8_t numValues;
-
 }lspTable;
-
-typedef struct lspSrc{
-	uint8_t src;
-	uint8_t indexNumber;
-}lspSrc;
 
 bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
 	int i;
