@@ -6,7 +6,6 @@
  * @date   2013/09/03
  *
  */
- // Update.
 #include <Timer.h>
 #include "includes/command.h"
 #include "includes/packet.h"
@@ -317,12 +316,16 @@ implementation
 	} // End event.
 
 
-	event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+	event void CommandHandler.ping(uint16_t destination, uint8_t *payload)
+	{
 		int forwardTo;
+		
 		dbg(GENERAL_CHANNEL, "PING EVENT \n");
 		makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, seqNum, payload, PACKET_MAX_PAYLOAD_SIZE);
-	dijkstra();
-	forwardTo = forwardPacketTo(&confirmedList,destination);
+		
+		dijkstra();
+		forwardTo = forwardPacketTo(&confirmedList,destination);
+		
 		call Sender.send(sendPackage, forwardTo);
 		seqNum++;
 	}
@@ -355,31 +358,33 @@ implementation
 		memcpy(Package->payload, payload, length);
 	}
 
-	bool checkPacket(pack Packet){
-			pack PacketMatch;
-			if(call SeenPackList.isEmpty()){
-				call SeenPackList.pushfront(Packet);
-				return FALSE;
-			}else{
-				int i;
-				int size = call SeenPackList.size();
-				for(i = 0; i < size; i++){
-					PacketMatch = call SeenPackList.get(i);
-					if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq) && (PacketMatch.protocol== Packet.protocol)){
-						return TRUE; //packet is found in list and has already been seen by node.
-
-					}
-
-				}
-
-
+	bool checkPacket(pack Packet)
+	{
+		pack PacketMatch;
+		if(call SeenPackList.isEmpty())
+		{
+			call SeenPackList.pushfront(Packet);
+			return FALSE;
+		}
+		else
+		{
+			int i;
+			int size = call SeenPackList.size();
+			for(i = 0; i < size; i++)
+			{
+				PacketMatch = call SeenPackList.get(i);
+				if( (PacketMatch.src == Packet.src) && (PacketMatch.dest == Packet.dest) && (PacketMatch.seq == Packet.seq) && (PacketMatch.protocol== Packet.protocol))
+						return TRUE;
 			}
-				call SeenPackList.pushfront(Packet);
-				return FALSE;
+
+		}
+		call SeenPackList.pushfront(Packet);
+		return FALSE;
 	}
 
-	void neighborDiscovery(){
-		char* dummyMsg = "NULL\n";
+	void neighborDiscovery()
+	{
+		char* dummyMsg = "Hello\n";
 
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, MAX_TTL, PROTOCOL_PINGREPLY, -1, dummyMsg, PACKET_MAX_PAYLOAD_SIZE);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
@@ -390,27 +395,24 @@ implementation
 			printNeighborList();
 		}
 		else
-		{
 			printNodeNeighbors = TRUE;
-
-		}
 	}
 
 	void printNeighborList()
 	{
 		int i;
 		neighbor neighPtr;
-		if(call NeighborList.size() == 0 ){
+		if(call NeighborList.size() == 0 )
 			dbg(NEIGHBOR_CHANNEL,"No neighbors for node %d\n", TOS_NODE_ID);
-
-		}else{
-			dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
-
-		for(i = 0; i < call NeighborList.size(); i++)
+			
+		else
 		{
-			neighPtr = call NeighborList.get(i);
-			dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr.Node);
-		}
+			dbg(NEIGHBOR_CHANNEL,"Neighbors for node %d\n",TOS_NODE_ID);
+			for(i = 0; i < call NeighborList.size(); i++)
+			{
+				neighPtr = call NeighborList.get(i);
+				dbg(NEIGHBOR_CHANNEL,"NeighborNode: %d\n", neighPtr.Node);
+			}
 		}
 
 	}
