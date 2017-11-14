@@ -418,66 +418,79 @@ implementation
 	}
 
 
-	void lspNeighborDiscoveryPacket(){
+	void lspNeighborDiscoveryPacket()
+	{
 		int i;
 		uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 		lspMapInit(&lspMAP, TOS_NODE_ID);
-		for(i  =0; i < call NeighborList.size(); i++){
+		for(i  =0; i < call NeighborList.size(); i++)
+		{
 			neighbor Neighbor = call NeighborList.get(i);
 			lspCostList[Neighbor.Node] = 1;
 			lspMAP[TOS_NODE_ID].cost[Neighbor.Node] = 1;
 		}
-	   if(!call NeighborList.isEmpty()){
+		
+	   	if(!call NeighborList.isEmpty())
+		{
 			lspSeqNum++;
-		   dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
+		   	dbg(ROUTING_CHANNEL, "Sending LSP: SeqNum: %d\n", lspSeqNum);
 			makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR,20, PROTOCOL_LINKSTATE, lspSeqNum, (uint8_t *) lspCostList, 20);
 			call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-	   }
+	   	}
 	}
 
 
-	bool checkSeenLspPacks(pack Packet){
-			pack PacketMatch;
-			if(call SeenLspPackList.isEmpty()){
-
-				call SeenLspPackList.pushfront(Packet);
-				return FALSE;
-			}else{
-				int i;
-				int size = call SeenLspPackList.size();
-				for(i = 0; i < size; i++){
-					PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
-					if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol)){ 
-						if(PacketMatch.seq == Packet.seq) return TRUE;
-						if(PacketMatch.seq < Packet.seq){   
-							call SeenLspPackList.remove(i);
-							call SeenLspPackList.pushback(Packet);
-							return FALSE;
-						}
-						return TRUE; //packet is found in list and has already been seen by node.
-
+	bool checkSeenLspPacks(pack Packet)
+	{
+		pack PacketMatch;
+		if(call SeenLspPackList.isEmpty())
+		{
+			call SeenLspPackList.pushfront(Packet);
+			return FALSE;
+		}
+		else
+		{
+			int i;
+			int size = call SeenLspPackList.size();
+			for(i = 0; i < size; i++)
+			{
+				PacketMatch = call SeenLspPackList.get(i);//check for lsp from a certain node
+				if( (PacketMatch.src == Packet.src) && (PacketMatch.protocol == Packet.protocol))
+				{ 
+					if(PacketMatch.seq == Packet.seq) 
+						return TRUE;
+					if(PacketMatch.seq < Packet.seq)
+					{   
+						call SeenLspPackList.remove(i);
+						call SeenLspPackList.pushback(Packet);
+						return FALSE;
 					}
-
+					return TRUE; //packet is found in list and has already been seen by node.
 				}
-
-
 			}
-				call SeenLspPackList.pushfront(Packet);
-				return FALSE;
+		}
+		call SeenLspPackList.pushfront(Packet);
+		return FALSE;
 	}
 
-	void dijkstra(){
+	void dijkstra()
+	{
 		int i;	
 		lspTuple lspTup, temp;
-		lspTableinit(&tentativeList); lspTableinit(&confirmedList);
-		dbg(ROUTING_CHANNEL,"start of dijkstra \n");
+		
+		lspTableinit(&tentativeList); 
+		lspTableinit(&confirmedList);
+
 		lspTablePushBack(&tentativeList, temp = (lspTuple){TOS_NODE_ID,0,TOS_NODE_ID});
-		dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-		while(!lspTableIsEmpty(&tentativeList)){
+		
+		while(!lspTableIsEmpty(&tentativeList))
+		{
 			if(!lspTableContains(&confirmedList,lspTup = lspTupleRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(lspTablePushBack(&confirmedList,lspTup))
 					dbg(ROUTING_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
-			for(i = 1; i < 20; i++){
+			
+			for(i = 1; i < 20; i++)
+			{
 				temp = (lspTuple){i,lspMAP[lspTup.dest].cost[i]+lspTup.nodeNcost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
 				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspTupleReplace(&tentativeList,temp,temp.nodeNcost))
 						dbg(ROUTING_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.nodeNcost, temp.nextHop);
@@ -485,13 +498,14 @@ implementation
 						dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 			}
 		}
+		
 		dbg(ROUTING_CHANNEL, "Printing the ROUTING_CHANNEL table! \n");
 		for(i = 0; i < confirmedList.numValues; i++)
 			dbg(ROUTING_CHANNEL, "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
-		dbg(ROUTING_CHANNEL, "End of dijkstra! \n");
 	}
 
-	int forwardPacketTo(lspTable* list, int dest){	
+	int forwardPacketTo(lspTable* list, int dest)
+	{	
 		return lspTableLookUp(list,dest);
 	}
 
@@ -501,7 +515,8 @@ implementation
 	 * Exponential Moving Average
 	 * S_t = alpha*Y_t + (1-alpha)*S_(t-1)
 	 */	
-	float EMA(float prevEMA, float now,float weight){
+	float EMA(float prevEMA, float now,float weight)
+	{
 		float alpha = 0.5*weight;
 		float averageEMA = alpha*now + (1-alpha)*prevEMA;
 		return averageEMA;
