@@ -14,17 +14,19 @@
 #include "includes/channels.h"
 #include "includes/lspTable.h"
 
-
-typedef nx_struct neighbor {
+// Neighbor structure for Neighbor Discovery.
+typedef nx_struct neighbor 
+{
     nx_uint16_t Node;
     nx_uint8_t Life;
 }neighbor;
 
-
+// Sequence number of this node.
 int seqNum = 1;
 
 module Node
 {
+	// Main interfaces.
 	uses interface Boot;
 	uses interface SplitControl as AMControl;
 	uses interface Receive;
@@ -61,13 +63,13 @@ implementation
 	bool checkPacket(pack Packet);
 
 	// Project 2 functions: Link State.
-    	void lspNeighborDiscoveryPacket();
-    	lspMap lspMAP[20];
-    	int lspSeqNum = 0;
-    	bool checkSeenLspPacks(pack Packet);
-    	lspTable confirmedList;
+	void lspNeighborDiscoveryPacket();
+	lspMap lspMAP[20];
+	int lspSeqNum = 0;
+	bool checkSeenLspPacks(pack Packet);
+	lspTable confirmedList;
 	lspTable tentativeList;
-    	float cost[20];
+	float cost[20];
 	int lastSequenceTracker[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	void printlspMap(lspMap *list);
 	void dijkstra();
@@ -83,7 +85,7 @@ implementation
    
     event void Timer1.fired()
     {
-	neighborDiscovery();
+		neighborDiscovery();
     }
     
     event void lspTimer.fired()
@@ -92,12 +94,16 @@ implementation
     }
     
     
-    event void AMControl.startDone(error_t err){
-        if(err == SUCCESS){
-            dbg(GENERAL_CHANNEL, "Radio On\n");
+    event void AMControl.startDone(error_t err)
+	{
+		if(err == SUCCESS)
+		{
+			dbg(GENERAL_CHANNEL, "Radio On\n");
             call Timer1.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
             call lspTimer.startPeriodic(100000 + (uint16_t)((call Random.rand16())%200));
-        }else{
+        }
+		else
+		{
             //Retry until successful
             call AMControl.start();
         }
@@ -105,199 +111,209 @@ implementation
     
     event void AMControl.stopDone(error_t err){}
     
-    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
+    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len)
+    {
         //dbg(GENERAL_CHANNEL, "Packet Received\n");
 	
-	// Temporary Variable for use of the size of the list of Neighbors.
-	uint16_t size = call NeighborList.size();
+		// Temporary Variable for use of the size of the list of Neighbors.
+		uint16_t size = call NeighborList.size();
                 
-        if(len==sizeof(pack)){
-            pack* myMsg=(pack*) payload;
+        if(len==sizeof(pack))
+		{
+			pack* myMsg=(pack*) payload;
 	    
 	    
-	    // If the message has a TTL of 0, do nothing with it.
+	    	// If the message has a TTL of 0, do nothing with it.
             if(myMsg->TTL == 0) {}
 	    
-	    // Flooding or Forwarding.
+	    	// Flooding or Forwarding.
             else if (myMsg->protocol == PROTOCOL_PING)
             {
                 int forwardTo;
                 
-		// Messaged received succesfully, reply with an ACK.
+				// Messaged received succesfully, reply with an ACK.
                 if (myMsg->dest == TOS_NODE_ID)
                 {
                     makePack(&sendPackage, myMsg->src, myMsg->dest, MAX_TTL,PROTOCOL_PING,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
                     
-		    // Message already received, drop it.
-		    if(checkPacket(sendPackage)){}
+		 			// Message already received, drop it.
+		    		if(checkPacket(sendPackage)){}
 		    
-		    else
-		    {
-                    	dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! Sending ACK.");
-			dijkstra();
-			forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
-                    	makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                    	call Sender.send(sendPackage, forwardTo);
-                    }
-                }
-		
-		// Message isn't meant for this node, therefore forward it.
-                else
-                {   
-			int forwardTo;
-                    	makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                   	if(checkPacket(sendPackage)){}
-			
-			else
-			{
-				dijkstra();
-				forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-				if(forwardTo == 0) 
-					printCostList(&lspMAP, TOS_NODE_ID);
-				        
-				if(forwardTo == -1)
-				{
-					dbg(ROUTING_CHANNEL, "rechecking \n");
-					dijkstra();
-					forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
-					if(forwardTo == -1){}
-					else
-					{
-						dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+		    		else // Else 1.
+		    		{
+						dbg(FLOODING_CHANNEL, "Packet has Arrived to destination! Sending ACK.");
+						dijkstra();
+						forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
+						makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 						call Sender.send(sendPackage, forwardTo);
-					}
-				}
-			    else
-			    {
-					dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-					call Sender.send(sendPackage, forwardTo); 
-			    }
-                    	}
-                }
-            }
+						
+					} // End Else 1.
+                } // End if (myMsg->dest == TOS_NODE_ID)
+		
+				// Message isn't meant for this node, therefore forward it.
+                else // Else 2.
+                {   
+					int forwardTo;
+					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PING, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+                   	
+					if(checkPacket(sendPackage)){}
+			
+					else // Else 3.
+					{
+						dijkstra();
+						forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+						
+						if(forwardTo == 0) 
+							printCostList(&lspMAP, TOS_NODE_ID);
+				        
+						if(forwardTo == -1)
+						{
+							dbg(ROUTING_CHANNEL, "rechecking \n");
+							dijkstra();
+							forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+							
+							if(forwardTo == -1){}
+							
+							else // Else 4.
+							{
+								dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+								call Sender.send(sendPackage, forwardTo);
+								
+							} // End Else 4.
+						} // End if(forwardTo == -1)
+						
+						else // Else 5.
+			    		{
+							dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+							call Sender.send(sendPackage, forwardTo); 
+							
+			    		} // End Else 5.
+                    }// End Else 3.
+                } // End Else 2.
+            } // End else if (myMsg->protocol == PROTOCOL_PING)
 	    
-	    // Neighbor Discovery or Link State.
+	    	// Neighbor Discovery or Link State.
             else if (myMsg->dest == AM_BROADCAST_ADDR) 
             {
-			if(myMsg->protocol == PROTOCOL_LINKSTATE){
-                   
-	    		int j, l;
-                    
-		    	// If this packet hasn't been seen yet.
-                    	if(!checkSeenLspPacks(sendPackage))
-			{ 
-                        	lspMapInit(&lspMAP, myMsg->src);
-				
-                            	if(myMsg->src == TOS_NODE_ID){}
-				
-				else
+				if(myMsg->protocol == PROTOCOL_LINKSTATE)
 				{
-                                	for(j = 0; j <20; j++)
-					{
-                                    		lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
-                                    		if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){}
-                        		}
-                            		for(l = 1; l < 20; l++)
-					{
-                                		for(j = 1; j <20; j++)
-						{ 
-                                    			if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0){
-                                        			dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
-                                    		}
-
-                                 	}
-                           	 }
-                        		makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
-                        		call Sender.send(sendPackage,AM_BROADCAST_ADDR);
-                            }   
-                        
-			}			
-                }
+	    			int j, l;
+                    
+		    		// If this packet hasn't been seen yet.
+					if(!checkSeenLspPacks(sendPackage))
+					{ 
+						lspMapInit(&lspMAP, myMsg->src);
+				
+						if(myMsg->src == TOS_NODE_ID){}
+				
+						else // Else 6.
+						{
+							for(j = 0; j <20; j++)
+							{
+								lspMAP[myMsg->src].cost[j] = myMsg->payload[j];
+								if(lspMAP[myMsg->src].cost[j] != 255 || lspMAP[myMsg->src].cost[j] != 0 ){}
+							} // End j loop.
+                            
+							for(l = 1; l < 20; l++)
+							{
+						   		for(j = 1; j <20; j++)
+								{ 
+									if(lspMAP[l].cost[j] != 255 && lspMAP[l].cost[j] != 0)
+										dbg(ROUTING_CHANNEL, "%d Neighbor %d, cost: %d\n",  l,j,lspMAP[l].cost[j] );
+										
+								} // End j loop.
+                           	 } // End l loop.
+							
+							makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol,myMsg->seq, (uint8_t*) myMsg->payload, 20);
+							call Sender.send(sendPackage,AM_BROADCAST_ADDR);
+						} // End Else 6.     
+					} // End if(!checkSeenLspPacks(sendPackage)).		
+                } //End if(myMsg->protocol == PROTOCOL_LINKSTATE).
 		
-		else if(myMsg->protocol == PROTOCOL_PINGREPLY)
-		{
-                        neighbor Neighbor;
-			neighbor neighbor_ptr;
+				else if(myMsg->protocol == PROTOCOL_PINGREPLY)
+				{
+					neighbor Neighbor;
+					neighbor neighbor_ptr;
 
-			int k = 0;
-			bool FOUND;
-			FOUND = FALSE;
-			size = call NeighborList.size();
+					int k = 0;
+					bool FOUND;
+					FOUND = FALSE;
+					size = call NeighborList.size();
 
-			for(k = 0; k < call NeighborList.size(); k++) 
+					for(k = 0; k < call NeighborList.size(); k++) 
+					{
+						neighbor_ptr = call NeighborList.get(k);
+						neighbor_ptr.Life++;
+						if(neighbor_ptr.Node == myMsg->src)
+						{
+							FOUND = TRUE;
+							neighbor_ptr.Life = 0;
+						}
+					} // End k loop.
+
+					if(FOUND)
+					{
+						dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
+						netChange = FALSE;
+					}
+					else // Else 7.
+					{
+						Neighbor.Node = myMsg->src;
+						Neighbor.Life = 0;
+						call NeighborList.pushfront(Neighbor); //at index 0
+						netChange = TRUE; //network change!
+					} // End Else 7.
+
+					for(k = 0; k < call NeighborList.size(); k++) 
+					{
+						neighbor_ptr = call NeighborList.get(k);
+
+						if(neighbor_ptr.Life > 5) 
+						{
+							call NeighborList.remove(k);
+							dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
+							dbg(ROUTING_CHANNEL, "CHANGE IN TOPOLOGY\n");
+							netChange = TRUE;
+						}
+					} // End k loop.
+				} // End else if(myMsg->protocol == PROTOCOL_PINGREPLY).
+
+				else
+					dbg(ROUTING_CHANNEL, "ERROR\n");   
+
+
+			} // End else if (myMsg->dest == AM_BROADCAST_ADDR).
+
+			else if(myMsg->protocol == PROTOCOL_PINGREPLY)
 			{
-			    neighbor_ptr = call NeighborList.get(k);
-			    neighbor_ptr.Life++;
-			    if(neighbor_ptr.Node == myMsg->src){
-				FOUND = TRUE;
-				neighbor_ptr.Life = 0;
-			    }
-		    	}
+				int forwardTo;
 
-                        
-                    
-			if(FOUND){
-				dbg(NEIGHBOR_CHANNEL,"Neighbor %d found in list\n", myMsg->src);
-				netChange = FALSE;
-			}else{
-				Neighbor.Node = myMsg->src;
-				Neighbor.Life = 0;
-				call NeighborList.pushfront(Neighbor); //at index 0
-				netChange = TRUE; //network change!
-			}
-                    
-                    
-                    
-
-                    
-                                //Check if neighbors havent been called or seen in a while, if 5 pings occur and neighbor is not heard from, we drop it
-
-			                    for(k = 0; k < call NeighborList.size(); k++) {
-			        	                neighbor_ptr = call NeighborList.get(k);
-				        
-                        
-				                        if(neighbor_ptr.Life > 5) {
-					                    call NeighborList.remove(k);
-					                    dbg(NEIGHBOR_CHANNEL, "Node %d life has expired dropping from NODE %d list\n", neighbor_ptr.Node, TOS_NODE_ID);
-                                        dbg(ROUTING_CHANNEL, "CHANGE IN TOPOLOGY\n");
-                                        netChange = TRUE;
-					
-					                    //i--;
-					                    //size--;
-				                        }
-			                    }
-                }else{
-                        dbg(ROUTING_CHANNEL, "ERROR\n");
-                }   
-                    
-                
-            }else if(myMsg->protocol == PROTOCOL_PINGREPLY){ //ack message
-                    int forwardTo;
-                  if(myMsg->dest == TOS_NODE_ID){ //ACK reached source
-                      makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PINGREPLY, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                      //dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
-                      if(!checkPacket(sendPackage)){
-                          dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);
-                       //dbg(FLOODING_CHANNEL,"Dropping Packet from src: %d to dest: %d with seq num:%d\n", myMsg->src,myMsg->dest,myMsg->seq);
-                        }
-                  }else{
-                      dbg(FLOODING_CHANNEL, "Sending Ping Reply to %d! \n\n", myMsg->src);
-					dbg(ROUTING_CHANNEL,"Running dijkstra\n");
+				if(myMsg->dest == TOS_NODE_ID)
+				{ //ACK reached source
+					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, PROTOCOL_PINGREPLY, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					if(!checkPacket(sendPackage))
+						dbg(FLOODING_CHANNEL,"Node %d recieved ACK from %d\n", TOS_NODE_ID,myMsg->src);        
+				}
+				else // Else 8.
+				{
+					dbg(FLOODING_CHANNEL, "Sending Ping Reply to %d! \n\n", myMsg->src);
 					dijkstra();
-					dbg(ROUTING_CHANNEL,"END\n\n"); 
 					forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
-                    dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
-                        makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-                        call Sender.send(sendPackage, forwardTo);
-                  }
+					dbg(ROUTING_CHANNEL,"Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL - 1,PROTOCOL_PINGREPLY,myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call Sender.send(sendPackage, forwardTo);
+				} // End Else 8.
 
-            }
-            
-            return msg;
-        }
+			} // End else if(myMsg->protocol == PROTOCOL_PINGREPLY).
+
+			return msg;
+			
+		} // End if(len==sizeof(pack)).
+		
         dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
-        return msg;
-    }
+		return msg;
+		
+    } // End event.
     
     
     event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
