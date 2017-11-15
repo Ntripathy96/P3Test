@@ -31,7 +31,7 @@ void initializeTable(lspTable* table)
 		table->lspTuples[i].nodeNcost = -1;
 	
 	// Set the number of values in the table to zero.
-	table->entires = 0;
+	table->entries = 0;
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
@@ -107,6 +107,27 @@ bool lspTableContainsDest(lspTable* list, int node)
 			 return TRUE;
 	}
 	return FALSE;
+}
+
+// ***************** REMOVE THIS *********************
+lspTuple lspTableRemove(lspTable* list, int node){
+	uint8_t i;
+	lspTuple temp;
+	for(i = 0; i<=list->entries; i++){
+		if(i == node){
+			if(list->entries > 1){
+				temp = list->lspTuples[i];
+				list->lspTuples[i] = list->lspTuples[list->entries-1];		
+				list->entries--;
+				i--;
+				return temp;
+			}
+			else{
+				list->entries = 0;
+				return list->lspTuples[0];
+			}
+		}
+	}	
 }
 
 // Remobe the tuple with the lowest cost, and return it.
