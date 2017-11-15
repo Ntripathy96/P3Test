@@ -21,20 +21,33 @@ typedef struct lspTable
 	uint8_t numValues;
 }lspTable;
 
-// Look for a specific tuple, and replace it with the new one.
+// Look for a specific destination tuple, and replace the cost and hop with the new lower one.
 bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 {
+	// Iterator.
 	int i;
-	for(i = 0; i<list->numValues; i++)
+	
+	// Find the specific tuple, and overwrite it.
+	for(i = 0; i < list->numValues; i++)
 	{
-		if(cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest)
+		// Look for the matching destinations.
+		if(newTuple.dest == list->lspTuples[i].dest)
 		{
-			list->lspTuples[i].dest = newTuple.dest;
-			list->lspTuples[i].nodeNcost = cost;
-			list->lspTuples[i].nextHop = newTuple.nextHop;
-			return TRUE;
+			// If the cost is lower than the current one, use the new tuple.
+			if (cost < list->lspTuples[i].nodeNcost)
+			{
+				list->lspTuples[i].nodeNcost = cost;
+				list->lspTuples[i].nextHop = newTuple.nextHop;
+				return TRUE;
+			}
+			
+			// Otherwise, keep the old one and return false.
+			else
+				return FALSE;
 		}
 	}
+	
+	// If this point is reached, the tuple is not currently in the table.
 	return FALSE;
 }
 
