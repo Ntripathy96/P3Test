@@ -478,8 +478,8 @@ implementation
 		int i;	
 		lspTuple lspTup, temp;
 		
-		lspTableinit(&tentativeList); 
-		lspTableinit(&confirmedList);
+		initializeTable(&tentativeList); 
+		initializeTable(&confirmedList);
 
 		lspTablePushBack(&tentativeList, temp = (lspTuple){TOS_NODE_ID,0,TOS_NODE_ID});
 		
