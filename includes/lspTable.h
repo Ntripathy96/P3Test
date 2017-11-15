@@ -21,7 +21,7 @@ typedef struct lspTable
 	uint8_t numValues;
 }lspTable;
 
-
+// Look for a specific tuple, and replace it with the new one.
 bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 {
 	int i;
@@ -38,6 +38,7 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 	return FALSE;
 }
 
+// Adds new entry into the LSP Table, much like a vector from the C++ STL.
 bool lspTablePushBack(lspTable* cur, lspTuple newVal)
 {	
 	if(cur->numValues != MAXNODEVAL)
@@ -50,6 +51,7 @@ bool lspTablePushBack(lspTable* cur, lspTuple newVal)
 		return FALSE;
 }
 
+// Checks whether or not the table is empty.
 bool lspTableIsEmpty(lspTable* cur)
 {
 	if(cur->numValues == 0)
@@ -58,6 +60,7 @@ bool lspTableIsEmpty(lspTable* cur)
 		return FALSE;
 }
 
+// Checks to see if a certain tuple is in the Table.
 bool lspTableContains(lspTable* list, lspTuple newVal)
 {
 	uint8_t i;
@@ -68,6 +71,7 @@ bool lspTableContains(lspTable* list, lspTuple newVal)
 	return FALSE;
 }
 
+// Checks if a Destination node is in the table.
 bool lspTableContainsDest(lspTable* list, int node)
 {
 	uint8_t i;
@@ -79,6 +83,7 @@ bool lspTableContainsDest(lspTable* list, int node)
 	return FALSE;
 }
 
+// Remobe the tuple with the lowest cost, and return it.
 lspTuple lspTupleRemoveMinCost(lspTable* cur)
 {
 	int i;
@@ -98,6 +103,7 @@ lspTuple lspTupleRemoveMinCost(lspTable* cur)
 	return temp2;
 }
 
+// Given a destination, return its associated nextHop.
 int lspTableLookUp(lspTable* list, int dest)
 {
 	int i;
