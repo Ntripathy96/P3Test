@@ -18,8 +18,21 @@ typedef struct lspTuple
 typedef struct lspTable
 {
 	lspTuple lspTuples[MAXNODES];
-	uint8_t numValues;
+	uint8_t entries;
 }lspTable;
+
+void initializeTable(lspTable* table)
+{
+	// Iterator.
+	int i;
+	
+	// Set the cost to all possible nodes to a sentinel value.
+	for(i = 0; i < MAXNODES; i++)
+		table->lspTuples[i].nodeNcost = -1;
+	
+	// Set the number of values in the table to zero.
+	table->entires = 0;
+}
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
 bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
@@ -28,7 +41,7 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 	int i;
 	
 	// Find the specific tuple, and overwrite it.
-	for(i = 0; i < list->numValues; i++)
+	for(i = 0; i < list->entries; i++)
 	{
 		// Look for the matching destinations.
 		if(newTuple.dest == list->lspTuples[i].dest)
@@ -54,10 +67,10 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
 bool lspTablePushBack(lspTable* cur, lspTuple newVal)
 {	
-	if(cur->numValues != MAXNODEVAL)
+	if(cur->entries != MAXNODEVAL)
 	{
-		cur->lspTuples[cur->numValues] = newVal;
-		cur->numValues++;
+		cur->lspTuples[cur->entries] = newVal;
+		cur->entries++;
 		return TRUE;
 	}
 	else 
@@ -67,7 +80,7 @@ bool lspTablePushBack(lspTable* cur, lspTuple newVal)
 // Checks whether or not the table is empty.
 bool lspTableIsEmpty(lspTable* cur)
 {
-	if(cur->numValues == 0)
+	if(cur->entries == 0)
 		return TRUE;
 	else
 		return FALSE;
@@ -77,7 +90,7 @@ bool lspTableIsEmpty(lspTable* cur)
 bool lspTableContains(lspTable* list, lspTuple newVal)
 {
 	uint8_t i;
-	for(i = 0; i<list->numValues; i++)
+	for(i = 0; i<list->entries; i++)
 	{
 		if(newVal.dest == list->lspTuples[i].dest) return TRUE;
 	}
@@ -88,7 +101,7 @@ bool lspTableContains(lspTable* list, lspTuple newVal)
 bool lspTableContainsDest(lspTable* list, int node)
 {
 	uint8_t i;
-	for(i = 0; i<list->numValues; i++)
+	for(i = 0; i<list->entries; i++)
 	{
 		if(node == list->lspTuples[i].dest)
 			 return TRUE;
@@ -104,7 +117,7 @@ lspTuple lspTupleRemoveMinCost(lspTable* cur)
 	lspTuple temp;
 	lspTuple temp2;
 	temp.nodeNcost = 255;
-	for(i = 0; i < cur->numValues; i++)
+	for(i = 0; i < cur->entries; i++)
 	{
 		if(cur->lspTuples[i].nodeNcost < temp.nodeNcost)
 		{
@@ -120,7 +133,7 @@ lspTuple lspTupleRemoveMinCost(lspTable* cur)
 int lspTableLookUp(lspTable* list, int dest)
 {
 	int i;
-	for(i = 0; i < list->numValues; i++)
+	for(i = 0; i < list->entries; i++)
 	{
 		if(list->lspTuples[i].dest == dest)
 			return list->lspTuples[i].nextHop;
