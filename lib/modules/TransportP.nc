@@ -16,7 +16,7 @@ implementation
 	
 	command socket_t Transport.socket()
 	{
-		// Temp Socket variable.
+		// Temp Socket struct.
 		socketStruct tempSocket; 
 		
 		// Check if there is space available to get a socket.
@@ -38,6 +38,30 @@ implementation
 	
 	command error_t Transport.bind(socket_t fd, socket_addr_t *addr)
 	{
+		// Temp Socket struct.
+		socketStruct tempSocket;
+		
+		// Temp Socket address struct.
+		socket_addr_t tempSocketAddr;
+		
+		// Iterator.
+		int i;
+		
+		// Go through the list, and find the appropriate Socket fd.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			if (fd == call SocketList.get(i).fd)
+			{
+				// Take out the appropriate Socket from the list. (Will be put back in later).
+				tempSocket = call SocketList.remove(i);
+				break;
+			}
+		}
+		
+		return FAIL;
+		
 
 	} // End bind.
 	
