@@ -10,6 +10,10 @@ configuration TransportC
 
 implementation
 {
+	// Main component wiring.
 	components TransportP;
 	Transport = TransportP;
+	
+	// Data Structure wiring.
+	TransportP.SocketList = SocketsInterface;
 }
