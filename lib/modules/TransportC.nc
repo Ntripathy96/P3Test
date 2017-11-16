@@ -5,7 +5,7 @@ configuration TransportC
 	provides interface Transport;
 	
 	// Data Structrures.
-	uses interface Hashmap<socketStruct> as SocketsInterface;
+	uses interface List<socketStruct> as SocketsInterface;
 }
 
 implementation
@@ -15,5 +15,5 @@ implementation
 	Transport = TransportP;
 	
 	// Data Structure wiring.
-	TransportP.SocketMap = SocketsInterface;
+	TransportP.SocketList = SocketsInterface;
 }
