@@ -54,7 +54,7 @@ typedef struct socket_store_t{
 }socket_store_t;
 
 // Socket structure, with File Description and Socket Store.
-typedef nx_struct socketStruct
+typedef struct socketStruct
 {
 	socket_t fd;
 	socket_store_t socketState;
