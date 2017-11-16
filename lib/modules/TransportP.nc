@@ -38,32 +38,32 @@ implementation
 	
 	command error_t Transport.bind(socket_t fd, socket_addr_t *addr)
 	{
-		return FAIL;
+
 	} // End bind.
 	
 	command error_t Transport.accept(socket_t fd)
 	{
-		return FAIL;
+
 	} // End accept.
 	
 	command uint16_t Transport.write(socket_t fd, uint8_t *buff, uint16_t bufflen)
 	{
-		return FAIL;
+
 	} // End write.
 	
 	command uint16_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
-		return 100;
+		
 	} // End connect.
 	
 	command error_t Transport.close(socket_t fd)
 	{
-		return FAIL;
+
 	} // End close.
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-		return FAIL;
+
 	} // End listen.
 
 } // End implementation.
