@@ -58,7 +58,7 @@ implementation
 				tempSocket = call SocketList.remove(i);
 				
 				// Modify the Socket.
-				tempSocket.socketState.dest = addr;
+				tempSocket.socketState.dest = *addr;
 				
 				// Put it back in.
 				call SocketList.pushback(tempSocket);
