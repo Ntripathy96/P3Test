@@ -1,11 +1,5 @@
 #include "../../includes/socket.h"
 
-typedef nx_struct socketStruct
-{
-	socket_t fd;
-	socket_store_t socketState;
-}Socket;
-
 module TransportP
 {
 	// Main interfaces.
