@@ -30,6 +30,8 @@ implementation
 			
 			// Return the fd.
 			return socket.fd;
+			
+			lol
 		}
 		
 		// If this point is reached, there is no space available.
