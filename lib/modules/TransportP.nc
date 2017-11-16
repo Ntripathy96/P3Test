@@ -71,7 +71,7 @@ implementation
 
 	} // End close.
 	
-	command error_t release(socket_t fd)
+	command error_t Transport.release(socket_t fd)
 	{
 	
 	} // End release.
