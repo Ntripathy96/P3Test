@@ -17,19 +17,19 @@ implementation
 	command socket_t Transport.socket()
 	{
 		// Temp Socket variable.
-		socketStruct socket; 
+		socketStruct tempSocket; 
 		
 		// Check if there is space available to get a socket.
 		if(call SocketList.size() < MAX_NUM_OF_SOCKETS)
 		{
 			// Give the socket the File Descripter id of the last index in the list.
-			socket.fd = call SocketList.size();
+			tempSocket.fd = call SocketList.size();
 			
 			// Place the socket in the list.
-			call SocketList.pushback(socket);
+			call SocketList.pushback(tempSocket);
 			
 			// Return the fd.
-			return socket.fd;
+			return tempSocket.fd;
 		}
 		
 		// If this point is reached, there is no space available.
