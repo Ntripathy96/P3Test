@@ -13,6 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 #include "includes/lspTable.h"
+#include "includes/socket.h";
 
 // Neighbor structure for Neighbor Discovery.
 typedef nx_struct neighbor 
