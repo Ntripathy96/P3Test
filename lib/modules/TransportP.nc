@@ -61,7 +61,7 @@ implementation
 	
 	} // End read.
 	
-	command uint16_t Transport.connect(socket_t fd, socket_addr_t *addr)
+	command error_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
 		
 	} // End connect.
