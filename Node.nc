@@ -42,6 +42,9 @@ module Node
 	uses interface List<neighbor> as NeighborList;
 	uses interface List<pack> as SeenPackList;
 	uses interface List<pack> as SeenLspPackList;
+	
+	// Transport Interface.
+	uses interface Transport;
 }
 
 implementation
