@@ -1,5 +1,11 @@
 #include "../../includes/socket.h"
 
+typedef nx_struct socketStruct
+{
+	socket_t fd;
+	socket_store_t socketState;
+}Socket;
+
 module TransportP
 {
 	// Main interfaces.
@@ -7,7 +13,7 @@ module TransportP
 	uses interface SimpleSend as Sender;
 	
 	// Data Structures.
-	uses interface List<socket_store_t> as SocketList;
+	uses interface List<socketStruct> as SocketList;
 	
 }
 
@@ -17,7 +23,7 @@ implementation
 	command socket_t Transport.socket()
 	{
 		// Temp Socket variable.
-		socket_store_t socket;
+		socketStruct socket; 
 		
 		// Check if there is space available to get a socket.
 		if(call SocketList.size() < MAX_NUM_OF_SOCKETS)
