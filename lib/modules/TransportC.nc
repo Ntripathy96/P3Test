@@ -5,7 +5,7 @@ configuration TransportC
 	provides interface Transport;
 	
 	// Data Structrures.
-	uses interface List<socket_store_t> as SocketsInterface;
+	uses interface List<socketStruct> as SocketsInterface;
 }
 
 implementation
