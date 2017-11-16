@@ -38,6 +38,7 @@ implementation
 		
 		// If this point is reached, there is no space available.
 		return NULL;
+		
 	} // End socket().
 	
 	command error_t Transport.bind(socket_t fd, socket_addr_t *addr)
@@ -80,7 +81,26 @@ implementation
 	
 	command socket_t Transport.accept(socket_t fd)
 	{
-
+		// Temp Socket struct.
+		socketStruct tempSocket;
+		
+		// Iterator.
+		int i;
+		
+		// Go through the list, and find the appropriate Socket fd.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			// Must also check if the Socket is listening.
+			if(fd == tempSocket.fd && tempSocket.socketState.state == LISTEN)
+				return tempSocket.fd; // Found the Socket, return a copy of its fd.
+		}
+		
+		// If this point is reached, it was unable to accept the connection.
+		return NULL;
+		
+		
 	} // End accept.
 	
 	command uint16_t Transport.write(socket_t fd, uint8_t *buff, uint16_t bufflen)
