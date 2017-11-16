@@ -26,7 +26,7 @@ implementation
 			tempSocket.fd = call SocketMap.size();
 			
 			// Place the socket in the list.
-			call SocketMap.pushback(tempSocket);
+			call SocketMap.insert(tempSocket);
 			
 			// Return the fd.
 			return tempSocket.fd;
