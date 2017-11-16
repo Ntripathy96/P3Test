@@ -102,7 +102,7 @@ implementation
 			}
 		}
 		
-		dbg(TRANSPORT_CHANNEL, "Socket %d was either unavailable or not listening, cannout connect.\n", fd);
+		dbg(TRANSPORT_CHANNEL, "Socket %d was either unavailable or not listening, cannot connect.\n", fd);
 		
 		// If this point is reached, it was unable to accept the connection.
 		return NULL;
