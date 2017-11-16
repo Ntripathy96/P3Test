@@ -54,14 +54,21 @@ implementation
 			
 			if (fd == tempSocket.fd)
 			{
-				// Take out the appropriate Socket from the list. (Will be put back in later).
+				// Take out the appropriate Socket from the list.
 				tempSocket = call SocketList.remove(i);
-				break;
+				
+				// Modify the Socket.
+				tempSocket.socketState.dest = addr;
+				
+				// Put it back in.
+				call SocketList.pushback(tempSocket);
+				
+				return SUCCESS;
 			}
 		}
 		
+		// If this point is reached, it was unable to bind the socket.
 		return FAIL;
-		
 
 	} // End bind.
 	
