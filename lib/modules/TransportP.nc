@@ -94,8 +94,15 @@ implementation
 			
 			// Must also check if the Socket is listening.
 			if(fd == tempSocket.fd && tempSocket.socketState.state == LISTEN)
-				return tempSocket.fd; // Found the Socket, return a copy of its fd.
+			{
+				dbg(TRANSPORT_CHANNEL, "Socket %d is available and listening, accepting connection.\n", fd);
+			
+				// Found the Socket, return a copy of its fd.
+				return tempSocket.fd;
+			}
 		}
+		
+		dbg(TRANSPORT_CHANNEL, "Socket %d was either unavailable or not listening, cannout connect.\n", fd);
 		
 		// If this point is reached, it was unable to accept the connection.
 		return NULL;
