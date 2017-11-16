@@ -7,7 +7,7 @@ module TransportP
 	uses interface SimpleSend as Sender;
 	
 	// Data Structures.
-	uses interface List<socketStruct> as SocketList;
+	uses interface Hashmap<socketStruct> as SocketMap;
 	
 }
 
@@ -20,13 +20,13 @@ implementation
 		socketStruct tempSocket; 
 		
 		// Check if there is space available to get a socket.
-		if(call SocketList.size() < MAX_NUM_OF_SOCKETS)
+		if(call SocketMap.size() < MAX_NUM_OF_SOCKETS)
 		{
 			// Give the socket the File Descripter id of the last index in the list.
-			tempSocket.fd = call SocketList.size();
+			tempSocket.fd = call SocketMap.size();
 			
 			// Place the socket in the list.
-			call SocketList.pushback(tempSocket);
+			call SocketMap.pushback(tempSocket);
 			
 			// Return the fd.
 			return tempSocket.fd;
