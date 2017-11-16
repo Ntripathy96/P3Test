@@ -72,7 +72,7 @@ implementation
 
 	} // End bind.
 	
-	command error_t Transport.accept(socket_t fd)
+	command socket_t Transport.accept(socket_t fd)
 	{
 
 	} // End accept.
