@@ -20,13 +20,6 @@ enum socket_state{
 typedef nx_uint8_t nx_socket_port_t;
 typedef uint8_t socket_port_t;
 
-// Socket structure, with File Description and Socket Store.
-typedef nx_struct socketStruct
-{
-	socket_t fd;
-	socket_store_t socketState;
-}socketStruct;
-
 // socket_addr_t is a simplified version of an IP connection.
 typedef nx_struct socket_addr_t{
     nx_socket_port_t port;
@@ -59,5 +52,12 @@ typedef struct socket_store_t{
     uint16_t RTT;
     uint8_t effectiveWindow;
 }socket_store_t;
+
+// Socket structure, with File Description and Socket Store.
+typedef nx_struct socketStruct
+{
+	socket_t fd;
+	socket_store_t socketState;
+}socketStruct;
 
 #endif
