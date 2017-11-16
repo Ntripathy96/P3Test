@@ -25,7 +25,7 @@ typedef nx_struct socketStruct
 {
 	socket_t fd;
 	socket_store_t socketState;
-}Socket;
+}socketStruct;
 
 // socket_addr_t is a simplified version of an IP connection.
 typedef nx_struct socket_addr_t{
