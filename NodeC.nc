@@ -13,6 +13,8 @@
 
 configuration NodeC{}
 implementation {
+
+    // Main components.
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
@@ -20,7 +22,7 @@ implementation {
     components new SimpleSendC(AM_PACK);
     components CommandHandlerC;
     
-    
+    // Main component wiring.
     Node -> MainC.Boot;
     Node.Receive -> GeneralReceive;
     Node.AMControl -> ActiveMessageC;
@@ -47,5 +49,9 @@ implementation {
     Node.Random -> Random;
     Node.lspTimer -> lspTimer;
     Node.Timer1 -> myTimerC;
+    
+    // Transport Component Aliases.
+    components TransportC;
+    Node.Transport -> TransportC;
         
 }
