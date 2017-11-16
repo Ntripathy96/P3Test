@@ -28,9 +28,13 @@ implementation
 			// Place the socket in the list.
 			call SocketList.pushback(tempSocket);
 			
+			dbg(TRANSPORT_CHANNEL, "Socket %d allocated.\n", tempSocket.fd);
+			
 			// Return the fd.
 			return tempSocket.fd;
 		}
+		
+		dbg(TRANSPORT_CHANNEL, "No space available, cannot allocate socket.\n");
 		
 		// If this point is reached, there is no space available.
 		return NULL;
@@ -62,6 +66,8 @@ implementation
 				
 				// Put it back in.
 				call SocketList.pushback(tempSocket);
+				
+				dbg(TRANSPORT_CHANNEL, "Socket %d bound.\n", fd);
 				
 				return SUCCESS;
 			}
