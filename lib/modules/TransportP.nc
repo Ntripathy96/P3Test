@@ -51,6 +51,16 @@ implementation
 
 	} // End write.
 	
+	command error_t Transport.receive(pack* package)
+	{
+	
+	} // End receive.
+	
+	command uint16_t Transport.read(socket_t fd, uint8_t *buff, uint16_t bufflen)
+	{
+	
+	} // End read.
+	
 	command uint16_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
 		
@@ -60,6 +70,11 @@ implementation
 	{
 
 	} // End close.
+	
+	command error_t release(socket_t fd)
+	{
+	
+	} // End release.
 	
 	command error_t Transport.listen(socket_t fd)
 	{
