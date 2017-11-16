@@ -52,7 +52,7 @@ implementation
 		{
 			tempSocket = call SocketList.get(i);
 			
-			if (fd == call SocketList.get(i).fd)
+			if (fd == tempSocket)
 			{
 				// Take out the appropriate Socket from the list. (Will be put back in later).
 				tempSocket = call SocketList.remove(i);
