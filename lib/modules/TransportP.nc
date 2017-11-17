@@ -170,7 +170,7 @@ implementation
  -			while(test.fd == fd)
  -			{ 
  -			test.state == LISTEN
- -			dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIII", temp.state);
+ -			dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIIIIIIIIII", temp.state);
  -			call SocketList.pushfront(test); 	
  -			}
  -		}
