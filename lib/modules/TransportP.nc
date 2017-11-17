@@ -133,8 +133,14 @@ implementation
 		// The SYN packet that must be sent out.
 		pack SYN;
 		
-		// Iterator.
-		int i;
+		// Iterators.
+		int i, j;
+		
+		// Next hop variable.
+		uint16_t nextHop;
+		
+		//Temp Socket struct.
+		socketStruct tempSocket;
 		
 		// Finish making the SYN packet.
 		SYN.src = TOS_NODE_ID;
@@ -142,6 +148,37 @@ implementation
 		SYN.seq = 1;
 		SYN.TTL = MAX_TTL;
 		SYN.protocol = PROTOCOL_TCP;
+		
+		// Find the next hop for the destination node and send it there.
+		for(i = 0; i < Table->entries; i++)
+		{
+			if(Table->lspTuples[i].dest == SYN.dest)
+			{
+				nextHop = Table->lspTuples[i].nextHop;
+				
+				// Send it to the next hop.
+				call Sender.send(SYN, nextHop);
+				
+				// Change the socket state to SYN_SENT.
+				for(j = 0; j < call SocketList.size(); j++)
+				{
+					tempSocket = call SocketList.get(j);
+					
+					if(fd == tempSocket.fd)
+					{
+						tempSocket = call SocketList.remove(j);
+						
+						tempSocket.socketState.state = SYN_SENT;
+						
+						break;
+					}
+				}
+				
+				return SUCCESS;
+			}
+		}
+		
+		return FAIL;
 		
 	} // End connect.
 	
