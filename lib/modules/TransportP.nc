@@ -116,7 +116,23 @@ implementation
 	
 	command uint16_t Transport.write(socket_t fd, uint8_t *buff, uint16_t bufflen)
 	{
-
+		// Temp Socket struct.
+		socketStruct tempSocket;
+		
+		// Iterator.
+		int i;
+		
+		// Go through the list, and find the appropriate Socket fd.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			if (fd == tempSocket.fd)
+			{
+				return 0;
+			}
+		}
+		return 1;
 	} // End write.
 	
 	command error_t Transport.receive(pack* package)
