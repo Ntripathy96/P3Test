@@ -158,22 +158,26 @@ implementation
 	command error_t Transport.listen(socket_t fd)
 	{
           
- -	  socket_store_t test;
- -	  //socket_t test;
- -          error_t SMD; 
- -	  enum socket_store_t socketState;
- -	for(i = 0; i < call SocketList.size(); i++)
- -		{
- -			tempSocket = call SocketList.get(i);
- -			
- -			
- -			while(test.fd == fd)
- -			{ 
- -			test.state == LISTEN
- -			dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIIIIIIIIII", temp.state);
- -			call SocketList.pushfront(test); 	
- -			}
- -		}
+	  socketStruct test;
+ 	  //socket_t test;
+        // error_t SMD; 
+ 
+ 	for(i = 0; i < call SocketList.size(); i++)
+ 		{
+ 			test = call SocketList.get(i);
+ 			
+			if(test.fd == fd)
+ 			{ 
+					test = call SocketList.remove(i);
+					
+					test.state == LISTEN;
+					
+ 					dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIIIIIIIIII", temp.state);
+ 					call SocketList.pushback(test); 
+					return SUCCESS;
+ 			}
+ 		}
+		return FAIL;
 	} // End listen.
 
 } // End implementation.
