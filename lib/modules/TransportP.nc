@@ -137,11 +137,11 @@ implementation
 		int i;
 		
 		// Finish making the SYN packet.
-		syn.src = TOS_NODE_ID;
-		syn.dest = addr->addr;
-		syn.seq = 1;
-		syn.TTL = MAX_TTL;
-		syn.protocol = PROTOCOL_TCP;
+		SYN.src = TOS_NODE_ID;
+		SYN.dest = addr->addr;
+		SYN.seq = 1;
+		SYN.TTL = MAX_TTL;
+		SYN.protocol = PROTOCOL_TCP;
 		
 	} // End connect.
 	
