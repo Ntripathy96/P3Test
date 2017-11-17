@@ -66,6 +66,7 @@ implementation
 				tempSocket = call SocketList.remove(i);
 				
 				// Modify the Socket.
+				tempSocket.socketState.src = addr->port;
 				tempSocket.socketState.dest = *addr;
 				
 				// Put it back in.
