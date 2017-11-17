@@ -194,23 +194,23 @@ implementation
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-  		socketStruct test;
+  		socketStruct tempSocket;
 		
 		int i;
  
  		for(i = 0; i < call SocketList.size(); i++)
  		{
-			test = call SocketList.get(i);
+			tempSocket = call SocketList.get(i);
  			
-			if(test.fd == fd)
+			if(tempSocket.fd == fd)
  			{ 
-					test = call SocketList.remove(i);
+					tempSocket = call SocketList.remove(i);
 					
-					test.socketState.state == LISTEN;
+					tempSocket.socketState.state == LISTEN;
 					
  					dbg(TRANSPORT_CHANNEL, "Socket %d set to listen.\n", fd);
  					
-					call SocketList.pushback(test); 
+					call SocketList.pushback(tempSocket); 
 					
 					return SUCCESS;
  			}
