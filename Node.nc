@@ -345,8 +345,15 @@ implementation
 
 	event void CommandHandler.printDistanceVector(){}
 
-	event void CommandHandler.setTestServer(){}
-
+	event void CommandHandler.setTestServer(uint16_t port){}
+        socket_addr_t address;
+	socketStruct fd = call Transport.socket();
+	address.addr = TOS_NODE_ID;
+	address.port = port;
+        if(call Transport.bind(fd, &address) == SUCCESS && call Transport.listen(fd) == SUCCESS)
+	{
+	dbg(TRANSPORT_CHANNEL, "Now Listen.\n");
+	}
 	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
 	{
 		pack SYN; 
