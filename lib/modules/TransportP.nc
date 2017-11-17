@@ -181,7 +181,61 @@ implementation
 	
 	command uint16_t Transport.read(socket_t fd, uint8_t *buff, uint16_t bufflen)
 	{
-	
+		// Temp Socket struct.
+		socketStruct tempSocket;
+		
+		// Iterators.
+		int i, j, k;
+		
+		// Buffer space for receiver.
+		int spaceRemaining;
+		
+		// Go through the list, and find the appropriate Socket fd.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			if (fd == tempSocket.fd)
+			{
+				// Take out the appropriate Socket from the list.
+				tempSocket = call SocketList.remove(i);
+				
+
+				// Now it can write to the buffer.
+				// Must start at the end of the last written portion of the buffer.
+				k = tempSocket.socketState.lastRead + 1;
+				
+				// Calculate how much space is left on the buffer.
+				spaceRemaining = SOCKET_BUFFER_SIZE - k;
+				
+				for(j = 0; j < bufflen; j++)
+				{
+				
+					tempSocket.socketState.sendBuff[k] = buff[j];
+					k++;
+					
+					spaceRemaining--;
+					
+					// If there is no space left, must stop reading.
+					if(spaceRemaining == 0)
+						break;
+				}
+					
+				tempSocket.socketState.lastRead = k;
+					
+				dbg(TRANSPORT_CHANNEL, "Data was read onto Socket %d", fd);
+				
+				// Put the socket back in.
+				call SocketList.pushback(tempSocket);
+				
+				
+				// It was able to write down j amount of data onto the buffer.
+				return j;
+			}
+		}
+		
+		// Could not write down anything on the buffer.
+		return 0;
 	} // End read.
 	
 	command error_t Transport.connect(socket_t fd, socket_addr_t *addr, lspTable* Table)
