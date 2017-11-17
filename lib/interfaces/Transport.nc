@@ -1,5 +1,7 @@
 #include "../../includes/packet.h"
 #include "../../includes/socket.h"
+#include "../../includes/protocol.h"
+#include "../../includes/lspTable.h"
 
 /**
  * The Transport interface handles sockets and is a layer of abstraction
@@ -110,7 +112,7 @@ interface Transport{
     * @return socket_t - returns SUCCESS if you are able to attempt
     *    a connection with the fd passed, else return FAIL.
     */
-   command error_t connect(socket_t fd, socket_addr_t * addr);
+   command error_t connect(socket_t fd, socket_addr_t * addr, lspTable* Table);
 
    /**
     * Closes the socket.
