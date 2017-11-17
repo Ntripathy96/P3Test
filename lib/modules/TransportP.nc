@@ -127,8 +127,11 @@ implementation
 	
 	command error_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
-		pack syn; 
-		uint16_t next;
+		// The SYN packet that must be sent out.
+		//pack SYN;
+		int i;
+		//Error test.
+		i = confirmedList.entries;
 		
 	} // End connect.
 	
