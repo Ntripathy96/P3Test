@@ -347,8 +347,8 @@ implementation
 
 	event void CommandHandler.setTestServer(){}
 
-	event void CommandHandler.setTestClient(){}
-
+	event void CommandHandler.setTestClient(uint16_t dest, uint16_t sourcePort, uint16_t destPort, uint16_t transfer)
+	
 	event void CommandHandler.setAppServer(){}
 
 	event void CommandHandler.setAppClient(){}
