@@ -127,14 +127,29 @@ implementation
 	
 	command error_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
-		// The SYN packet that must be sent out.
-		//pack SYN;
+		pack syn; 
+		uint16_t next;
 		
 	} // End connect.
 	
 	command error_t Transport.close(socket_t fd)
 	{
-
+	  socket_store_t test;
+	  //socket_t test;
+          error_t SMD; 
+	  enum socket_store_t socketState;
+	for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			
+			while(test.fd == fd)
+			{ 
+			test.state == LISTEN
+			dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIII", temp.state);
+			call SocketList.pushfront(test); 	
+			}
+		}
 	} // End close.
 	
 	command error_t Transport.release(socket_t fd)
@@ -144,7 +159,7 @@ implementation
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-
+		
 	} // End listen.
 
 } // End implementation.
