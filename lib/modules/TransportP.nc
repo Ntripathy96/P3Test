@@ -157,7 +157,9 @@ implementation
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-  		socketStruct test; 
+  		socketStruct test;
+		
+		int i;
  
  		for(i = 0; i < call SocketList.size(); i++)
  		{
