@@ -347,7 +347,7 @@ implementation
 
 	event void CommandHandler.setTestServer(){}
 
-	event void CommandHandler.setTestClient(uint16_t destination, uint16_t SRCP, uint16_t DP, uint16_t trans)
+	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
 	{
 		pack SYN; 
 		socketStruct tempSocket;
