@@ -1,4 +1,7 @@
 #include "../../includes/socket.h"
+#include "../../includes/lspTable.h"
+#include "../../includes/packet.h"
+#include "../../includes/protocol.h"
 
 module TransportP
 {
@@ -125,31 +128,26 @@ implementation
 	
 	} // End read.
 	
-	command error_t Transport.connect(socket_t fd, socket_addr_t *addr)
+	command error_t Transport.connect(socket_t fd, socket_addr_t *addr, lspTable* Table)
 	{
-		pack syn; 
-		uint16_t next;
+		// The SYN packet that must be sent out.
+		pack SYN;
+		
+		// Iterator.
+		int i;
+		
+		// Finish making the SYN packet.
+		syn.src = TOS_NODE_ID;
+		syn.dest = addr->addr;
+		syn.seq = 1;
+		syn.TTL = MAX_TTL;
+		syn.protocol = PROTOCOL_TCP;
 		
 	} // End connect.
 	
 	command error_t Transport.close(socket_t fd)
 	{
-	  socket_store_t test;
-	  //socket_t test;
-          error_t SMD; 
-	  enum socket_store_t socketState;
-	for(i = 0; i < call SocketList.size(); i++)
-		{
-			tempSocket = call SocketList.get(i);
-			
-			
-			while(test.fd == fd)
-			{ 
-			test.state == LISTEN
-			dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIII", temp.state);
-			call SocketList.pushfront(test); 	
-			}
-		}
+
 	} // End close.
 	
 	command error_t Transport.release(socket_t fd)
@@ -159,7 +157,7 @@ implementation
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-		
+
 	} // End listen.
 
 } // End implementation.
