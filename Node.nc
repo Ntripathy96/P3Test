@@ -347,7 +347,21 @@ implementation
 
 	event void CommandHandler.setTestServer(){}
 
-	event void CommandHandler.setTestClient(uint16_t dest, uint16_t sourcePort, uint16_t destPort, uint16_t transfer){}
+	event void CommandHandler.setTestClient(uint16_t destination, uint16_t SRCP, uint16_t DP, uint16_t trans){
+	pack SYN; 
+	socketStruct tempSocket;
+	socket_addr_t address; 
+	socker_addr_t serverAdd; 
+	socket_t fd = call Transport.socket(); 
+	address.addr = TOS_NODE_ID;
+	address.port = sourcePort;
+	serverAdd.addr = destination;
+	serverAdd.port = DP;
+	
+	if (call Transport.bind(fd, &address) == SUCCESS) {
+		call Transport.connect(fd, &serverAdd)
+	}
+	}
 	
 	event void CommandHandler.setAppServer(){}
 
