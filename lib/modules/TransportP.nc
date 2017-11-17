@@ -191,7 +191,36 @@ implementation
 	
 	command error_t Transport.close(socket_t fd)
 	{
-
+		// Temp Socket Structure.
+		socketStruct tempSocket;
+		
+		// Iterator.
+		int i;
+		
+		// Go through the list, and find the appropriate Socket fd.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			if (fd == tempSocket.fd)
+			{
+				// Take out the appropriate Socket from the list.
+				tempSocket = call SocketList.remove(i);
+				
+				// Close the Socket.
+				tempSocket.socketState.state == CLOSED;
+				
+				// Put it back in.
+				call SocketList.pushback(tempSocket);
+				
+				dbg(TRANSPORT_CHANNEL, "Socket %d is now closed.\n", fd);
+				
+				return SUCCESS;
+			}
+		}
+		
+		// If this point is reached, it was unable to close the socket.
+		return FAIL;
 	} // End close.
 	
 	command error_t Transport.release(socket_t fd)
