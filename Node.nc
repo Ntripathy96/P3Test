@@ -354,12 +354,12 @@ implementation
 	socket_addr_t serverAdd; 
 	socket_t fd = call Transport.socket(); 
 	address.addr = TOS_NODE_ID;
-	address.port = sourcePort;
+	address.port = SRCP;
 	serverAdd.addr = destination;
 	serverAdd.port = DP;
 	
 	if (call Transport.bind(fd, &address) == SUCCESS) {
-		call Transport.connect(fd, &serverAdd)
+		call Transport.connect(fd, &serverAdd, &confirmedList);
 	}
 	}
 	
