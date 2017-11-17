@@ -328,7 +328,8 @@ implementation
 	
 	command error_t Transport.release(socket_t fd)
 	{
-	
+		// This functin will not be used.
+		return FAIL;
 	} // End release.
 	
 	command error_t Transport.listen(socket_t fd)
