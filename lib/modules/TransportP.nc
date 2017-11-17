@@ -127,6 +127,8 @@ implementation
 	
 	command error_t Transport.connect(socket_t fd, socket_addr_t *addr)
 	{
+		pack syn; 
+		uint16_t next;
 		
 	} // End connect.
 	
