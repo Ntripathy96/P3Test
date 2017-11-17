@@ -121,7 +121,13 @@ implementation
 	
 	command error_t Transport.receive(pack* package)
 	{
-	
+		// If the received packet is a TCP packet, it can be handled.
+		if(package->protocol == PROTOCOL_TCP)
+			return SUCCESS;
+			
+		// Otherwise it cannot be handled.	
+		else
+			return FAIL;
 	} // End receive.
 	
 	command uint16_t Transport.read(socket_t fd, uint8_t *buff, uint16_t bufflen)
