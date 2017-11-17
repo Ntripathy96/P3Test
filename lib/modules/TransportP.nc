@@ -1,5 +1,4 @@
 #include "../../includes/socket.h"
-#include "../../Node.nc"
 
 module TransportP
 {
@@ -130,9 +129,6 @@ implementation
 	{
 		// The SYN packet that must be sent out.
 		//pack SYN;
-		int i;
-		//Error test.
-		i = confirmedList.entries;
 		
 	} // End connect.
 	
