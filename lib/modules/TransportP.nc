@@ -157,23 +157,22 @@ implementation
 	
 	command error_t Transport.listen(socket_t fd)
 	{
-          
-	  socketStruct test;
- 	  //socket_t test;
-        // error_t SMD; 
+  		socketStruct test; 
  
- 	for(i = 0; i < call SocketList.size(); i++)
+ 		for(i = 0; i < call SocketList.size(); i++)
  		{
- 			test = call SocketList.get(i);
+			test = call SocketList.get(i);
  			
 			if(test.fd == fd)
  			{ 
 					test = call SocketList.remove(i);
 					
-					test.state == LISTEN;
+					test.socketState.state == LISTEN;
 					
  					dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIIIIIIIIII", temp.state);
- 					call SocketList.pushback(test); 
+ 					
+					call SocketList.pushback(test); 
+					
 					return SUCCESS;
  			}
  		}
