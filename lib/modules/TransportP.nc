@@ -169,7 +169,7 @@ implementation
 					
 					test.socketState.state == LISTEN;
 					
- 					dbg(TRANSPORT_CHANNEL, "YEEEE BOIIIIIIIIIIII", temp.state);
+ 					dbg(TRANSPORT_CHANNEL, "Socket %d set to listen.\n", fd);
  					
 					call SocketList.pushback(test); 
 					
