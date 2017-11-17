@@ -351,7 +351,7 @@ implementation
 	pack SYN; 
 	socketStruct tempSocket;
 	socket_addr_t address; 
-	socker_addr_t serverAdd; 
+	socket_addr_t serverAdd; 
 	socket_t fd = call Transport.socket(); 
 	address.addr = TOS_NODE_ID;
 	address.port = sourcePort;
