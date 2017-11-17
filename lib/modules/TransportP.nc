@@ -1,4 +1,5 @@
 #include "../../includes/socket.h"
+#include "../../node.nc"
 
 module TransportP
 {
