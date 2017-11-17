@@ -4,9 +4,6 @@
 configuration TransportC
 {
 	provides interface Transport;
-	
-	// Data Structrures.
-	uses interface List<socketStruct> as SocketsInterface;
 }
 
 implementation
@@ -16,6 +13,7 @@ implementation
 	Transport = TransportP;
 	
 	// Data Structures.
+	components new ListC(socketStruct, MAX_NUM_OF_SOCKETS) as SocketsInterface;
 	TransportP.SocketList = SocketsInterface;
 	
 	components new SimpleSendC(AM_PACK);
