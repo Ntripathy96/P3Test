@@ -1,4 +1,5 @@
 #include "../../includes/socket.h"
+#include "../../includes/am_types.h"
 
 configuration TransportC
 {
@@ -10,10 +11,13 @@ configuration TransportC
 
 implementation
 {
-	// Main component wiring.
+	// Main components.
 	components TransportP;
 	Transport = TransportP;
 	
-	// Data Structure wiring.
+	// Data Structures.
 	TransportP.SocketList = SocketsInterface;
+	
+	components new SimpleSendC(AM_PACK);
+	TransportP.Sender -> SimpleSendC;
 }
