@@ -28,6 +28,10 @@ implementation
 			// Give the socket the File Descripter id of the last index in the list.
 			tempSocket.fd = call SocketList.size();
 			
+			// Initialize the Socket State.
+			tempSocket.socketState.lastWritten = 0;
+			tempSocket.socketState.effectiveWindow = SOCKET_BUFFER_SIZE;
+			
 			// Place the socket in the list.
 			call SocketList.pushback(tempSocket);
 			
@@ -119,8 +123,8 @@ implementation
 		// Temp Socket struct.
 		socketStruct tempSocket;
 		
-		// Iterator.
-		int i;
+		// Iterators.
+		int i, j, k;
 		
 		// Go through the list, and find the appropriate Socket fd.
 		for(i = 0; i < call SocketList.size(); i++)
@@ -129,10 +133,39 @@ implementation
 			
 			if (fd == tempSocket.fd)
 			{
-				return 0;
+				// Take out the appropriate Socket from the list.
+				tempSocket = call SocketList.remove(i);
+				
+				// Check if the buffer is within the effective window.
+				if (tempSocket.socketState.effectiveWindow > bufflen)
+				{
+					// Now it can write to the buffer.
+					// Must start at the end of the last written portion of the buffer.
+					k = tempSocket.socketState.lastWritten + 1;
+					for(j = 0; j < bufflen; j++)
+					{
+						tempSocket.socketState.sendBuff[k] = buff[j];
+						k++;
+						tempSocket.socketState.effectiveWindow--;
+					}
+					
+					tempSocket.socketState.lastWritten = k;
+					
+					dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d", fd);
+				}
+				
+				// Put the socket back in.
+				call SocketList.pushback(tempSocket);
+				
+				
+				// It was able to write down j amount of data onto the buffer.
+				return j;
 			}
 		}
-		return 1;
+		
+		// Could not write down anything on the buffer.
+		return 0;
+		
 	} // End write.
 	
 	command error_t Transport.receive(pack* package)
