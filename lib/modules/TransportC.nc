@@ -14,7 +14,7 @@ implementation
 	
 	// Data Structures.
 	components new ListC(socketStruct, MAX_NUM_OF_SOCKETS) as SocketsInterface;
-	TransportP.SocketList = SocketsInterface;
+	TransportP.SocketList -> SocketsInterface;
 	
 	components new SimpleSendC(AM_PACK);
 	TransportP.Sender -> SimpleSendC;
