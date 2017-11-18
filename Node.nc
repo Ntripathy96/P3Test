@@ -139,10 +139,8 @@ implementation
 				
 				fd = call Transport.socket();
 				
-				for(i=0; i < SocketList.size(); i++)
- 				{
-				tempSocket = call Sockets.get(i);
- 				}
+				tempSocket = call Transport.getSocket(fd);
+				
 				
 			}
 
