@@ -266,7 +266,7 @@ implementation
 				// Send it to the next hop.
 				call Sender.send(SYN, nextHop);
 				
-				// Change the socket state to SYN_SENT.
+				// Modify the Socket State.
 				for(j = 0; j < call SocketList.size(); j++)
 				{
 					tempSocket = call SocketList.get(j);
@@ -276,6 +276,12 @@ implementation
 						tempSocket = call SocketList.remove(j);
 						
 						tempSocket.socketState.state = SYN_SENT;
+						tempSocket.socketState.flag = 1;
+						
+						tempSocket.socketState.port = addr->port;
+						tempSocket.socketState.addr = addr->addr;
+						
+						call SocketList.pushback(tempSocket);
 						
 						break;
 					}
