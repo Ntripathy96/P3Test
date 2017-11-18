@@ -136,8 +136,8 @@ implementation
 				
 			}
 
-			// Flooding or Forwarding.
-			else if (myMsg->protocol == PROTOCOL_PING)
+			// Flooding or Forwarding. Also catches Transport packets not intended for this node.
+			else if (myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_TCP)
 			{
 				int forwardTo;
 
