@@ -42,6 +42,11 @@ implementation
 		return tempSocket;
 	}
 	
+	command error_t setSocket(socket_t fd, socketStruct update)
+	{
+	
+	}
+	
 	command socket_t Transport.socket()
 	{
 		// Temp Socket struct.
