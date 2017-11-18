@@ -148,7 +148,7 @@ implementation
 					tempSocket = call Transport.getSocket(i);
 					
 					// Compare the port and source.
-					if (
+					//if (
 					
 				}
 				
