@@ -156,8 +156,17 @@ implementation
 					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag = 1))
 					{
 						// Conditions hold true, reply with a SYN_ACK.
-						//memcpy(SYN_ACK.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
+						// Update the state of the Socket.
+						tempSocket.socketState.flag = 2;
+						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
+						tempSocket.socketState.dest.addr = myMsg->src;
+						call Transport.setSocket(tempSocket.fd, tempSocket);
+						
+						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+						
+						// Send out the SYN_ACK.
+						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
 					}
 					
 				}
