@@ -129,6 +129,12 @@ implementation
 
 			// If the message has a TTL of 0, do nothing with it.
 			if(myMsg->TTL == 0) {}
+			
+			// Transport packet. If intended for this node, handle it.
+			else if(myMsg->protocol == PROTOCOL_TCP && myMsg->dest == TOS_NODE_ID)
+			{
+				
+			}
 
 			// Flooding or Forwarding.
 			else if (myMsg->protocol == PROTOCOL_PING)
