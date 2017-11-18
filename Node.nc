@@ -166,23 +166,50 @@ implementation
 						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
+						dbg(TRANSPORT_CHANNEL, "SYN packet received, replying with SYN_ACK.\n");
+						
 						// Send out the SYN_ACK.
 						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
 					}
 					// If flag is 2, it is a SYN_ACK packet.
 					else if((receivedSocket->socketState.flag == 2) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
+						// Packet to reply to the SYN_ACK.
+						// Specifies that a connection has been established.
+						pack EST;
 						
+						// Get the current state of the Socket.
+						tempSocket = call Transport.getSocket(i);
+						
+						// Update the state of the Socket.
+						tempSocket.socketState.flag = 3;
+						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
+						tempSocket.socketState.dest.addr = myMsg->src;
+						tempSocket.socketState.state = ESTABLISHED;
+						call Transport.setSocket(tempSocket.fd, tempSocket);
+						
+						// Make the EST.
+						makePack(&EST, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+					
+						dbg(TRANSPORT_CHANNEL, "SYN_ACK has been received, a connection has been established.\n");
+						
+						// Send out the EST.
+						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
 					}
 					// If flag is 3, a SYN_ACK was received. Both sockets have established connection.
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
-					
+						// Get the current state of the Socket.
+						tempSocket = call Transport.getSocket(i);
+						
+						// Update the state of the Socket.
+						tempSocket.socketState.state = ESTABLISHED;
+						call Transport.setSocket(tempSocket.fd, tempSocket);
 					}
 					//If flag is 4, it is a DATA packet.
 					else if(receivedSocket->socketState.flag == 4)
 					{
-					
+						
 					}
 				}
 				
