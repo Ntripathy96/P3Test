@@ -2,7 +2,6 @@
 #include "../../includes/lspTable.h"
 #include "../../includes/packet.h"
 #include "../../includes/protocol.h"
-#include "../../includes/node.nc"
 
 module TransportP
 {
