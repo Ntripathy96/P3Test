@@ -278,8 +278,8 @@ implementation
 						tempSocket.socketState.state = SYN_SENT;
 						tempSocket.socketState.flag = 1;
 						
-						tempSocket.socketState.port = addr->port;
-						tempSocket.socketState.addr = addr->addr;
+						tempSocket.socketState.src = addr->port;
+						tempSocket.socketState.dest = *addr;
 						
 						call SocketList.pushback(tempSocket);
 						
