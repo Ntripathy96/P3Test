@@ -140,6 +140,11 @@ implementation
 				fd = call Transport.socket();
 				
 				tempSocket = call Transport.getSocket(fd);
+				if(tempSocket.fd == -1) 
+				{
+				return msg; 
+				}
+				
 				
 				
 			}
