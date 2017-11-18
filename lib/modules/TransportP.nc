@@ -53,9 +53,6 @@ implementation
 		// Temp Socket struct.
 		socketStruct tempSocket;
 		
-		// Temp Socket address struct.
-		socket_addr_t tempSocketAddr;
-		
 		// Iterator.
 		int i;
 		
