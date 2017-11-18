@@ -17,7 +17,7 @@ module TransportP
 implementation
 {
 
-	// Helper command to access SocketList. Returns the Socket associated with the provided fd. 
+	// A get command to access SocketList. Returns the Socket associated with the provided fd. 
 	// If no such socket exists, returns NULL.
 	command socketStruct Transport.getSocket(socket_t fd)
 	{
@@ -42,6 +42,8 @@ implementation
 		return tempSocket;
 	}
 	
+	// A set command for SocketList. Erases old Socket associated with the provided fd in place of the updated one.
+	// Caution must be used when using this. Designed to be used in tandem with the get command.
 	command error_t Transport.setSocket(socket_t fd, socketStruct update)
 	{
 		// Temp Socket Struct.
