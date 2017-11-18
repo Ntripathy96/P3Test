@@ -222,7 +222,7 @@ implementation
 						
 						// Now send out an DATA_ACK, as the data has been received.
 						// Get the current state of the Socket.
-						tempSocket = call Tranpsort.getSocket(i);
+						tempSocket = call Transport.getSocket(i);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.flag = 5;
