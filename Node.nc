@@ -170,7 +170,9 @@ implementation
 						
 						// Send out the SYN_ACK.
 						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
-					}
+						
+					} // End flag 1 handle.
+					
 					// If flag is 2, it is a SYN_ACK packet.
 					else if((receivedSocket->socketState.flag == 2) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
@@ -195,7 +197,9 @@ implementation
 						
 						// Send out the EST.
 						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
-					}
+						
+					} // End flag 2 handle.
+					
 					// If flag is 3, a SYN_ACK was received. Both sockets have established connection.
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
@@ -205,7 +209,9 @@ implementation
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
-					}
+						
+					} // End flag 3 handle.
+					
 					//If flag is 4, it is a DATA packet.
 					else if(receivedSocket->socketState.flag == 4)
 					{
@@ -236,17 +242,19 @@ implementation
 						
 						// Send out the DATA_ACK.
 						call Sender.send(DATA_ACK, forwardPacketTo(&confirmedList, myMsg->src));
-					}
+						
+					} // End flag 4 handle.
+					
 					//If flag is 5, it is a DATA_ACK packet.
 					else if(receivedSocket->socketState.flag == 5)
 					{
 						dbg(TRANSPORT_CHANNEL, "DATA_ACK received, DATA successfully reached destination.\n");
-					}
-				}
+						
+					} // End flag 5 handle.
+					
+				} // End i loop.
 				
-				
-				
-			}
+			} // End else if(myMsg->protocol == PROTOCOL_TCP && myMsg->dest == TOS_NODE_ID).
 
 			// Flooding or Forwarding. Also catches Transport packets not intended for this node.
 			else if (myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_TCP)
