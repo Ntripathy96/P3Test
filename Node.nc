@@ -150,7 +150,7 @@ implementation
 					// Compare the port and source.
 					// Make sure the Socket is listening.
 					// Also check flag. Must be 1 for a SYN.
-					if (receivedSocket->socketState.dest.port == tempSocket.socketState.src && tempSocket.socketState.state == LISTEN && receivedSocket->socketState.flag = 1)
+					if ((receivedSocket->socketState->dest->port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState->flag = 1))
 					{
 					
 					}
