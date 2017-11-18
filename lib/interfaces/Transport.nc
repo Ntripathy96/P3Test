@@ -19,7 +19,7 @@
 
 interface Transport{
 
-   command *List<socketStruct> getSocketList();
+   command socketStruct getSocket(socket_t fd);
 
    /**
     * Get a socket if there is one available.
