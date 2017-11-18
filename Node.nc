@@ -140,7 +140,10 @@ implementation
 				// Iterator.
 				int i;
 				
-				receivedSocket = myMsg->payload;
+				// Temp Package.
+				pack 
+				
+				receivedSocket = msg->payload;
 				
 				// Find the appropriate socket.
 				for(i = 0; i < MAX_NUM_OF_SOCKETS; i++)
@@ -152,6 +155,7 @@ implementation
 					// Also check flag. Must be 1 for a SYN.
 					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag = 1))
 					{
+						// Conditions hold true, reply with a SYN_ACK.
 						
 					}
 					
