@@ -44,7 +44,31 @@ implementation
 	
 	command error_t Transport.setSocket(socket_t fd, socketStruct update)
 	{
-	
+		// Temp Socket Struct.
+		socketStruct tempSocket;
+		
+		// Iterator.
+		int i;
+		
+		// Find the Socket.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			// If this is true, the appropriate Socket has been found.
+			if (fd == tempSocket.fd)
+			{
+				// Remove the old Socket.
+				tempSocket = call SocketList.remove(i);
+				
+				// Place in the updated Socket.
+				call SocketList.pushback(update);
+				
+				return SUCCESS;
+			}
+		}
+		
+		return FAIL;
 	}
 	
 	command socket_t Transport.socket()
