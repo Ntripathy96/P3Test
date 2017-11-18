@@ -2,6 +2,7 @@
 #include "../../includes/lspTable.h"
 #include "../../includes/packet.h"
 #include "../../includes/protocol.h"
+#include "../../includes/node.nc"
 
 module TransportP
 {
@@ -334,7 +335,7 @@ implementation
 						tempSocket.socketState.src = addr->port;
 						tempSocket.socketState.dest = *addr;
 						
-						memcpy(SYN, &tempSocket, (uint8_t) sizeof(tempSocket));
+						memcpy(SYN.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
 						call SocketList.pushback(tempSocket);
 						
