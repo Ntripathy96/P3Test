@@ -133,11 +133,14 @@ implementation
 			// Transport packet. If intended for this node, handle it.
 			else if(myMsg->protocol == PROTOCOL_TCP && myMsg->dest == TOS_NODE_ID)
 			{
-				// Temp Socket Struct.
+				// Temp Socket Structs.
 				socketStruct tempSocket;
+				socketStruct receivedSocket;
 				
 				// Iterator.
 				int i;
+				
+				receivedSocket = myMsg->payload;
 				
 				// Find the appropriate socket.
 				for(i = 0; i < MAX_NUM_OF_SOCKETS; i++)
@@ -145,7 +148,7 @@ implementation
 					tempSocket = call Transport.getSocket(i);
 					
 					// Compare the port and source.
-					//if (
+					if (
 					
 				}
 				
