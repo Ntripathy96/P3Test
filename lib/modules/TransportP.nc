@@ -225,7 +225,7 @@ implementation
 				DATA.dest = tempSocket.socketState.dest.addr;
 				DATA.protocol = PROTOCOL_TCP;
 				DATA.TTL = MAX_TTL;
-				memcpy(DATA.payload, &tempSocket, (uint8_t) sizeof(temp));
+				memcpy(DATA.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 				
 				// Get the next hop associated with the destination.
 				for(j = 0; j < Table->entries; j++)
