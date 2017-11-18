@@ -152,14 +152,15 @@ implementation
 					
 					// Compare the port and source.
 					// Make sure the Socket is listening.
-					// Also check flag. Must be 1 for a SYN.
-					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag = 1))
+					// Also check flag. Must be 1 for a SYN. If so, send a SYN_ACK.
+					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag == 1))
 					{
 						// Conditions hold true, reply with a SYN_ACK.
 						// Update the state of the Socket.
 						tempSocket.socketState.flag = 2;
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
+						tempSocket.socketState.state = SYN_RCVD;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
 						// Make the SYN_ACK.
@@ -168,7 +169,21 @@ implementation
 						// Send out the SYN_ACK.
 						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
 					}
+					// If flag is 2, it is a SYN_ACK packet.
+					else if((receivedSocket->socketState.flag == 2) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
+					{
+						
+					}
+					// If flag is 3, a SYN_ACK was received. Both sockets have established connection.
+					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
+					{
 					
+					}
+					//If flag is 4, it is a DATA packet.
+					else if(receivedSocket->socketState.flag == 4)
+					{
+					
+					}
 				}
 				
 				
