@@ -17,7 +17,7 @@ module TransportP
 implementation
 {
 
-	command &List<socketStruct> getSocketList()
+	command *List<socketStruct> getSocketList()
 	{
 	
 	}
