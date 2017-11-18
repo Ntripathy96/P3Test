@@ -138,7 +138,7 @@ implementation
 				
 				fd = call Transport.socket();
 				
-				tempSocket = Transport.SocketList[0];
+				tempSocket = SocketList[0];
 			}
 
 			// Flooding or Forwarding. Also catches Transport packets not intended for this node.
