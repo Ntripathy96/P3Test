@@ -42,7 +42,7 @@ implementation
 		return tempSocket;
 	}
 	
-	command error_t setSocket(socket_t fd, socketStruct update)
+	command error_t Transport.setSocket(socket_t fd, socketStruct update)
 	{
 	
 	}
