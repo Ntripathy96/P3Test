@@ -37,8 +37,9 @@ implementation
 				return tempSocket;
 		}
 		
-		// If this point is reached, it was unable to find the Socket.
-		return NULL;
+		// If this point is reached, it was unable to find the Socket. Return a socketStruct that will identify this.
+		tempSocket.fd = -1;
+		return tempSocket;
 	}
 	
 	command socket_t Transport.socket()
