@@ -17,7 +17,7 @@ module TransportP
 implementation
 {
 
-	command socketStruct getSocket(socket_t fd)
+	command socketStruct Transport.getSocket(socket_t fd)
 	{
 	
 	}
