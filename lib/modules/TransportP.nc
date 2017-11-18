@@ -171,13 +171,22 @@ implementation
 		
 	} // End accept.
 	
-	command uint16_t Transport.write(socket_t fd, uint8_t *buff, uint16_t bufflen)
+	command uint16_t Transport.write(socket_t fd, uint8_t *buff, uint16_t bufflen, lspTable* Table)
 	{
 		// Temp Socket struct.
 		socketStruct tempSocket;
 		
 		// Iterators.
 		int i, j, k;
+		
+		// Space left on the buffer.
+		int spaceRemaining;
+		
+		// Packet to be written to.
+		pack msg;
+		
+		// Next hop for the destination.
+		uint16_t nextHop;
 		
 		// Go through the list, and find the appropriate Socket fd.
 		for(i = 0; i < call SocketList.size(); i++)
@@ -189,27 +198,47 @@ implementation
 				// Take out the appropriate Socket from the list.
 				tempSocket = call SocketList.remove(i);
 				
-				// Check if the buffer is within the effective window.
-				if (tempSocket.socketState.effectiveWindow > bufflen)
+				// Start at the last written portion of the buffer.
+				k = tempSocket.socketState.lastWritten + 1;
+				
+				// Calculate how much space is left on the buffer.
+				spaceRemaining = SOCKET_BUFFER_SIZE - k;
+
+				// Now it can write to the buffer.
+				for(j = 0; j < bufflen; j++)
 				{
-					// Now it can write to the buffer.
-					// Must start at the end of the last written portion of the buffer.
-					k = tempSocket.socketState.lastWritten + 1;
-					for(j = 0; j < bufflen; j++)
-					{
-						tempSocket.socketState.sendBuff[k] = buff[j];
-						k++;
-						tempSocket.socketState.effectiveWindow--;
-					}
+					tempSocket.socketState.sendBuff[k] = buff[j];
+					k++;
+					spaceRemaining--;
 					
-					tempSocket.socketState.lastWritten = k;
-					
-					dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d", fd);
+					if(spaceRemaining == 0)
+						break;
 				}
+
+				tempSocket.socketState.lastWritten = k;
+				tempSocket.socketState.flag = 4;
+
+				dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d", fd);
+				
+				// Initialize the written message.
+				msg.src = TOS_NODE_ID;
+				msg.dest = tempSocket.socketState.dest.addr;
+				msg.protocol = PROTOCOL_TCP;
+				msg.TTL = MAX_TTL;
+				memcpy(msg.payload, &tempSocket, (uint8_t) sizeof(temp));
+				
+				// Get the next hop associated with the destination.
+				for(j = 0; j < Table->entries; j++)
+				{
+					if(Table->lspTuples[i].dest == msg.dest)
+						nextHop = Table->lspTuples[i].nextHop;
+				}
+				
+				// Send out the written message.
+				call Sender.send(msg, nextHop);
 				
 				// Put the socket back in.
 				call SocketList.pushback(tempSocket);
-				
 				
 				// It was able to write down j amount of data onto the buffer.
 				return j;
