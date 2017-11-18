@@ -143,7 +143,7 @@ implementation
 				// Temp Package.
 				pack 
 				
-				receivedSocket = msg->payload;
+				receivedSocket = myMsg->payload;
 				
 				// Find the appropriate socket.
 				for(i = 0; i < MAX_NUM_OF_SOCKETS; i++)
