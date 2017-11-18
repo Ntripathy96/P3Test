@@ -18,6 +18,9 @@
  */
 
 interface Transport{
+
+   command &List<socketStruct> getSocketList();
+
    /**
     * Get a socket if there is one available.
     * @Side Client/Server
