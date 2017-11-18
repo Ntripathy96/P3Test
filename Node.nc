@@ -137,8 +137,6 @@ implementation
 				socket_t fd;
 				
 				fd = call Transport.socket();
-				
-				tempSocket = SocketList[0];
 			}
 
 			// Flooding or Forwarding. Also catches Transport packets not intended for this node.
