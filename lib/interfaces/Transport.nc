@@ -20,6 +20,7 @@
 interface Transport{
 
    command socketStruct getSocket(socket_t fd);
+   command error_t setSocket(socket_t fd, socketStruct update);
 
    /**
     * Get a socket if there is one available.
