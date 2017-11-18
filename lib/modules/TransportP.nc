@@ -16,6 +16,11 @@ module TransportP
 
 implementation
 {
+
+	command &List<socketStruct> getSocketList()
+	{
+	
+	}
 	
 	command socket_t Transport.socket()
 	{
