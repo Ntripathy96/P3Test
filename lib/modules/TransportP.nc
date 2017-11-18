@@ -319,9 +319,6 @@ implementation
 			{
 				nextHop = Table->lspTuples[i].nextHop;
 				
-				// Send it to the next hop.
-				call Sender.send(SYN, nextHop);
-				
 				// Modify the Socket State.
 				for(j = 0; j < call SocketList.size(); j++)
 				{
@@ -337,7 +334,12 @@ implementation
 						tempSocket.socketState.src = addr->port;
 						tempSocket.socketState.dest = *addr;
 						
+						memcpy(SYN, &tempSocket, (uint8_t) sizeof(tempSocket));
+						
 						call SocketList.pushback(tempSocket);
+						
+						// Send it to the next hop.
+						call Sender.send(SYN, nextHop);
 						
 						break;
 					}
