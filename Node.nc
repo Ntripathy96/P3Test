@@ -209,7 +209,38 @@ implementation
 					//If flag is 4, it is a DATA packet.
 					else if(receivedSocket->socketState.flag == 4)
 					{
+						// Data has been received, now to read it.
 						
+						// Make a DATA_ACK packet to let the other node know the data has been received.
+						pack DATA_ACK;
+						
+						// The length of the buffer is the same as the value of the lastWritten index in the buffer.
+						uint16_t bufflen;
+						
+						// Read the buffer from the DATA packet.
+						call Transport.read(receivedSocket->fd, receivedSocket->socketState.sendBuff, bufflen);
+						
+						// Now send out an DATA_ACK, as the data has been received.
+						// Get the current state of the Socket.
+						tempSocket = call Tranpsort.getSocket(i);
+						
+						// Update the state of the Socket.
+						tempSocket.socketState.flag = 5;
+						tempSocket.socketState.nextExpected = bufflen + 1;
+						call Transport.setSocket(tempSocket.fd, tempSocket);
+						
+						// Make the DATA_ACK.
+						makePack(&DATA_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+					
+						dbg(TRANSPORT_CHANNEL, "DATA has been received, sending out DATA_ACK.\n");
+						
+						// Send out the DATA_ACK.
+						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
+					}
+					//If flag is 5, it is a DATA_ACK packet.
+					else if(receivedSocket->socketState.flag == 5)
+					{
+						dbg(TRANSPORT_CHANNEL, "DATA_ACK received, DATA successfully reached destination.\n");
 					}
 				}
 				
