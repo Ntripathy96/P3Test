@@ -182,8 +182,8 @@ implementation
 		// Space left on the buffer.
 		int spaceRemaining;
 		
-		// Packet to be written to.
-		pack msg;
+		// DATA packet to be written to.
+		pack DATA;
 		
 		// Next hop for the destination.
 		uint16_t nextHop;
@@ -221,21 +221,21 @@ implementation
 				dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d", fd);
 				
 				// Initialize the written message.
-				msg.src = TOS_NODE_ID;
-				msg.dest = tempSocket.socketState.dest.addr;
-				msg.protocol = PROTOCOL_TCP;
-				msg.TTL = MAX_TTL;
-				memcpy(msg.payload, &tempSocket, (uint8_t) sizeof(temp));
+				DATA.src = TOS_NODE_ID;
+				DATA.dest = tempSocket.socketState.dest.addr;
+				DATA.protocol = PROTOCOL_TCP;
+				DATA.TTL = MAX_TTL;
+				memcpy(DATA.payload, &tempSocket, (uint8_t) sizeof(temp));
 				
 				// Get the next hop associated with the destination.
 				for(j = 0; j < Table->entries; j++)
 				{
-					if(Table->lspTuples[i].dest == msg.dest)
+					if(Table->lspTuples[i].dest == DATA.dest)
 						nextHop = Table->lspTuples[i].nextHop;
 				}
 				
 				// Send out the written message.
-				call Sender.send(msg, nextHop);
+				call Sender.send(DATA, nextHop);
 				
 				// Put the socket back in.
 				call SocketList.pushback(tempSocket);
