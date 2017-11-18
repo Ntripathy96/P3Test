@@ -140,8 +140,8 @@ implementation
 				// Iterator.
 				int i;
 				
-				// Temp Package.
-				//pack 
+				// SYN_ACK packet.
+				pack SYN_ACK;
 				
 				receivedSocket = myMsg->payload;
 				
@@ -156,7 +156,7 @@ implementation
 					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag = 1))
 					{
 						// Conditions hold true, reply with a SYN_ACK.
-						
+						memcpy(SYN_ACK.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 					}
 					
 				}
