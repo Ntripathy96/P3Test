@@ -17,9 +17,28 @@ module TransportP
 implementation
 {
 
+	// Helper command to access SocketList. Returns the Socket associated with the provided fd. 
+	// If no such socket exists, returns NULL.
 	command socketStruct Transport.getSocket(socket_t fd)
 	{
-	
+		// Temp Socket Struct.
+		socketStruct tempSocket;
+		
+		// Iterator.
+		int i;
+		
+		// Find the Socket.
+		for(i = 0; i < call SocketList.size(); i++)
+		{
+			tempSocket = call SocketList.get(i);
+			
+			// If this is true, the appropriate Socket has been found.
+			if (fd == tempSocket.fd)
+				return tempSocket;
+		}
+		
+		// If this point is reached, it was unable to find the Socket.
+		return NULL;
 	}
 	
 	command socket_t Transport.socket()
