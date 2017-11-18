@@ -235,7 +235,7 @@ implementation
 						dbg(TRANSPORT_CHANNEL, "DATA has been received, sending out DATA_ACK.\n");
 						
 						// Send out the DATA_ACK.
-						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
+						call Sender.send(DATA_ACK, forwardPacketTo(&confirmedList, myMsg->src));
 					}
 					//If flag is 5, it is a DATA_ACK packet.
 					else if(receivedSocket->socketState.flag == 5)
