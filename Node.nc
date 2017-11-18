@@ -139,10 +139,6 @@ implementation
 				
 				fd = call Transport.socket();
 				
-				//for(i=0; i < SocketList.size(); i++)
-				//{
-				//tempSocket = call Sockets.get(i);
-				//}
 			}
 
 			// Flooding or Forwarding. Also catches Transport packets not intended for this node.
