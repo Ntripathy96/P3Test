@@ -135,7 +135,7 @@ implementation
 			{
 				// Temp Socket Structs.
 				socketStruct tempSocket;
-				socketStruct receivedSocket;
+				socketStruct* receivedSocket;
 				
 				// Iterator.
 				int i;
