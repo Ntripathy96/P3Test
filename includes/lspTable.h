@@ -1,8 +1,7 @@
 #ifndef LSP_TABLE_H
 #define LSP_TABLE_H
 
-#define MAXNODES 20
-#define MAXNODEVAL MAXNODES
+#define maxEntries 20
 
 // lspTuple defines an entry in an LSP Table.
 // Contains a destination node's associated cost and next hop.
@@ -17,7 +16,7 @@ typedef struct lspTuple
 // Also contains a variable storing the number of entries currently in the struct.
 typedef struct lspTable
 {
-	lspTuple lspTuples[MAXNODES];
+	lspTuple lspTuples[maxEntries];
 	uint8_t entries;
 }lspTable;
 
@@ -27,7 +26,7 @@ void initializeTable(lspTable* table)
 	int i;
 	
 	// Set the cost to all possible nodes to a sentinel value.
-	for(i = 0; i < MAXNODES; i++)
+	for(i = 0; i < maxEntries; i++)
 		table->lspTuples[i].nodeNcost = -1;
 	
 	// Set the number of values in the table to zero.
@@ -67,7 +66,7 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
 bool lspTablePushBack(lspTable* cur, lspTuple newVal)
 {	
-	if(cur->entries != MAXNODEVAL)
+	if(cur->entries < 20)
 	{
 		cur->lspTuples[cur->entries] = newVal;
 		cur->entries++;
@@ -171,7 +170,7 @@ typedef struct lspMap
 void lspMapInit(lspMap *list, int TOS_NODE_ID)
 {
 	int i;	
-	for(i = 0; i < MAXNODES; i++)
+	for(i = 0; i < maxEntries; i++)
 	{
 		list[TOS_NODE_ID].cost[i] = -1;	
 	}	
