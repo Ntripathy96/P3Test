@@ -628,23 +628,23 @@ implementation
 	void dijkstra()
 	{
 		int i;	
-		lspTuple lspTup, temp;
+		lspEntry lspTup, temp;
 		
 		initializeTable(&tentativeList); 
 		initializeTable(&confirmedList);
 
-		lspTablePushBack(&tentativeList, temp = (lspTuple){TOS_NODE_ID,0,TOS_NODE_ID});
+		lspTablePushBack(&tentativeList, temp = (lspEntry){TOS_NODE_ID,0,TOS_NODE_ID});
 		
 		while(!lspTableIsEmpty(&tentativeList))
 		{
-			if(!lspTableContains(&confirmedList,lspTup = lspTupleRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
+			if(!lspTableContains(&confirmedList,lspTup = lspEntryRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(lspTablePushBack(&confirmedList,lspTup))
 					dbg(ROUTING_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.cost, lspTup.nextHop);
 			
 			for(i = 1; i < 20; i++)
 			{
-				temp = (lspTuple){i,lspMAP[lspTup.dest].cost[i]+lspTup.cost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
-				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspTupleReplace(&tentativeList,temp,temp.cost))
+				temp = (lspEntry){i,lspMAP[lspTup.dest].cost[i]+lspTup.cost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
+				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspEntryReplace(&tentativeList,temp,temp.cost))
 						dbg(ROUTING_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.cost, temp.nextHop);
 				else if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspTablePushBack(&tentativeList, temp))
 						dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.cost, temp.nextHop);
@@ -653,7 +653,7 @@ implementation
 		
 		dbg(ROUTING_CHANNEL, "Printing the ROUTING_CHANNEL table! \n");
 		for(i = 0; i < confirmedList.entries; i++)
-			dbg(ROUTING_CHANNEL, "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].cost,confirmedList.lspTuples[i].nextHop);
+			dbg(ROUTING_CHANNEL, "dest:%d cost:%d nextHop:%d \n",confirmedList.lspEntries[i].dest,confirmedList.lspEntries[i].cost,confirmedList.lspEntries[i].nextHop);
 	}
 
 	int forwardPacketTo(lspTable* list, int dest)
