@@ -34,22 +34,23 @@ void initializeTable(lspTable* Table)
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
-bool lspEntryReplace(lspTable* list, lspEntry newEntry, int cost)
+bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
 {
 	// Iterator.
 	int i;
 	
 	// Find the specific tuple, and overwrite it.
-	for(i = 0; i < list->entries; i++)
+	for(i = 0; i < Table->entries; i++)
 	{
 		// Look for the matching destinations.
-		if(newEntry.dest == list->lspEntries[i].dest)
+		if(newEntry.dest == Table->lspEntries[i].dest)
 		{
 			// If the cost is lower than the current one, use the new tuple.
-			if (cost < list->lspEntries[i].cost)
+			if (cost < Table->lspEntries[i].cost)
 			{
-				list->lspEntries[i].cost = cost;
-				list->lspEntries[i].nextHop = newEntry.nextHop;
+				Table->lspEntries[i] = newEntry;
+				//Table->lspEntries[i].cost = cost;
+				//Table->lspEntries[i].nextHop = newEntry.nextHop;
 				return TRUE;
 			}
 			
