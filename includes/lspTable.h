@@ -20,17 +20,17 @@ typedef struct lspTable
 	uint8_t entries;
 }lspTable;
 
-void initializeTable(lspTable* table)
+void initializeTable(lspTable* Table)
 {
 	// Iterator.
 	int i;
 	
 	// Set the cost to all possible nodes to a sentinel value.
 	for(i = 0; i < maxEntries; i++)
-		table->lspEntries[i].cost = -1;
+		Table->lspEntries[i].cost = -1;
 	
 	// Set the number of values in the table to zero.
-	table->entries = 0;
+	Table->entries = 0;
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
@@ -82,22 +82,32 @@ bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
 }
 
 // Checks whether or not the table is empty.
-bool lspTableIsEmpty(lspTable* cur)
+bool lspTableIsEmpty(lspTable* Table)
 {
-	if(cur->entries == 0)
+	// If the entries "pointer" is zero, then there are no entries.
+	// Therefore, the table is empty.
+	if(Table->entries == 0)
 		return TRUE;
 	else
 		return FALSE;
 }
 
-// Checks to see if a certain tuple is in the Table.
-bool lspTableContains(lspTable* list, lspEntry newVal)
+// Checks to see if a certain destination is in the Table.
+bool lspTableContains(lspTable* Table, lspEntry Entry)
 {
-	uint8_t i;
-	for(i = 0; i<list->entries; i++)
+	// Iterator.
+	int i;
+	
+	// Move through the table.
+	for(i = 0; i < Table->entries; i++)
 	{
-		if(newVal.dest == list->lspEntries[i].dest) return TRUE;
+		// If the destination node of the new Entry matches one of the Entries in the table,
+		// Then the destination node is already in the table.
+		if(Entry.dest == Table->lspEntries[i].dest)
+			return TRUE;
 	}
+	
+	// Otherwise, this is a new destination node.
 	return FALSE;
 }
 
