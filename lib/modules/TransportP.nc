@@ -230,8 +230,8 @@ implementation
 				// Get the next hop associated with the destination.
 				for(j = 0; j < Table->entries; j++)
 				{
-					if(Table->lspTuples[i].dest == DATA.dest)
-						nextHop = Table->lspTuples[i].nextHop;
+					if(Table->lspEntries[i].dest == DATA.dest)
+						nextHop = Table->lspEntries[i].nextHop;
 				}
 				
 				// Send out the written message.
@@ -344,9 +344,9 @@ implementation
 		// Find the next hop for the destination node and send it there.
 		for(i = 0; i < Table->entries; i++)
 		{
-			if(Table->lspTuples[i].dest == SYN.dest)
+			if(Table->lspEntries[i].dest == SYN.dest)
 			{
-				nextHop = Table->lspTuples[i].nextHop;
+				nextHop = Table->lspEntries[i].nextHop;
 				
 				// Modify the Socket State.
 				for(j = 0; j < call SocketList.size(); j++)
