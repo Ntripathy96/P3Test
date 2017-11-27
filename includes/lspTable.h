@@ -64,16 +64,21 @@ bool lspEntryReplace(lspTable* list, lspEntry newEntry, int cost)
 }
 
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
-bool lspTablePushBack(lspTable* cur, lspEntry newVal)
+bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
 {	
-	if(cur->entries < 20)
+	// If there are "maxEntries" or more entries in the Table, a new entry cannot be added.
+	if(Table->entries >= maxEntries)
+		return FALSE;
+	
+	else
 	{
-		cur->lspEntries[cur->entries] = newVal;
-		cur->entries++;
+		// Place the entry at the tail of the Table by using the entries "pointer".
+		Table->lspEntries[Table->entries] = newEntry;
+		
+		// Move the entries "pointer".
+		Table->entries++;
 		return TRUE;
 	}
-	else 
-		return FALSE;
 }
 
 // Checks whether or not the table is empty.
