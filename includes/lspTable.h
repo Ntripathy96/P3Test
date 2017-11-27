@@ -39,18 +39,16 @@ bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
 	// Iterator.
 	int i;
 	
-	// Find the specific tuple, and overwrite it.
+	// Find the specific entry, and overwrite it.
 	for(i = 0; i < Table->entries; i++)
 	{
 		// Look for the matching destinations.
 		if(newEntry.dest == Table->lspEntries[i].dest)
 		{
-			// If the cost is lower than the current one, use the new tuple.
+			// If the cost is lower than the current one, use the new entry.
 			if (cost < Table->lspEntries[i].cost)
 			{
 				Table->lspEntries[i] = newEntry;
-				//Table->lspEntries[i].cost = cost;
-				//Table->lspEntries[i].nextHop = newEntry.nextHop;
 				return TRUE;
 			}
 			
