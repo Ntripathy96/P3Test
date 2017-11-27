@@ -8,7 +8,7 @@
 typedef struct lspTuple
 {
 	uint8_t dest;
-	uint8_t nodeNcost;
+	uint8_t cost;
 	uint8_t nextHop;	
 }lspTuple;
 
@@ -27,7 +27,7 @@ void initializeTable(lspTable* table)
 	
 	// Set the cost to all possible nodes to a sentinel value.
 	for(i = 0; i < maxEntries; i++)
-		table->lspTuples[i].nodeNcost = -1;
+		table->lspTuples[i].cost = -1;
 	
 	// Set the number of values in the table to zero.
 	table->entries = 0;
@@ -46,9 +46,9 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 		if(newTuple.dest == list->lspTuples[i].dest)
 		{
 			// If the cost is lower than the current one, use the new tuple.
-			if (cost < list->lspTuples[i].nodeNcost)
+			if (cost < list->lspTuples[i].cost)
 			{
-				list->lspTuples[i].nodeNcost = cost;
+				list->lspTuples[i].cost = cost;
 				list->lspTuples[i].nextHop = newTuple.nextHop;
 				return TRUE;
 			}
@@ -136,10 +136,10 @@ lspTuple lspTupleRemoveMinCost(lspTable* cur)
 	int minNode;
 	lspTuple temp;
 	lspTuple temp2;
-	temp.nodeNcost = 255;
+	temp.cost = 255;
 	for(i = 0; i < cur->entries; i++)
 	{
-		if(cur->lspTuples[i].nodeNcost < temp.nodeNcost)
+		if(cur->lspTuples[i].cost < temp.cost)
 		{
 			temp = cur->lspTuples[i];
 			minNode = i;
