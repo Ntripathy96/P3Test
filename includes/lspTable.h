@@ -3,20 +3,20 @@
 
 #define maxEntries 20
 
-// lspTuple defines an entry in an LSP Table.
+// lspEntry defines an entry in an LSP Table.
 // Contains a destination node's associated cost and next hop.
-typedef struct lspTuple
+typedef struct lspEntry
 {
 	uint8_t dest;
 	uint8_t cost;
 	uint8_t nextHop;	
-}lspTuple;
+}lspEntry;
 
-// An LSP table, full of lspTuples.
+// An LSP table, full of lspEntries
 // Also contains a variable storing the number of entries currently in the struct.
 typedef struct lspTable
 {
-	lspTuple lspTuples[maxEntries];
+	lspEntry lspEntries[maxEntries];
 	uint8_t entries;
 }lspTable;
 
@@ -27,14 +27,14 @@ void initializeTable(lspTable* table)
 	
 	// Set the cost to all possible nodes to a sentinel value.
 	for(i = 0; i < maxEntries; i++)
-		table->lspTuples[i].cost = -1;
+		table->lspEntries[i].cost = -1;
 	
 	// Set the number of values in the table to zero.
 	table->entries = 0;
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
-bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
+bool lspEntryReplace(lspTable* list, lspEntry newEntry, int cost)
 {
 	// Iterator.
 	int i;
@@ -43,13 +43,13 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 	for(i = 0; i < list->entries; i++)
 	{
 		// Look for the matching destinations.
-		if(newTuple.dest == list->lspTuples[i].dest)
+		if(newEntry.dest == list->lspEntries[i].dest)
 		{
 			// If the cost is lower than the current one, use the new tuple.
-			if (cost < list->lspTuples[i].cost)
+			if (cost < list->lspEntries[i].cost)
 			{
-				list->lspTuples[i].cost = cost;
-				list->lspTuples[i].nextHop = newTuple.nextHop;
+				list->lspEntries[i].cost = cost;
+				list->lspEntries[i].nextHop = newEntry.nextHop;
 				return TRUE;
 			}
 			
@@ -64,11 +64,11 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost)
 }
 
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
-bool lspTablePushBack(lspTable* cur, lspTuple newVal)
+bool lspTablePushBack(lspTable* cur, lspEntry newVal)
 {	
 	if(cur->entries < 20)
 	{
-		cur->lspTuples[cur->entries] = newVal;
+		cur->lspEntries[cur->entries] = newVal;
 		cur->entries++;
 		return TRUE;
 	}
@@ -86,12 +86,12 @@ bool lspTableIsEmpty(lspTable* cur)
 }
 
 // Checks to see if a certain tuple is in the Table.
-bool lspTableContains(lspTable* list, lspTuple newVal)
+bool lspTableContains(lspTable* list, lspEntry newVal)
 {
 	uint8_t i;
 	for(i = 0; i<list->entries; i++)
 	{
-		if(newVal.dest == list->lspTuples[i].dest) return TRUE;
+		if(newVal.dest == list->lspEntries[i].dest) return TRUE;
 	}
 	return FALSE;
 }
@@ -102,46 +102,46 @@ bool lspTableContainsDest(lspTable* list, int node)
 	uint8_t i;
 	for(i = 0; i<list->entries; i++)
 	{
-		if(node == list->lspTuples[i].dest)
+		if(node == list->lspEntries[i].dest)
 			 return TRUE;
 	}
 	return FALSE;
 }
 
 // ***************** REMOVE THIS *********************
-lspTuple lspTableRemove(lspTable* list, int node){
+lspEntry lspTableRemove(lspTable* list, int node){
 	uint8_t i;
-	lspTuple temp;
+	lspEntry temp;
 	for(i = 0; i<=list->entries; i++){
 		if(i == node){
 			if(list->entries > 1){
-				temp = list->lspTuples[i];
-				list->lspTuples[i] = list->lspTuples[list->entries-1];		
+				temp = list->lspEntries[i];
+				list->lspEntries[i] = list->lspEntries[list->entries-1];		
 				list->entries--;
 				i--;
 				return temp;
 			}
 			else{
 				list->entries = 0;
-				return list->lspTuples[0];
+				return list->lspEntries[0];
 			}
 		}
 	}	
 }
 
 // Remobe the tuple with the lowest cost, and return it.
-lspTuple lspTupleRemoveMinCost(lspTable* cur)
+lspEntry lspEntryRemoveMinCost(lspTable* cur)
 {
 	int i;
 	int minNode;
-	lspTuple temp;
-	lspTuple temp2;
+	lspEntry temp;
+	lspEntry temp2;
 	temp.cost = 255;
 	for(i = 0; i < cur->entries; i++)
 	{
-		if(cur->lspTuples[i].cost < temp.cost)
+		if(cur->lspEntries[i].cost < temp.cost)
 		{
-			temp = cur->lspTuples[i];
+			temp = cur->lspEntries[i];
 			minNode = i;
 		}
 	}
@@ -155,8 +155,8 @@ int lspTableLookUp(lspTable* list, int dest)
 	int i;
 	for(i = 0; i < list->entries; i++)
 	{
-		if(list->lspTuples[i].dest == dest)
-			return list->lspTuples[i].nextHop;
+		if(list->lspEntries[i].dest == dest)
+			return list->lspEntries[i].nextHop;
 	}
 	return -1;
 }
