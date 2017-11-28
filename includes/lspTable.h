@@ -44,6 +44,19 @@ void initializeTable(lspTable* Table)
 		Table->lspEntries[i].cost = -1;
 }
 
+// Checks whether or not the table is empty.
+bool tableIsEmpty(lspTable* Table)
+{
+	// If the entries "pointer" is non-zero, then there are entries in the table.
+	// Therefore, the table is not empty.
+	if(Table->entries > 0)
+		return FALSE;
+	
+	// If it is zero, then there are no entries and the table is empty.
+	else
+		return TRUE;
+}
+
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
 bool tablePushback(lspTable* Table, lspEntry newEntry)
 {	
@@ -89,19 +102,6 @@ bool replaceEntry(lspTable* Table, lspEntry newEntry, int cost)
 	
 	// If this point is reached, the entry is not currently in the table.
 	return FALSE;
-}
-
-// Checks whether or not the table is empty.
-bool tableIsEmpty(lspTable* Table)
-{
-	// If the entries "pointer" is non-zero, then there are entries in the table.
-	// Therefore, the table is not empty.
-	if(Table->entries > 0)
-		return FALSE;
-	
-	// If it is zero, then there are no entries and the table is empty.
-	else
-		return TRUE;
 }
 
 // Checks to see if a certain entry is in the Table.
@@ -165,14 +165,23 @@ lspEntry lspEntryRemoveMinCost(lspTable* cur)
 }
 
 // Given a destination, return its associated nextHop.
-int lspTableLookUp(lspTable* list, int dest)
+int lspTableLookUp(lspTable* Table, int dest)
 {
+	// Iterator.
 	int i;
-	for(i = 0; i < list->entries; i++)
+	
+	// Search through the Table and find the respective destination node.
+	for(i = 0; i < Table->entries; i++)
 	{
-		if(list->lspEntries[i].dest == dest)
-			return list->lspEntries[i].nextHop;
+		if(dest == Table->lspEntries[i].dest)
+		{
+			// Return the next Hop for this destination node.
+			return Table->lspEntries[i].nextHop;
+		}
 	}
+	
+	// If this point is reached, the destination node was not found in the table. 
+	// Return a sentinel value.
 	return -1;
 }
 
