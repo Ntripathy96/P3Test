@@ -724,7 +724,7 @@ implementation
 		lspEntry tempEntry;
 
 		// Set the temporary entry's cost to a sentinel value.
-		tempEntry.cost = 1000;
+		tempEntry.cost = 255;
 
 		// Find the node with the min cost.
 		for(i = 0; i < Table->entries; i++)
