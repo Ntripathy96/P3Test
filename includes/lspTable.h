@@ -7,9 +7,9 @@
 // Contains a destination node's associated cost and next hop.
 typedef struct lspEntry
 {
-	uint8_t dest;
-	uint8_t cost;
-	uint8_t nextHop;	
+	uint8_t dest; // The destination node of this entry.
+	uint8_t cost; // The cost to get to said destination.
+	uint8_t nextHop; // The next hop for said destination.
 }lspEntry;
 
 // An LSP table, full of lspEntries
@@ -25,12 +25,12 @@ void initializeTable(lspTable* Table)
 	// Iterator.
 	int i;
 	
+	// Set the number of values in the table to zero.
+	Table->entries = 0;
+	
 	// Set the cost to all possible nodes to a sentinel value.
 	for(i = 0; i < maxEntries; i++)
 		Table->lspEntries[i].cost = -1;
-	
-	// Set the number of values in the table to zero.
-	Table->entries = 0;
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
@@ -58,7 +58,7 @@ bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
 		}
 	}
 	
-	// If this point is reached, the tuple is not currently in the table.
+	// If this point is reached, the entry is not currently in the table.
 	return FALSE;
 }
 
@@ -83,12 +83,14 @@ bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
 // Checks whether or not the table is empty.
 bool lspTableIsEmpty(lspTable* Table)
 {
-	// If the entries "pointer" is zero, then there are no entries.
-	// Therefore, the table is empty.
-	if(Table->entries == 0)
-		return TRUE;
-	else
+	// If the entries "pointer" is non-zero, then there are entries in the table.
+	// Therefore, the table is not empty.
+	if(Table->entries > 0)
 		return FALSE;
+	
+	// If it is zero, then there are no entries and the table is empty.
+	else
+		return TRUE;
 }
 
 // Checks to see if a certain destination is in the Table.
