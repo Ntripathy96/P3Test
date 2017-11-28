@@ -635,7 +635,7 @@ implementation
 
 		tablePushback(&tentativeList, temp = (lspEntry){TOS_NODE_ID,0,TOS_NODE_ID});
 		
-		while(!lspTableIsEmpty(&tentativeList))
+		while(!tableIsEmpty(&tentativeList))
 		{
 			if(!lspTableContains(&confirmedList,lspTup = lspEntryRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(tablePushback(&confirmedList,lspTup))
