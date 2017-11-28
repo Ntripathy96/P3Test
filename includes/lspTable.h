@@ -30,7 +30,7 @@ typedef struct lspTable
 	
 }lspTable;
 
-// Takes in a Table, and intializes all values to a sentinel value. Also sets the entries to zero.
+// Takes in a Table, and intializes all values to a sentinel value. Also sets the entries "pointer" to zero.
 void initializeTable(lspTable* Table)
 {
 	// Iterator.
