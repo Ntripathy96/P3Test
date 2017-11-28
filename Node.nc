@@ -644,7 +644,7 @@ implementation
 			for(i = 1; i < 20; i++)
 			{
 				temp = (lspEntry){i,lspMAP[lspTup.dest].cost[i]+lspTup.cost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
-				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && lspEntryReplace(&tentativeList,temp,temp.cost))
+				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && replaceEntry(&tentativeList,temp,temp.cost))
 						dbg(ROUTING_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.cost, temp.nextHop);
 				else if(!lspTableContainsDest(&confirmedList, i) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && tablePushback(&tentativeList, temp))
 						dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.cost, temp.nextHop);
