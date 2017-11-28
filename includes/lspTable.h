@@ -43,6 +43,24 @@ void initializeTable(lspTable* Table)
 		Table->lspEntries[i].cost = -1;
 }
 
+// Adds new entry into the LSP Table, much like a vector from the C++ STL.
+bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
+{	
+	// If there are "maxEntries" or more entries in the Table, a new entry cannot be added.
+	if(Table->entries >= maxEntries)
+		return FALSE;
+	
+	else
+	{
+		// Place the entry at the tail of the Table by using the entries "pointer".
+		Table->lspEntries[Table->entries] = newEntry;
+		
+		// Move the entries "pointer".
+		Table->entries++;
+		return TRUE;
+	}
+}
+
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
 bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
 {
@@ -70,24 +88,6 @@ bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
 	
 	// If this point is reached, the entry is not currently in the table.
 	return FALSE;
-}
-
-// Adds new entry into the LSP Table, much like a vector from the C++ STL.
-bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
-{	
-	// If there are "maxEntries" or more entries in the Table, a new entry cannot be added.
-	if(Table->entries >= maxEntries)
-		return FALSE;
-	
-	else
-	{
-		// Place the entry at the tail of the Table by using the entries "pointer".
-		Table->lspEntries[Table->entries] = newEntry;
-		
-		// Move the entries "pointer".
-		Table->entries++;
-		return TRUE;
-	}
 }
 
 // Checks whether or not the table is empty.
