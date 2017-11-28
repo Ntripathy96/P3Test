@@ -644,7 +644,7 @@ implementation
 		
 		while(!tableIsEmpty(&tentativeList))
 		{
-			if(!tableContains(&confirmedList, lspTup = lspEntryRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
+			if(!tableContains(&confirmedList, lspTup = getMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(tablePushback(&confirmedList,lspTup))
 					dbg(ROUTING_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.cost, lspTup.nextHop);
 			
