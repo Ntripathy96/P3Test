@@ -63,7 +63,7 @@ bool tablePushback(lspTable* Table, lspEntry newEntry)
 }
 
 // Look for a specific destination tuple, and replace the cost and hop with the new lower one.
-bool lspEntryReplace(lspTable* Table, lspEntry newEntry, int cost)
+bool replaceEntry(lspTable* Table, lspEntry newEntry, int cost)
 {
 	// Iterator.
 	int i;
