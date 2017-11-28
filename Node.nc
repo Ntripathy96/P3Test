@@ -637,16 +637,16 @@ implementation
 		
 		while(!tableIsEmpty(&tentativeList))
 		{
-			if(!lspTableContains(&confirmedList, lspTup = lspEntryRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
+			if(!ltableContains(&confirmedList, lspTup = lspEntryRemoveMinCost(&tentativeList))) //gets the minCost node from the tentative and removes it, then checks if it's in the confirmed list.
 				if(tablePushback(&confirmedList,lspTup))
 					dbg(ROUTING_CHANNEL,"PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.cost, lspTup.nextHop);
 			
 			for(i = 1; i < 20; i++)
 			{
 				temp = (lspEntry){i,lspMAP[lspTup.dest].cost[i]+lspTup.cost,(lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop};
-				if(!lspTableContains(&confirmedList, temp) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && replaceEntry(&tentativeList,temp,temp.cost))
+				if(!ltableContains(&confirmedList, temp) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && replaceEntry(&tentativeList,temp,temp.cost))
 						dbg(ROUTING_CHANNEL,"Replace from tentativeList dest:%d cost:%d nextHop:%d\n", temp.dest, temp.cost, temp.nextHop);
-				else if(!lspTableContains(&confirmedList, temp) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && tablePushback(&tentativeList, temp))
+				else if(!tableContains(&confirmedList, temp) && lspMAP[lspTup.dest].cost[i] != 255 && lspMAP[i].cost[lspTup.dest] != 255 && tablePushback(&tentativeList, temp))
 						dbg(ROUTING_CHANNEL,"PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.cost, temp.nextHop);
 			}
 		}
