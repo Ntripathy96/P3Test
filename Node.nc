@@ -86,7 +86,7 @@ implementation
 	int forwardPacketTo(lspTable* list, int dest);
 	void printCostList(lspMap *list, uint8_t nodeID);
 	float EMA(float prevEMA, float now,float weight);
-	void lspMapInit(lspMap *list, int TOS_NODE_ID);
+	void initializeMap(lspMap *Map, int TOS_NODE_ID);
 
 	event void Boot.booted()
 	{
@@ -339,7 +339,7 @@ implementation
 					// If this packet hasn't been seen yet.
 					if(!checkSeenLspPacks(sendPackage))
 					{ 
-						lspMapInit(&lspMAP, myMsg->src);
+						initializeMap(&lspMAP, myMsg->src);
 
 						if(myMsg->src == TOS_NODE_ID){}
 
@@ -581,7 +581,7 @@ implementation
 	{
 		int i;
 		uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-		lspMapInit(&lspMAP, TOS_NODE_ID);
+		initializeMap(&lspMAP, TOS_NODE_ID);
 		for(i  =0; i < call NeighborList.size(); i++)
 		{
 			neighbor Neighbor = call NeighborList.get(i);
@@ -700,12 +700,12 @@ implementation
 		}
 	}
 
-	void lspMapInit(lspMap *list, int TOS_NODE_ID)
+	void initializeMap(lspMap *Map, int TOS_NODE_ID)
 	{
 		int i;	
 		for(i = 0; i < maxEntries; i++)
 		{
-			list[TOS_NODE_ID].cost[i] = -1;	
+			Map[TOS_NODE_ID].cost[i] = -1;	
 		}	
 	}
 
