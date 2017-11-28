@@ -123,6 +123,27 @@ bool tableContains(lspTable* Table, lspEntry Entry)
 	return FALSE;
 }
 
+// Given a destination, return its associated nextHop.
+int getNextHop(lspTable* Table, int dest)
+{
+	// Iterator.
+	int i;
+	
+	// Search through the Table and find the respective destination node.
+	for(i = 0; i < Table->entries; i++)
+	{
+		if(dest == Table->lspEntries[i].dest)
+		{
+			// Return the next Hop for this destination node.
+			return Table->lspEntries[i].nextHop;
+		}
+	}
+	
+	// If this point is reached, the destination node was not found in the table. 
+	// Return a sentinel value.
+	return -1;
+}
+
 // ***************** REMOVE THIS *********************
 lspEntry lspTableRemove(lspTable* list, int node){
 	uint8_t i;
@@ -162,27 +183,6 @@ lspEntry lspEntryRemoveMinCost(lspTable* cur)
 	}
 	temp2 = lspTableRemove(cur, minNode);
 	return temp2;
-}
-
-// Given a destination, return its associated nextHop.
-int getNextHop(lspTable* Table, int dest)
-{
-	// Iterator.
-	int i;
-	
-	// Search through the Table and find the respective destination node.
-	for(i = 0; i < Table->entries; i++)
-	{
-		if(dest == Table->lspEntries[i].dest)
-		{
-			// Return the next Hop for this destination node.
-			return Table->lspEntries[i].nextHop;
-		}
-	}
-	
-	// If this point is reached, the destination node was not found in the table. 
-	// Return a sentinel value.
-	return -1;
 }
 
 #endif /* LSP_TABLE_H */
