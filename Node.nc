@@ -709,5 +709,62 @@ implementation
 		for(i = 0; i < maxEntries; i++)
 			Map[TOS_NODE_ID].cost[i] = -1;
 	}
+	
+	// Gets the entry with the lowest cost from the table, removes it, and then returns it.
+	lspEntry getMinCost(lspTable* Table)
+	{
+		// Iterator.
+		int i;
+
+		// Index of the min cost node.
+		int minNode;
+
+		// Temporary lspEntry.
+		lspEntry tempEntry;
+
+		// Set the temporary entry's cost to a sentinel value.
+		tempEntry.cost = 1000;
+
+		// Find the node with the min cost.
+		for(i = 0; i < Table->entries; i++)
+		{
+			// If the current node it is on is less than the cost of the temp, then a new min cost node has been found.
+			if(tempEntry.cost > Table->lspEntries[i].cost)
+			{
+				// Set temp as the new min cost node.
+				tempEntry = Table->lspEntries[i];
+
+				// Set the index of the min cost node.
+				minNode = i;
+			}
+		}
+
+		// Now remove the min cost node and return it.
+		// As long as there are more than one entries in the table, it can do it this way.
+		if(Table->entries > 1)
+		{
+			// Reset the tempEntry as the min cost node.
+			tempEntry = Table->lspEntries[minNode];
+
+			// "Swap" the min cost node with the last entry.
+			Table->lspEntries[minNode] = Table->lspEntries[Table->entries - 1];
+
+			// Decrement the entries "pointer".
+			Table->entries--;
+
+			// Return the min cost node.
+			return tempEntry;
+		}
+
+		// Otherwise, the last entry must be the min cost node. Set the table as empty.
+		else
+		{
+			// "Decrement" the entries "pointer".
+			Table->entries = 0;
+
+			// Return the min cost node.
+			return Table->lspEntries[0];
+		}
+	}
 
 }
