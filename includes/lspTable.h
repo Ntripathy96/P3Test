@@ -14,7 +14,8 @@ typedef struct lspEntry
 	uint8_t cost;
 	
 	// The next hop for said destination.
-	uint8_t nextHop; 
+	uint8_t nextHop;
+	
 }lspEntry;
 
 // An LSP table, full of lspEntries
