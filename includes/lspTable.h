@@ -104,8 +104,8 @@ bool tableIsEmpty(lspTable* Table)
 		return TRUE;
 }
 
-// Checks to see if a certain destination is in the Table.
-bool lspTableContains(lspTable* Table, lspEntry Entry)
+// Checks to see if a certain entry is in the Table.
+bool tableContains(lspTable* Table, lspEntry Entry)
 {
 	// Iterator.
 	int i;
@@ -122,19 +122,6 @@ bool lspTableContains(lspTable* Table, lspEntry Entry)
 	// Otherwise, this is a new destination node.
 	return FALSE;
 }
-
-/*
-// Checks if a Destination node is in the table.
-bool lspTableContainsDest(lspTable* list, int node)
-{
-	uint8_t i;
-	for(i = 0; i<list->entries; i++)
-	{
-		if(node == list->lspEntries[i].dest)
-			 return TRUE;
-	}
-	return FALSE;
-}*/
 
 // ***************** REMOVE THIS *********************
 lspEntry lspTableRemove(lspTable* list, int node){
