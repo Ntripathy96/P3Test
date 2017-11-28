@@ -44,7 +44,7 @@ void initializeTable(lspTable* Table)
 }
 
 // Adds new entry into the LSP Table, much like a vector from the C++ STL.
-bool lspTablePushBack(lspTable* Table, lspEntry newEntry)
+bool tablePushback(lspTable* Table, lspEntry newEntry)
 {	
 	// If there are "maxEntries" or more entries in the Table, a new entry cannot be added.
 	if(Table->entries >= maxEntries)
