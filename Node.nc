@@ -665,7 +665,7 @@ implementation
 
 	int forwardPacketTo(lspTable* list, int dest)
 	{	
-		return lspTableLookUp(list,dest);
+		return getNextHop(list,dest);
 	}
 
 
