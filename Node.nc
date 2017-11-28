@@ -87,6 +87,7 @@ implementation
 	void printCostList(lspMap *list, uint8_t nodeID);
 	float EMA(float prevEMA, float now,float weight);
 	void initializeMap(lspMap *Map, int TOS_NODE_ID);
+	lspEntry getMinCost(lspTable* Table);
 
 	event void Boot.booted()
 	{
