@@ -185,6 +185,7 @@ int lspTableLookUp(lspTable* Table, int dest)
 	return -1;
 }
 
+/*
 //Creates a Map of all the Nodes
 typedef struct lspMap
 {
@@ -198,6 +199,6 @@ void lspMapInit(lspMap *list, int TOS_NODE_ID)
 	{
 		list[TOS_NODE_ID].cost[i] = -1;	
 	}	
-}
+}*/
 
 #endif /* LSP_TABLE_H */
