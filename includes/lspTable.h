@@ -166,7 +166,7 @@ lspEntry lspTableRemove(lspTable* list, int node){
 }
 
 // Remobe the tuple with the lowest cost, and return it.
-lspEntry lspEntryRemoveMinCost(lspTable* cur)
+lspEntry getMinCost(lspTable* cur)
 {
 	int i;
 	int minNode;
