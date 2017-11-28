@@ -165,7 +165,7 @@ lspEntry lspEntryRemoveMinCost(lspTable* cur)
 }
 
 // Given a destination, return its associated nextHop.
-int lspTableLookUp(lspTable* Table, int dest)
+int getNextHop(lspTable* Table, int dest)
 {
 	// Iterator.
 	int i;
