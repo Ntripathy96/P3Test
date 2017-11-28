@@ -7,19 +7,29 @@
 // Contains a destination node's associated cost and next hop.
 typedef struct lspEntry
 {
-	uint8_t dest; // The destination node of this entry.
-	uint8_t cost; // The cost to get to said destination.
-	uint8_t nextHop; // The next hop for said destination.
+	// The destination node of this entry.
+	uint8_t dest;
+	
+	// The cost to get to said destination.
+	uint8_t cost;
+	
+	// The next hop for said destination.
+	uint8_t nextHop; 
 }lspEntry;
 
 // An LSP table, full of lspEntries
-// Also contains a variable storing the number of entries currently in the struct.
+// Also contains a "pointer" storing the number of entries currently in the struct.
 typedef struct lspTable
 {
+	// The actual Table of lspEntries.
 	lspEntry lspEntries[maxEntries];
+	
+	// A "pointer" as well as a counter. Marks the last index in the table, and how many entries are in it.
 	uint8_t entries;
+	
 }lspTable;
 
+// Takes in a Table, and intializes all values to a sentinel value. Also sets the entries to zero.
 void initializeTable(lspTable* Table)
 {
 	// Iterator.
