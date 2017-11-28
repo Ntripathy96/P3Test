@@ -144,28 +144,6 @@ int getNextHop(lspTable* Table, int dest)
 	return -1;
 }
 
-// ***************** REMOVE THIS *********************
-/*
-lspEntry lspTableRemove(lspTable* list, int node){
-	uint8_t i;
-	lspEntry temp;
-	for(i = 0; i<=list->entries; i++){
-		if(i == node){
-			if(list->entries > 1){
-				temp = list->lspEntries[i];
-				list->lspEntries[i] = list->lspEntries[list->entries-1];		
-				list->entries--;
-				i--;
-				return temp;
-			}
-			else{
-				list->entries = 0;
-				return list->lspEntries[0];
-			}
-		}
-	}	
-}*/
-
 // Gets the entry with the lowest cost from the table, removes it, and then returns it.
 lspEntry getMinCost(lspTable* Table)
 {
@@ -176,37 +154,51 @@ lspEntry getMinCost(lspTable* Table)
 	int minNode;
 	
 	// Temporary lspEntry.
-	lspEntry temp;
-	//lspEntry temp2;
+	lspEntry tempEntry;
 	
 	// Set the temporary entry's cost to a sentinel value.
-	temp.cost = 1000;
+	tempEntry.cost = 1000;
 	
 	// Find the node with the min cost.
 	for(i = 0; i < Table->entries; i++)
 	{
-		if(temp.cost > Table->lspEntries[i].cost)
+		// If the current node it is on is less than the cost of the temp, then a new min cost node has been found.
+		if(tempEntry.cost > Table->lspEntries[i].cost)
 		{
-			temp = Table->lspEntries[i];
+			// Set temp as the new min cost node.
+			tempEntry = Table->lspEntries[i];
+			
+			// Set the index of the min cost node.
 			minNode = i;
 		}
 	}
 	
+	// Now remove the min cost node and return it.
+	// As long as there are more than one entries in the table, it can do it this way.
 	if(Table->entries > 1)
 	{
-		temp = Table->lspEntries[minNode];
-		Table->lspEntries[minNode] = Table->lspEntries[Table->entries - 1];		
+		// Reset the tempEntry as the min cost node.
+		tempEntry = Table->lspEntries[minNode];
+		
+		// "Swap" the min cost node with the last entry.
+		Table->lspEntries[minNode] = Table->lspEntries[Table->entries - 1];
+		
+		// Decrement the entries "pointer".
 		Table->entries--;
-		return temp;
-	}
-	else
-	{
-		Table->entries = 0;
-		return Table->lspEntries[0];
+		
+		// Return the min cost node.
+		return tempEntry;
 	}
 	
-	//temp2 = lspTableRemove(Table, minNode);
-	//return temp;
+	// Otherwise, the last entry must be the min cost node. Set the table as empty.
+	else
+	{
+		// "Decrement" the entries "pointer".
+		Table->entries = 0;
+		
+		// Return the min cost node.
+		return Table->lspEntries[0];
+	}
 }
 
 #endif /* LSP_TABLE_H */
