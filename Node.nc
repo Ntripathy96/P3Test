@@ -28,15 +28,6 @@ typedef struct lspMap
 	uint8_t cost[20];
 }lspMap;
 
-void lspMapInit(lspMap *list, int TOS_NODE_ID)
-{
-	int i;	
-	for(i = 0; i < maxEntries; i++)
-	{
-		list[TOS_NODE_ID].cost[i] = -1;	
-	}	
-}
-
 // Sequence number of this node.
 int seqNum = 1;
 
@@ -95,6 +86,7 @@ implementation
 	int forwardPacketTo(lspTable* list, int dest);
 	void printCostList(lspMap *list, uint8_t nodeID);
 	float EMA(float prevEMA, float now,float weight);
+	void lspMapInit(lspMap *list, int TOS_NODE_ID);
 
 	event void Boot.booted()
 	{
