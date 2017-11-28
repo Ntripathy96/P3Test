@@ -702,11 +702,12 @@ implementation
 
 	void initializeMap(lspMap *Map, int TOS_NODE_ID)
 	{
-		int i;	
+		// Iterator.
+		int i;
+		
+		// Go through the map and set each cost to a sentinel value.
 		for(i = 0; i < maxEntries; i++)
-		{
-			Map[TOS_NODE_ID].cost[i] = -1;	
-		}	
+			Map[TOS_NODE_ID].cost[i] = -1;
 	}
 
 }
