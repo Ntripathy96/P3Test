@@ -185,20 +185,4 @@ int lspTableLookUp(lspTable* Table, int dest)
 	return -1;
 }
 
-/*
-//Creates a Map of all the Nodes
-typedef struct lspMap
-{
-	uint8_t cost[20];
-}lspMap;
-
-void lspMapInit(lspMap *list, int TOS_NODE_ID)
-{
-	int i;	
-	for(i = 0; i < maxEntries; i++)
-	{
-		list[TOS_NODE_ID].cost[i] = -1;	
-	}	
-}*/
-
 #endif /* LSP_TABLE_H */
