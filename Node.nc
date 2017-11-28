@@ -22,6 +22,21 @@ typedef nx_struct neighbor
 	nx_uint8_t Life;
 }neighbor;
 
+//Creates a Map of all the Nodes
+typedef struct lspMap
+{
+	uint8_t cost[20];
+}lspMap;
+
+void lspMapInit(lspMap *list, int TOS_NODE_ID)
+{
+	int i;	
+	for(i = 0; i < maxEntries; i++)
+	{
+		list[TOS_NODE_ID].cost[i] = -1;	
+	}	
+}
+
 // Sequence number of this node.
 int seqNum = 1;
 
@@ -691,6 +706,15 @@ implementation
 		for(i = 0; i < 20; i++) {
 			dbg(ROUTING_CHANNEL, "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
 		}
+	}
+
+	void lspMapInit(lspMap *list, int TOS_NODE_ID)
+	{
+		int i;	
+		for(i = 0; i < maxEntries; i++)
+		{
+			list[TOS_NODE_ID].cost[i] = -1;	
+		}	
 	}
 
 }
