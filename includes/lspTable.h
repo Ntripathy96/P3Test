@@ -145,6 +145,7 @@ int getNextHop(lspTable* Table, int dest)
 }
 
 // ***************** REMOVE THIS *********************
+/*
 lspEntry lspTableRemove(lspTable* list, int node){
 	uint8_t i;
 	lspEntry temp;
@@ -163,16 +164,25 @@ lspEntry lspTableRemove(lspTable* list, int node){
 			}
 		}
 	}	
-}
+}*/
 
-// Remobe the tuple with the lowest cost, and return it.
+// Gets the entry with the lowest cost from the table, removes it, and then returns it.
 lspEntry getMinCost(lspTable* Table)
 {
+	// Iterator.
 	int i;
+	
+	// Index of the min cost node.
 	int minNode;
+	
+	// Temporary lspEntry.
 	lspEntry temp;
-	lspEntry temp2;
-	temp.cost = 255;
+	//lspEntry temp2;
+	
+	// Set the temporary entry's cost to a sentinel value.
+	temp.cost = 1000;
+	
+	// Find the node with the min cost.
 	for(i = 0; i < Table->entries; i++)
 	{
 		if(temp.cost > Table->lspEntries[i].cost)
@@ -181,8 +191,22 @@ lspEntry getMinCost(lspTable* Table)
 			minNode = i;
 		}
 	}
-	temp2 = lspTableRemove(Table, minNode);
-	return temp2;
+	
+	if(Table->entries > 1)
+	{
+		temp = Table->lspEntries[minNode];
+		Table->lspEntries[minNode] = Table->lspEntries[Table->entries - 1];		
+		Table->entries--;
+		return temp;
+	}
+	else
+	{
+		Table->entries = 0;
+		return Table->lspEntries[0];
+	}
+	
+	//temp2 = lspTableRemove(Table, minNode);
+	//return temp;
 }
 
 #endif /* LSP_TABLE_H */
