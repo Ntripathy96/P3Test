@@ -92,7 +92,7 @@ bool replaceEntry(lspTable* Table, lspEntry newEntry, int cost)
 }
 
 // Checks whether or not the table is empty.
-bool lspTableIsEmpty(lspTable* Table)
+bool tableIsEmpty(lspTable* Table)
 {
 	// If the entries "pointer" is non-zero, then there are entries in the table.
 	// Therefore, the table is not empty.
