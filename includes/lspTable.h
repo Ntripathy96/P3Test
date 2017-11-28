@@ -123,6 +123,7 @@ bool lspTableContains(lspTable* Table, lspEntry Entry)
 	return FALSE;
 }
 
+/*
 // Checks if a Destination node is in the table.
 bool lspTableContainsDest(lspTable* list, int node)
 {
@@ -133,7 +134,7 @@ bool lspTableContainsDest(lspTable* list, int node)
 			 return TRUE;
 	}
 	return FALSE;
-}
+}*/
 
 // ***************** REMOVE THIS *********************
 lspEntry lspTableRemove(lspTable* list, int node){
