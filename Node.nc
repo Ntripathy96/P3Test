@@ -546,7 +546,20 @@ implementation
 			call Transport.connect(fd, &serverAdd, &confirmedList);
 		}
 	}
-	
+    	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
+   		 pack FIN;
+   		 socketState temp, temp2;
+   		 int i;
+   		 FIN.protocol = 4;
+   		 temp = call Transport.getSocket(temp.fd);
+    		 temp.state = CLOSED;
+    		 temp.flag = 6;
+    		 temp.dest.port = dest;
+   		 temp.dest.addr = destPort;
+    		 makePack(&FIN, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+    		 call Sender.send(FIN, forwardPacketTo(&confirmedList, myMsg->src))    dbg(TRANSPORT_CHANNEL, "Closed.\n");
+}
+
 	event void CommandHandler.setAppServer(){}
 
 	event void CommandHandler.setAppClient(){}
