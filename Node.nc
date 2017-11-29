@@ -194,7 +194,7 @@ implementation
 					{
 						// Packet to reply to the SYN_ACK.
 						// Specifies that a connection has been established.
-						pack EST;
+						pack ACK;
 						
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
@@ -206,13 +206,13 @@ implementation
 						tempSocket.socketState.state = ESTABLISHED;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
-						// Make the EST.
-						makePack(&EST, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+						// Make the ACK.
+						makePack(&ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
 					
-						dbg(TRANSPORT_CHANNEL, "SYN_ACK has been received, a connection has been established.\n");
+						dbg(TRANSPORT_CHANNEL, "SYN_ACK has been received, a connection has been established, replying with an ACK.\n");
 						
-						// Send out the EST.
-						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
+						// Send out the ACK.
+						call Sender.send(ACK, forwardPacketTo(&confirmedList, myMsg->src));
 						return msg;
 						
 					} // End flag 2 handle.
@@ -222,6 +222,8 @@ implementation
 					{
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
+						
+						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have established a connection. Ready to send DATA.\n");
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
