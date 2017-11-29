@@ -158,11 +158,13 @@ def main():
     
     s.TestServer(2, 80);
     
+    s.runTime(100);
     
-    s.neighborDMP(3);
-    i=0;
-    for i in range(1, s.numMote+1):
-            s.neighborDMP(i);
+    
+    #s.neighborDMP(3);
+    #i=0;
+    #for i in range(1, s.numMote+1):
+    #        s.neighborDMP(i);
 
 if __name__ == '__main__':
     main()
