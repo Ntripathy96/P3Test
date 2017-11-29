@@ -495,9 +495,9 @@ implementation
 		
 		
 		if(call Transport.bind(fd, &address) == SUCCESS && call Transport.listen(fd) == SUCCESS)
-			dbg(TRANSPORT_CHANNEL, "Now Listening.\n");
+			dbg(TRANSPORT_CHANNEL, "Socket %d is now listening.\n", fd);
 		else
-			dbg(TRANSPORT_CHANNEL, "Unable to edit socket.\n");
+			dbg(TRANSPORT_CHANNEL, "Unable to edit socket %d.\n", fd);
 	}
         
 	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
