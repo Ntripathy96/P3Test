@@ -149,7 +149,7 @@ def main():
     #s.addChannel(s.ROUTING_CHANNEL);
     s.addChannel(s.TRANSPORT_CHANNEL);
     
-    s.runTime(1000);
+    s.runTime(500);
     #s.ping(5, 6, "Hello, World");
     #s.runTime(100);
     #s.ping(3, 2, "Hello, World");
