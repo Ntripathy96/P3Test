@@ -150,23 +150,9 @@ def main():
     s.ping(9, 10, "Hello, World");
     s.runTime(100);
     
-    #s.ping(1,19, "Hi!");
-    #s.runTime(2000);
-    #s.runTime(20);
-    #s.ping(5, 7, "Helloooo!");
-    #s.runTime(10000); #runtime correspons to piing under it
-    #s.ping(9, 2, "WOOOOW!");
-    #s.runTime(20);
-    #s.ping(19, 1, "HEEEE!");
-    #s.runTime(20);
-    #s.ping(19, 6, "AAAAAAA!");
-    #s.runTime(8);
-    #s.ping(2, 3, "GGGGGG!");
-    #s.runTime(7);
-    #s.ping(5, 9, "SSSSSSS!");
-    #s.runTime(1);
-    #s.ping(11, 13, "POKEEERR!");
-    #s.runTime(2);
+    s.TestServer(2, 80);
+    
+    
     s.neighborDMP(3);
     i=0;
     for i in range(1, s.numMote+1):
