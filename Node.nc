@@ -217,13 +217,17 @@ implementation
 						// Temp Buffer to write onto.
 						uint8_t buff[126];
 						
+						int i;
+						
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
 						
 						// Now create and send a DATA packet.
-						buff[0] = 1;
+						for(i = 0; i < 126; i++)
+							buff[i] = i;
+						
 						call Transport.write(tempSocket.fd, buff, 126, &confirmedList);
 						
 						// Update the state of the Socket.
