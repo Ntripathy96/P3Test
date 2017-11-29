@@ -156,8 +156,6 @@ implementation
 					return msg; // Seen this one, drop it.
 				} 
 				
-				dbg(TRANSPORT_CHANNEL, "Node %d has received a TCP packet.\n", TOS_NODE_ID);
-				
 				receivedSocket = myMsg->payload;
 				
 				// Find the appropriate socket.
@@ -187,6 +185,7 @@ implementation
 						
 						// Send out the SYN_ACK.
 						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
+						return msg;
 						
 					} // End flag 1 handle.
 					
@@ -214,6 +213,7 @@ implementation
 						
 						// Send out the EST.
 						call Sender.send(EST, forwardPacketTo(&confirmedList, myMsg->src));
+						return msg;
 						
 					} // End flag 2 handle.
 					
@@ -226,6 +226,7 @@ implementation
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
+						return msg;
 						
 					} // End flag 3 handle.
 					
@@ -259,6 +260,7 @@ implementation
 						
 						// Send out the DATA_ACK.
 						call Sender.send(DATA_ACK, forwardPacketTo(&confirmedList, myMsg->src));
+						return msg;
 						
 					} // End flag 4 handle.
 					
@@ -266,6 +268,7 @@ implementation
 					else if(receivedSocket->socketState.flag == 5)
 					{
 						dbg(TRANSPORT_CHANNEL, "DATA_ACK received, DATA successfully reached destination.\n");
+						return msg;
 						
 					} // End flag 5 handle.
 					
