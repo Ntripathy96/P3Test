@@ -188,6 +188,8 @@ implementation
 		// Next hop for the destination.
 		uint16_t nextHop;
 		
+		dbg(TRANSPORT_CHANNEL, "Preparing to write onto socket %d.\n", fd);
+		
 		// Go through the list, and find the appropriate Socket fd.
 		for(i = 0; i < call SocketList.size(); i++)
 		{
