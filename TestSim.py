@@ -132,8 +132,8 @@ class TestSim:
     def TestServer(self, address, port):
         self.sendCMD(self.CMD_TEST_SERVER, address, chr(port));
         
-    def TestClient(self, source, sourcePort, destPort, dest):
-        self.sendCMD(self.CMD_TEST_CLIENT, source, chr(sourcePort), chr(destPort), dest);
+    def TestClient(self, address, sourcePort, destPort, dest):
+        self.sendCMD(self.CMD_TEST_CLIENT, source, "{0}{1}{2}".format(chr(sourcePort), chr(destPort), chr(dest)));
 
 def main():
     s = TestSim();
