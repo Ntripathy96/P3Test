@@ -346,11 +346,9 @@ implementation
 		// Find the next hop for the destination node and send it there.
 		for(i = 0; i < Table->entries; i++)
 		{
-			dbg(TRANSPORT_CHANNEL, "Table entry: %d\n", Table->lspEntries[i].dest);
 			if(Table->lspEntries[i].dest == SYN.dest)
 			{
 				nextHop = Table->lspEntries[i].nextHop;
-				dbg(TRANSPORT_CHANNEL, "Next hop is %d\n", nextHop);
 				
 				// Modify the Socket State.
 				for(j = 0; j < call SocketList.size(); j++)
@@ -370,6 +368,8 @@ implementation
 						memcpy(SYN.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
 						call SocketList.pushback(tempSocket);
+						
+						dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, TOS_NODE_ID);
 						
 						// Send it to the next hop.
 						call Sender.send(SYN, nextHop);
