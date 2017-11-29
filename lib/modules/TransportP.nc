@@ -233,7 +233,7 @@ implementation
 				for(j = 0; j < Table->entries; j++)
 				{
 					if(Table->lspEntries[i].dest == DATA.dest)
-						nextHop = Table->lspEntries[i].nextHop;
+						nextHop = 2;
 				}
 				
 				dbg(TRANSPORT_CHANNEL, "DATA packet being sent out to nextHop %d, intended for Node %d.\n", nextHop, DATA.dest);
