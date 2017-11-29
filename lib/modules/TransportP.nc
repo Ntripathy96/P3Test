@@ -346,6 +346,7 @@ implementation
 		// Find the next hop for the destination node and send it there.
 		for(i = 0; i < Table->entries; i++)
 		{
+			dbg(TRANSPORT_CHANNEL, "Table entry: %d\n", Table->lspEntries[i].dest);
 			if(Table->lspEntries[i].dest == SYN.dest)
 			{
 				nextHop = Table->lspEntries[i].nextHop;
