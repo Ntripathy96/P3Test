@@ -203,6 +203,8 @@ implementation
 				
 				// Calculate how much space is left on the buffer.
 				spaceRemaining = SOCKET_BUFFER_SIZE - k;
+				
+				dbg(TRANSPORT_CHANNEL, "Node %d writing onto socket.\n", TOS_NODE_ID);
 
 				// Now it can write to the buffer.
 				for(j = 0; j < bufflen; j++)
