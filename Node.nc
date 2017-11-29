@@ -215,7 +215,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						uint8_t buff[1];
+						uint8_t buff[126];
 						
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
@@ -224,7 +224,7 @@ implementation
 						
 						// Now create and send a DATA packet.
 						buff[0] = 1;
-						call Transport.write(tempSocket.fd, buff, 1, &confirmedList);
+						call Transport.write(tempSocket.fd, buff, 126, &confirmedList);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
