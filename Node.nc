@@ -502,18 +502,34 @@ implementation
         
 	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
 	{
-		pack SYN; 
-		socketStruct tempSocket;
+		// The SYN packet to be sent to the server.
+		pack SYN;
+		
+		// Socket state variables.
 		socket_addr_t address; 
-		socket_addr_t serverAdd; 
-		socket_t fd = call Transport.socket(); 
+		socket_addr_t serverAdd;
+		
+		// Socket file descriptor.
+		socket_t fd;
+		
+		dbg(TRANSPORT_CHANNEL, "Testing client...\n");
+		
+		// Get the socket fd.
+		fd = call Transport.socket(); 
+		
+		// Source and source port.
 		address.addr = TOS_NODE_ID;
 		address.port = SRCP;
+		
+		// Destination and destination port.
 		serverAdd.addr = destination;
 		serverAdd.port = DP;
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
+		{
+			dbg(TRANSPORT_CHANNEL, "Socket %d bound. Attempting connection to port %d of node %d.\n", fd, DP, destination);
 			call Transport.connect(fd, &serverAdd, &confirmedList);
+		}
 	}
 	
 	event void CommandHandler.setAppServer(){}
