@@ -550,14 +550,14 @@ implementation
    		 pack FIN;
    		 socketStruct temp, temp2;
    		 int i;
-   		 FIN.protocol = PROTOCOL_TCP;
+   		// FIN.protocol = PROTOCOL_TCP;
    		 temp = call Transport.getSocket(temp.fd);
     		 temp.socketState.state = CLOSED;
     		 temp.socketState.flag = 6;
     		 temp.socketState.dest.port = dest;
    		 temp.socketState.dest.addr = destPort;
-    		 makePack(&FIN, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
-    		 call Sender.send(FIN, forwardPacketTo(&confirmedList, myMsg->src))    dbg(TRANSPORT_CHANNEL, "Closed.\n");
+    		 makePack(&FIN, TOS_NODE_ID, dest, MAX_TTL, PROTOCOL_TCP, seqNum, &temp, (uint8_t) sizeof(temp));
+    		 call Sender.send(FIN, forwardPacketTo(&confirmedList, dest))    dbg(TRANSPORT_CHANNEL, "Closed.\n");
 	}
 
 	event void CommandHandler.setAppServer(){}
