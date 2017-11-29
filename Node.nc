@@ -552,13 +552,13 @@ implementation
    		 int i;
    		 FIN.protocol = PROTOCOL_TCP;
    		 temp = call Transport.getSocket(temp.fd);
-    		 temp.state = CLOSED;
-    		 temp.flag = 6;
-    		 temp.dest.port = dest;
-   		 temp.dest.addr = destPort;
+    		 temp.socketState.state = CLOSED;
+    		 temp.socketState.flag = 6;
+    		 temp.socketState.dest.port = dest;
+   		 temp.socketState.dest.addr = destPort;
     		 makePack(&FIN, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
     		 call Sender.send(FIN, forwardPacketTo(&confirmedList, myMsg->src))    dbg(TRANSPORT_CHANNEL, "Closed.\n");
-}
+	}
 
 	event void CommandHandler.setAppServer(){}
 
