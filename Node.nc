@@ -548,9 +548,9 @@ implementation
 	}
     	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
    		 pack FIN;
-   		 socketState temp, temp2;
+   		 socketStruct temp, temp2;
    		 int i;
-   		 FIN.protocol = 4;
+   		 FIN.protocol = PROTOCOL_TCP;
    		 temp = call Transport.getSocket(temp.fd);
     		 temp.state = CLOSED;
     		 temp.flag = 6;
