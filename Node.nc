@@ -168,7 +168,6 @@ implementation
 					// Also check flag. Must be 1 for a SYN. If so, send a SYN_ACK.
 					if (receivedSocket->socketState.flag == 1)
 					{
-						dbg(TRANSPORT_CHANNEL, "Node %d has received a SYN packet for port %d\n", TOS_NODE_ID, receivedSocket->socketState.dest.port);
 						
 						// Conditions hold true, reply with a SYN_ACK.
 						// Update the state of the Socket.
@@ -181,7 +180,7 @@ implementation
 						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
-						dbg(TRANSPORT_CHANNEL, "SYN packet received, replying with SYN_ACK.\n");
+						dbg(TRANSPORT_CHANNEL, "SYN packet received from Node %d port %d, replying with SYN_ACK.\n", myMsg->src, receivedSocket->socketState.dest.port);
 						
 						// Send out the SYN_ACK.
 						call Sender.send(SYN_ACK, forwardPacketTo(&confirmedList, myMsg->src));
@@ -190,7 +189,7 @@ implementation
 					} // End flag 1 handle.
 					
 					// If flag is 2, it is a SYN_ACK packet.
-					else if((receivedSocket->socketState.flag == 2) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
+					else if(receivedSocket->socketState.flag == 2)
 					{
 						// Packet to reply to the SYN_ACK.
 						// Specifies that a connection has been established.
