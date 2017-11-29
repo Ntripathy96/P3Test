@@ -236,6 +236,8 @@ implementation
 						nextHop = Table->lspEntries[i].nextHop;
 				}
 				
+				dbg(TRANSPORT_CHANNEL, "DATA packet being sent out to nextHop %d, intended for Node %d.\n", nextHop, DATA.dest);
+				
 				// Send out the written message.
 				call Sender.send(DATA, nextHop);
 				
