@@ -481,15 +481,23 @@ implementation
 
 	event void CommandHandler.setTestServer(uint16_t port)
 	{
+		// Socket State variables.
 		socket_addr_t address;
-		socket_t fd = call Transport.socket();
-		address.addr = TOS_NODE_ID;
-		address.port = port;
+		socket_t fd;
 		
 		dbg(TRANSPORT_CHANNEL, "Testing server...\n");
 		
+		// Set the socket state.
+		fd = call Transport.socket();
+		address.addr = TOS_NODE_ID;
+		address.port = port;
+		
+		
+		
 		if(call Transport.bind(fd, &address) == SUCCESS && call Transport.listen(fd) == SUCCESS)
-			dbg(TRANSPORT_CHANNEL, "Now Listen.\n");
+			dbg(TRANSPORT_CHANNEL, "Now Listening.\n");
+		else
+			dbg(TRANSPORT_CHANNEL, "Unable to edit socket.\n");
 	}
         
 	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
