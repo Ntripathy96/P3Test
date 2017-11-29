@@ -349,6 +349,7 @@ implementation
 			if(Table->lspEntries[i].dest == SYN.dest)
 			{
 				nextHop = Table->lspEntries[i].nextHop;
+				dbg(TRANSPORT_CHANNEL, "Next hop is %d\n", nextHop);
 				
 				// Modify the Socket State.
 				for(j = 0; j < call SocketList.size(); j++)
