@@ -500,7 +500,7 @@ implementation
 			dbg(TRANSPORT_CHANNEL, "Unable to edit socket %d.\n", fd);
 	}
         
-	event void CommandHandler.setTestClient(uint16_t destination, uint16_t DP, uint16_t SRCP)
+	event void CommandHandler.setTestClient(uint16_t SRCP, uint16_t DP, uint16_t destination)
 	{
 		// The SYN packet to be sent to the server.
 		pack SYN;
@@ -527,7 +527,7 @@ implementation
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
-			dbg(TRANSPORT_CHANNEL, "Socket %d bound. Attempting connection to port %d of node %d.\n", fd, DP, destination);
+			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
 			call Transport.connect(fd, &serverAdd, &confirmedList);
 		}
 	}
