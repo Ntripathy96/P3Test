@@ -151,11 +151,6 @@ implementation
 				// SYN_ACK packet.
 				pack SYN_ACK;
 				
-				if(checkPacket(*myMsg))
-				{
-					return msg; // Seen this one, drop it.
-				} 
-				
 				receivedSocket = myMsg->payload;
 				
 				// Find the appropriate socket.
