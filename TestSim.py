@@ -141,7 +141,8 @@ def main():
     s = TestSim();
     s.runTime(20);
     #s.loadTopo("long_line.topo");
-    s.loadTopo("RingTopology.topo");
+    #s.loadTopo("RingTopology.topo");
+    s.loadTopo("pizza.topo");
     s.loadNoise("no_noise.txt");
     s.bootAll();
     s.addChannel(s.COMMAND_CHANNEL);
