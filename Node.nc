@@ -217,7 +217,7 @@ implementation
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
 						
-						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have established a connection. Ready to send DATA.\n");
+						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
