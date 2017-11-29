@@ -141,14 +141,14 @@ def main():
     s.addChannel(s.TRANSPORT_CHANNEL);
     
     s.runTime(100);
-    s.ping(5, 6, "Hello, World");
-    s.runTime(100);
-    s.ping(3, 2, "Hello, World");
-    s.runTime(100);
-    s.ping(3, 4, "Hello, World");
-    s.runTime(100);
-    s.ping(9, 10, "Hello, World");
-    s.runTime(100);
+    #s.ping(5, 6, "Hello, World");
+    #s.runTime(100);
+    #s.ping(3, 2, "Hello, World");
+    #s.runTime(100);
+    #s.ping(3, 4, "Hello, World");
+    #s.runTime(100);
+    #s.ping(9, 10, "Hello, World");
+    #s.runTime(100);
     
     s.TestServer(2, 80);
     
