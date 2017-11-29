@@ -214,10 +214,17 @@ implementation
 					// If flag is 3, a SYN_ACK was received. Both sockets have established connection.
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
+						// Temp Buffer to write onto.
+						uint8_t buff;
+						
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
+						
+						// Now create and send a DATA packet.
+						buff = 1;
+						call Transport.write(tempSocket.fd, buff, 1, &confirmedList);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
