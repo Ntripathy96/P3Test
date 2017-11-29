@@ -145,8 +145,8 @@ def main():
     #s.loadTopo("pizza.topo");
     s.loadTopo("circle.topo");
     
-    #s.loadNoise("no_noise.txt");
-    s.loadNoise("meyer-heavy.txt");
+    s.loadNoise("no_noise.txt");
+    #s.loadNoise("meyer-heavy.txt");
     
     s.bootAll();
     s.addChannel(s.COMMAND_CHANNEL);
