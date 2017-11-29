@@ -141,7 +141,7 @@ implementation
 			// Transport packet. If intended for this node, handle it.
 			else if(myMsg->protocol == PROTOCOL_TCP && myMsg->dest == TOS_NODE_ID)
 			{
-				if(checkPacket(myMsg)){} // Seen this one, drop it.
+				
 			
 				// Temp Socket Structs.
 				socketStruct tempSocket;
@@ -152,6 +152,8 @@ implementation
 				
 				// SYN_ACK packet.
 				pack SYN_ACK;
+				
+				if(checkPacket(myMsg*)){} // Seen this one, drop it.
 				
 				dbg(TRANSPORT_CHANNEL, "Node %d has received a TCP packet.\n", TOS_NODE_ID);
 				
