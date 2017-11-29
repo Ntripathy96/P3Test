@@ -220,7 +220,7 @@ implementation
 				tempSocket.socketState.lastWritten = k;
 				tempSocket.socketState.flag = 4;
 
-				dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d", fd);
+				dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d\n", fd);
 				
 				// Initialize the written message.
 				DATA.src = TOS_NODE_ID;
