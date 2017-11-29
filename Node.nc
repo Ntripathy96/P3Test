@@ -215,7 +215,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						uint8_t buff;
+						uint8_t buff[1];
 						
 						// Get the current state of the Socket.
 						tempSocket = call Transport.getSocket(i);
@@ -223,7 +223,7 @@ implementation
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
 						
 						// Now create and send a DATA packet.
-						buff = 1;
+						buff[0] = 1;
 						call Transport.write(tempSocket.fd, buff, 1, &confirmedList);
 						
 						// Update the state of the Socket.
