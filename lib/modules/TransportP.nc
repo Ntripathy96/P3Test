@@ -334,7 +334,7 @@ implementation
 		//Temp Socket struct.
 		socketStruct tempSocket;
 		
-		dbg(TRANSPORT_CHANNEL, "Creating SYN packet intended for %d.\n", addr->addr);
+		dbg(TRANSPORT_CHANNEL, "Creating SYN packet intended for node %d, port %d.\n", addr->addr, addr->port);
 		
 		// Finish making the SYN packet.
 		SYN.src = TOS_NODE_ID;
