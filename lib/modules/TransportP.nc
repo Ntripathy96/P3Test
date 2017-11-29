@@ -362,7 +362,6 @@ implementation
 						tempSocket.socketState.state = SYN_SENT;
 						tempSocket.socketState.flag = 1;
 						
-						tempSocket.socketState.src = addr->port;
 						tempSocket.socketState.dest = *addr;
 						
 						memcpy(SYN.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
