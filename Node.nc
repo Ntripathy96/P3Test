@@ -151,7 +151,7 @@ implementation
 				// SYN_ACK packet.
 				pack SYN_ACK;
 				
-				if(checkPacket(myMsg*))
+				if(checkPacket(*myMsg))
 				{
 					return msg; // Seen this one, drop it.
 				} 
