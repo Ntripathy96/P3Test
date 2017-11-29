@@ -309,7 +309,7 @@ implementation
 					
 				tempSocket.socketState.lastRead = k;
 					
-				dbg(TRANSPORT_CHANNEL, "Data was read onto Socket %d", fd);
+				dbg(TRANSPORT_CHANNEL, "Data was read onto Socket %d\n", fd);
 				
 				// Put the socket back in.
 				call SocketList.pushback(tempSocket);
