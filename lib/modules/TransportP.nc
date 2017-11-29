@@ -334,6 +334,8 @@ implementation
 		//Temp Socket struct.
 		socketStruct tempSocket;
 		
+		dbg(TRANSPORT_CHANNEL, "Creating SYN packet.\n");
+		
 		// Finish making the SYN packet.
 		SYN.src = TOS_NODE_ID;
 		SYN.dest = addr->addr;
