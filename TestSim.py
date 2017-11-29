@@ -159,11 +159,11 @@ def main():
     #s.ping(9, 10, "Hello, World");
     #s.runTime(100);
     
-    s.TestServer(2, 80);
+    s.TestServer(1, 80);
     
     s.runTime(15);
     
-    s.TestClient(1, 50, 80, 2);
+    s.TestClient(2, 50, 80, 1);
     
     s.runTime(100);
     
