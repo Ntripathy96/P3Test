@@ -79,7 +79,7 @@ implementation{
                 break;
             case CMD_TEST_CLOSE: 
                 dbg(COMMAND_CHANNEL, "Command Type: Close\n");
-                signal CommandHandler.setTestClose(buff[0], buff[1]);
+                signal CommandHandler.ClientClose(buff[0], buff[1]);
                 break;
 
             default:
