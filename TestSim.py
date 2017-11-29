@@ -131,6 +131,9 @@ class TestSim:
         
     def TestServer(self, address, port):
         self.sendCMD(self.CMD_TEST_SERVER, address, chr(port));
+        
+    def TestClient(self, source, sourcePort, destPort, dest):
+        self.sendCMD(self.CMD_TEST_CLIENT, source, chr(sourcePort), chr(destPort), dest);
 
 def main():
     s = TestSim();
@@ -157,6 +160,10 @@ def main():
     #s.runTime(100);
     
     s.TestServer(2, 80);
+    
+    s.runTime(15);
+    
+    s.TestClient(1, 50, 80, 2);
     
     s.runTime(100);
     
