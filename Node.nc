@@ -249,7 +249,7 @@ implementation
 						uint16_t bufflen;
 						
 						// Read the buffer from the DATA packet.
-						call Transport.read(receivedSocket->fd, receivedSocket->socketState.sendBuff, bufflen);
+						call Transport.read(receivedSocket->fd, receivedSocket->socketState.sendBuff, 56);
 						
 						// Now send out an DATA_ACK, as the data has been received.
 						// Get the current state of the Socket.
