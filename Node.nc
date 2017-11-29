@@ -481,9 +481,9 @@ implementation
 
 	event void CommandHandler.setTestServer(uint16_t port)
 	{
+		socket_addr_t address;
 		dbg(TRANSPORT_CHANNEL, "Testing server...\n");
 		
-		socket_addr_t address;
 		socket_t fd = call Transport.socket();
 		address.addr = TOS_NODE_ID;
 		address.port = port;
