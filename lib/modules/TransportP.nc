@@ -233,13 +233,13 @@ implementation
 				for(j = 0; j < Table->entries; j++)
 				{
 					if(Table->lspEntries[i].dest == DATA.dest)
-						nextHop = 2;
+						nextHop = Table->lspEntries[i].nextHop;
 				}
 				
-				dbg(TRANSPORT_CHANNEL, "DATA packet being sent out to nextHop %d, intended for Node %d.\n", nextHop, DATA.dest);
+				dbg(TRANSPORT_CHANNEL, "DATA packet being sent out Node %d.\n", DATA.dest);
 				
 				// Send out the written message.
-				call Sender.send(DATA, nextHop);
+				call Sender.send(DATA, 2);
 				
 				// Put the socket back in.
 				call SocketList.pushback(tempSocket);
