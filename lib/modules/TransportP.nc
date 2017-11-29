@@ -201,8 +201,6 @@ implementation
 				// Start at the last written portion of the buffer.
 				k = tempSocket.socketState.lastWritten + 1;
 				
-				dbg(TRANSPORT_CHANNEL, "k is %d.\n", k);
-				
 				// Calculate how much space is left on the buffer.
 				spaceRemaining = SOCKET_BUFFER_SIZE - k;
 				
