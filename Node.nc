@@ -165,8 +165,10 @@ implementation
 					// Compare the port and source.
 					// Make sure the Socket is listening.
 					// Also check flag. Must be 1 for a SYN. If so, send a SYN_ACK.
-					if ((receivedSocket->socketState.dest.port == tempSocket.socketState.src) && (tempSocket.socketState.state == LISTEN) && (receivedSocket->socketState.flag == 1))
+					if (receivedSocket->socketState.flag == 1)
 					{
+						dbg(TRANSPORT_CHANNEL, "Node %d has received a SYN packet for port %d\n", TOS_NODE_ID, receivedSocket->socketState.dest.port);
+						
 						// Conditions hold true, reply with a SYN_ACK.
 						// Update the state of the Socket.
 						tempSocket.socketState.flag = 2;
