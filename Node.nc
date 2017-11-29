@@ -141,7 +141,7 @@ implementation
 			// Transport packet. If intended for this node, handle it.
 			else if(myMsg->protocol == PROTOCOL_TCP && myMsg->dest == TOS_NODE_ID)
 			{
-				
+				if(checkPacket(myMsg)){} // Seen this one, drop it.
 			
 				// Temp Socket Structs.
 				socketStruct tempSocket;
