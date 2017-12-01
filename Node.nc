@@ -547,7 +547,7 @@ implementation
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
 			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
-			call Transport.connect(fd, &serverAdd, &confirmedList);
+			call Transport.connect(fd, &serverAdd, &confirmedList, bufflen);
 		}
 	}
     	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
