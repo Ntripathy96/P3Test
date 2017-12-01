@@ -215,7 +215,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						uint8_t buff[56];
+						// uint8_t buff[56];
 						
 						int i;
 						
@@ -519,7 +519,7 @@ implementation
 			dbg(TRANSPORT_CHANNEL, "Unable to edit socket %d.\n", fd);
 	}
         
-	event void CommandHandler.setTestClient(uint16_t SRCP, uint16_t DP, uint16_t destination)
+	event void CommandHandler.setTestClient(uint16_t SRCP, uint16_t DP, uint16_t destination, uint16_t bufflen)
 	{
 		// The SYN packet to be sent to the server.
 		pack SYN;
