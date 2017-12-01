@@ -201,7 +201,11 @@ implementation
 				tempSocket = call SocketList.remove(i);
 				
 				// Start at the last written portion of the buffer.
-				k = tempSocket.socketState.lastWritten + 1;
+				k = tempSocket.socketState.lastWritten;
+				
+				// If the buffer is filled, overwrite.
+				if(k == 128)
+					k = 0;
 				
 				// Calculate how much space is left on the buffer.
 				spaceRemaining = SOCKET_BUFFER_SIZE - k;
@@ -220,6 +224,7 @@ implementation
 				}
 
 				tempSocket.socketState.lastWritten = k;
+				
 				tempSocket.socketState.flag = 4;
 
 				dbg(TRANSPORT_CHANNEL, "Data was written onto Socket %d\n", fd);
@@ -370,13 +375,13 @@ implementation
 						
 						tempSocket.socketState.dest = *addr;
 						
+						tempSocket.bufflen = bufflen;
+						
 						memcpy(SYN.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
 						call SocketList.pushback(tempSocket);
 						
-						dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, addr->addr);
-						
-						//                                                                                                                
+						dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, addr->addr);                                                                                                       
 						
 						// Send it to the next hop.
 						call Sender.send(SYN, nextHop);
