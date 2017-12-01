@@ -75,7 +75,7 @@ interface Transport{
     * @return uint16_t - return the amount of data you are able to write
     *    from the pass buffer. This may be shorter then bufflen
     */
-   command uint16_t write(socket_t fd, uint8_t *buff, uint16_t bufflen, lspTable* Table, uint16_t bufflen);
+   command uint16_t write(socket_t fd, uint8_t *buff, uint16_t bufflen, lspTable* Table);
 
    /**
     * This will pass the packet so you can handle it internally. 
@@ -116,7 +116,7 @@ interface Transport{
     * @return socket_t - returns SUCCESS if you are able to attempt
     *    a connection with the fd passed, else return FAIL.
     */
-   command error_t connect(socket_t fd, socket_addr_t * addr, lspTable* Table);
+   command error_t connect(socket_t fd, socket_addr_t * addr, lspTable* Table, uint16_t bufflen);
 
    /**
     * Closes the socket.
