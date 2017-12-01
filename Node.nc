@@ -215,7 +215,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						// uint8_t buff[56];
+						uint8_t buff[56];
 						
 						int i;
 						
