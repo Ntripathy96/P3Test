@@ -58,6 +58,7 @@ typedef struct socketStruct
 {
 	socket_t fd;
 	socket_store_t socketState;
+	uint16_t bufflen;
 }socketStruct;
 
 #endif
