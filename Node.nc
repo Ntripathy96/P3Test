@@ -170,6 +170,7 @@ implementation
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = SYN_RCVD;
+						tempSocket.bufflen = receivedSocket->bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
 						// Make the SYN_ACK.
@@ -198,6 +199,7 @@ implementation
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = ESTABLISHED;
+						tempSocket.bufflen = receivedSocket->bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
 						// Make the ACK.
@@ -223,6 +225,7 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
+						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", receivedSocket->bufflen);
 						
 						// Now create and send a DATA packet.
 						for(i = 0; i < 56; i++)
