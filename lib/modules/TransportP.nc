@@ -381,7 +381,9 @@ implementation
 						
 						call SocketList.pushback(tempSocket);
 						
-						dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, addr->addr);                                                                                                       
+						//dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, addr->addr);                                                                                                       
+						
+						dbg(TRANSPORT_CHANNEL, "Bufflen is %d.\n", tempSocket.bufflen);
 						
 						// Send it to the next hop.
 						call Sender.send(SYN, 1);
