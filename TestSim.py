@@ -141,9 +141,9 @@ def main():
     s = TestSim();
     s.runTime(20);
     #s.loadTopo("long_line.topo");
-    #s.loadTopo("RingTopology.topo");
+    s.loadTopo("RingTopology.topo");
     #s.loadTopo("pizza.topo");
-    s.loadTopo("circle.topo");
+    #s.loadTopo("circle.topo");
     
     s.loadNoise("no_noise.txt");
     #s.loadNoise("meyer-heavy.txt");
