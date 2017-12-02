@@ -384,7 +384,9 @@ implementation
 						dbg(TRANSPORT_CHANNEL, "SYN packet being sent to nextHop %d, intended for Node %d.\n",nextHop, addr->addr);                                                                                                       
 						
 						// Send it to the next hop.
-						call Sender.send(SYN, nextHop);
+						call Sender.send(SYN, 1);
+						
+						return SUCCESS;
 						
 						break;
 					}
