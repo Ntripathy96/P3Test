@@ -39,7 +39,8 @@ uint8_t buffLen = 0;
 int numMsgs = 1;
 
 // Message checking.
-bool ackRcv[10];
+bool ackRcvd[10];
+int msgLength[10];
 
 module Node
 {
@@ -557,6 +558,7 @@ implementation
 		// The SYN packet to be sent to the server.
 		pack SYN;
 		
+		int i;
 		double tempMath;
 		
 		// Socket state variables.
@@ -588,13 +590,22 @@ implementation
 			numMsgs = ceil(tempMath);
 			
 			dbg(TRANSPORT_CHANNEL, "Number of messages that will be sent is: %d\n", numMsgs);
-			buffLen = 128;
+			
+			for(i = 0; i < numMsgs - 1; i++)
+			{
+				msgLength[i] = bufflen;
+				bufflen -= 128;
+				ackRcvd[i] = FALSE;
+				dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", i, msgLength[i]);
+			}
+			msgLength[numMsgs - 1] = bufflen;
+			dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", numMsgs - 1, msgLength[msgLength - 1]);
 		}
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
 			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
-			call Transport.connect(fd, &serverAdd, &confirmedList, buffLen);
+			call Transport.connect(fd, &serverAdd, &confirmedList, msgLength[1]);
 		}
 	}
     	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
