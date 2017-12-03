@@ -116,7 +116,7 @@ interface Transport{
     * @return socket_t - returns SUCCESS if you are able to attempt
     *    a connection with the fd passed, else return FAIL.
     */
-   command error_t connect(socket_t fd, socket_addr_t * addr, lspTable* Table, uint16_t bufflen);
+   command error_t connect(socket_t fd, socket_addr_t * addr, lspTable* Table, uint8_t bufflen);
 
    /**
     * Closes the socket.
