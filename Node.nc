@@ -42,6 +42,9 @@ int numMsgs = 1;
 bool ackRcvd[10];
 int msgLength[10];
 int msgsRcvd = 0;
+uint16_t SRCPM;
+uint16_t DPM;
+uint16_t destinationM;
 
 module Node
 {
@@ -315,6 +318,16 @@ implementation
 					else if(receivedSocket->socketState.flag == 5)
 					{
 						dbg(TRANSPORT_CHANNEL, "DATA_ACK received, DATA successfully reached destination.\n");
+						
+						ackRcvd[msgsRcvd] = TRUE;
+						msgsRcvd++;
+						
+						if(numMsgs > 1 && msgsRcvd < numMsgs)
+						{
+							signal CommandHandler.setTestClient(SRCPM, DPM, destinationM, msgLength[msgsRcvd]);
+						}
+						
+						
 						return msg;
 						
 					} // End flag 5 handle.
@@ -588,6 +601,9 @@ implementation
 		serverAdd.port = DP;
 		
 		buffLen = bufflen;
+		SRCPM = SRCP;
+		DPM = DP;
+		destinationM = destination;
 		
 		if(buffLen > 128)
 		{
