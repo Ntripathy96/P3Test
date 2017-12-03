@@ -599,7 +599,7 @@ implementation
 				dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", i, msgLength[i]);
 			}
 			msgLength[numMsgs - 1] = bufflen;
-			dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", numMsgs - 1, msgLength[msgLength - 1]);
+			dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", numMsgs - 1, msgLength[numMsgs - 1]);
 		}
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
