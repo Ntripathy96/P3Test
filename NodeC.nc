@@ -39,6 +39,7 @@ implementation {
     // Timer Component Aliases.
     components new TimerMilliC() as myTimerC;
     components new TimerMilliC() as lspTimer;
+    components new TimerMilliC() as sendTimer;
     components RandomC as Random;
     
     // Data Structure Component Wiring.
@@ -50,6 +51,7 @@ implementation {
     Node.Random -> Random;
     Node.lspTimer -> lspTimer;
     Node.Timer1 -> myTimerC;
+    Node.sendTimer -> sendTimer;
     
     // Transport Component Aliases.
     components TransportC;
