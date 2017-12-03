@@ -197,7 +197,7 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						// Update the state of the Socket.
-						tempSocket.socketState.flag = 6;
+						tempSocket.socketState.flag = 7;
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = ESTABLISHED;
@@ -216,11 +216,9 @@ implementation
 					} // End flag 2 handle.
 					
 					// Give the all clear to send the DATA.
-					else if(receivedSocket->socketState.flag == 6)
+					else if(receivedSocket->socketState.flag == 7)
 					{
 						pack ACK;
-						
-						dbg(TRANSPORT_CHANNEL, "Flag 6 has been received.\n");
 						
 						tempSocket = call Transport.getSocket(i);
 
