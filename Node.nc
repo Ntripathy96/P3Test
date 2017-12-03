@@ -250,10 +250,10 @@ implementation
 						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", buffLen);
 						
 						// Now create and send a DATA packet.
-						for(i = 0; i < 56; i++)
+						for(i = 0; i < buffLen; i++)
 							buff[i] = i;
 						
-						call Transport.write(0, buff, 56, &confirmedList);
+						call Transport.write(0, buff, buffLen, &confirmedList);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
