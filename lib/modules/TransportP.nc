@@ -376,7 +376,7 @@ implementation
 						tempSocket.socketState.dest = *addr;
 						
 						tempSocket.socketState.bufflen = bufflen;
-						
+
 						memcpy(SYN.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
 						call SocketList.pushback(tempSocket);
