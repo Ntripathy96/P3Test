@@ -246,7 +246,7 @@ implementation
 				dbg(TRANSPORT_CHANNEL, "DATA packet being sent out Node %d.\n", DATA.dest);
 				
 				// Send out the written message.
-				call Sender.send(DATA, 2);
+				call Sender.send(DATA, nextHop);
 				
 				// Put the socket back in.
 				call SocketList.pushback(tempSocket);
