@@ -524,7 +524,7 @@ implementation
 			dbg(TRANSPORT_CHANNEL, "Unable to edit socket %d.\n", fd);
 	}
         
-	event void CommandHandler.setTestClient(uint16_t SRCP, uint16_t DP, uint16_t destination, uint16_t bufflen)
+	event void CommandHandler.setTestClient(uint16_t SRCP, uint16_t DP, uint16_t destination, uint8_t bufflen)
 	{
 		// The SYN packet to be sent to the server.
 		pack SYN;
