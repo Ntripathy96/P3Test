@@ -170,7 +170,7 @@ implementation
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = SYN_RCVD;
-						tempSocket.bufflen = receivedSocket->socketState.bufflen;
+						tempSocket.socketState.bufflen = receivedSocket->socketState.bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
 						dbg(TRANSPORT_CHANNEL, "Bufflen is %d.\n", receivedSocket->socketState.bufflen);
