@@ -576,7 +576,9 @@ implementation
 		
 		if(buffLen > 128)
 		{
-			tempMath = buffLen / 128.0
+			dbg(TRANSPORT_CHANNEL, "Message size larger than max buffer, fragmenting...\n");
+			tempMath = buffLen / 128.0;
+			buffLen = 128;
 		}
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
