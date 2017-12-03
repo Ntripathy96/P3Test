@@ -227,7 +227,7 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
-						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", receivedSocket->bufflen);
+						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", receivedSocket->socketState.bufflen);
 						
 						// Now create and send a DATA packet.
 						for(i = 0; i < 56; i++)
