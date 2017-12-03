@@ -32,9 +32,14 @@ typedef struct lspMap
 // Sequence number of this node.
 int seqNum = 1;
 
+// The length of the message being sent.
 uint8_t buffLen = 0;
 
+// If fragmentation occurs, this will be the number of messages being sent.
 int numMsgs = 1;
+
+// Message checking.
+bool ackRcv[10];
 
 module Node
 {
