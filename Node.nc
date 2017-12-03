@@ -41,6 +41,7 @@ int numMsgs = 1;
 // Message checking.
 bool ackRcvd[10];
 int msgLength[10];
+int msgsRcvd = 0;
 
 module Node
 {
@@ -54,6 +55,7 @@ module Node
 	// Timers.
 	uses interface Timer<TMilli> as Timer1;
 	uses interface Timer<TMilli> as lspTimer;
+	uses interface Timer<TMilli> as sendTimer;
 	uses interface Random as Random;
 
 	// Data Structures.
@@ -116,6 +118,10 @@ implementation
 			lspNeighborDiscoveryPacket(); 
 	}
 
+	event void sendTimer.fired()
+	{
+		
+	}
 
 	event void AMControl.startDone(error_t err)
 	{
@@ -609,6 +615,9 @@ implementation
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
+			if(buffLen > 128)
+				call sendTimer.startPeriodic(1000);
+		
 			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
 			call Transport.connect(fd, &serverAdd, &confirmedList, msgLength[0]);
 		}
