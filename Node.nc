@@ -616,7 +616,10 @@ implementation
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
 			if(buffLen > 128)
+			{
 				call sendTimer.startPeriodic(1000);
+				dbg(TRANSPORT_CHANNEL, "Timer started.\n");
+			}
 		
 			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
 			call Transport.connect(fd, &serverAdd, &confirmedList, msgLength[0]);
