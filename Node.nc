@@ -592,13 +592,14 @@ implementation
 			dbg(TRANSPORT_CHANNEL, "Number of messages that will be sent is: %d\n", numMsgs);
 			
 			msgLength[0] = 128;
+			bufflen -= 128;
 			ackRcvd[0] = FALSE;
 			dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", 0, msgLength[0]);
 			
 			for(i = 1; i < numMsgs - 1; i++)
 			{
-				bufflen = bufflen - 128;
 				msgLength[i] = bufflen;
+				bufflen -= 128;
 				ackRcvd[i] = FALSE;
 				dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", i, msgLength[i]);
 			}
