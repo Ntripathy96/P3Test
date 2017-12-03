@@ -570,6 +570,9 @@ implementation
 		serverAdd.port = DP;
 		
 		buffLen = bufflen;
+		
+		if(buffLen > 128)
+			dbg(TRANSPORT_CHANNEL, "Fragment this bitch.\n);
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
