@@ -220,6 +220,8 @@ implementation
 					{
 						pack ACK;
 						
+						dbg(TRANSPORT_CHANNEL, "Flag 6 has been received.\n");
+						
 						tempSocket = call Transport.getSocket(i);
 
 						tempSocket.socketState.flag = 3;
