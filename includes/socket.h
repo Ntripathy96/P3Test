@@ -52,7 +52,7 @@ typedef struct socket_store_t{
 	uint16_t RTT;
 	uint8_t effectiveWindow;
 	
-	uint16_t bufflen;
+	uint8_t bufflen;
 	
 }socket_store_t;
 
