@@ -31,6 +31,8 @@ typedef struct lspMap
 // Sequence number of this node.
 int seqNum = 1;
 
+uint8_t bufflen = 0;
+
 module Node
 {
 	// Main interfaces.
