@@ -582,7 +582,7 @@ implementation
 			tempMath = buffLen / 128.0;
 			numMsgs = ceil(tempMath);
 			
-			dbg(TRANSPORT_CHANNEL, "Number of messages that will be sent is: %d", numMsgs);
+			dbg(TRANSPORT_CHANNEL, "Number of messages that will be sent is: %d\n", numMsgs);
 			buffLen = 128;
 		}
 
