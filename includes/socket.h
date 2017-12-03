@@ -32,25 +32,28 @@ typedef uint8_t socket_t;
 
 // State of a socket. 
 typedef struct socket_store_t{
-    uint8_t flag;
-    enum socket_state state;
-    socket_port_t src;
-    socket_addr_t dest;
+	uint8_t flag;
+	enum socket_state state;
+	socket_port_t src;
+	socket_addr_t dest;
 
-    // This is the sender portion.
-    uint8_t sendBuff[SOCKET_BUFFER_SIZE];
-    uint8_t lastWritten;
-    uint8_t lastAck;
-    uint8_t lastSent;
+	// This is the sender portion.
+	uint8_t sendBuff[SOCKET_BUFFER_SIZE];
+	uint8_t lastWritten;
+	uint8_t lastAck;
+	uint8_t lastSent;
 
-    // This is the receiver portion
-    uint8_t rcvdBuff[SOCKET_BUFFER_SIZE];
-    uint8_t lastRead;
-    uint8_t lastRcvd;
-    uint8_t nextExpected;
+	// This is the receiver portion
+	uint8_t rcvdBuff[SOCKET_BUFFER_SIZE];
+	uint8_t lastRead;
+	uint8_t lastRcvd;
+	uint8_t nextExpected;
 
-    uint16_t RTT;
-    uint8_t effectiveWindow;
+	uint16_t RTT;
+	uint8_t effectiveWindow;
+	
+	uint16_t bufflen;
+	
 }socket_store_t;
 
 // Socket structure, with File Description and Socket Store.
@@ -58,7 +61,6 @@ typedef struct socketStruct
 {
 	socket_t fd;
 	socket_store_t socketState;
-	uint8_t bufflen;
 }socketStruct;
 
 #endif
