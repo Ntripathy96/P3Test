@@ -593,10 +593,11 @@ implementation
 			
 			msgLength[0] = 128;
 			ackRcvd[0] = FALSE;
+			dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", 0, msgLength[0]);
 			
 			for(i = 1; i < numMsgs - 1; i++)
 			{
-				bufflen -= 128;
+				bufflen = bufflen - 128;
 				msgLength[i] = bufflen;
 				ackRcvd[i] = FALSE;
 				dbg(TRANSPORT_CHANNEL, "Message %d has length: %d\n", i, msgLength[i]);
