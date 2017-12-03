@@ -31,7 +31,7 @@ typedef struct lspMap
 // Sequence number of this node.
 int seqNum = 1;
 
-uint8_t bufflen = 0;
+uint8_t buffLen = 0;
 
 module Node
 {
@@ -175,8 +175,6 @@ implementation
 						tempSocket.socketState.bufflen = receivedSocket->socketState.bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
-						dbg(TRANSPORT_CHANNEL, "Bufflen is %d.\n", receivedSocket->socketState.bufflen);
-						
 						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
 						
@@ -241,7 +239,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						uint8_t buff[56];
+						uint8_t buff[buffLen];
 						
 						int i;
 						
@@ -249,7 +247,7 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
-						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", receivedSocket->socketState.bufflen);
+						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", buffLen);
 						
 						// Now create and send a DATA packet.
 						for(i = 0; i < 56; i++)
@@ -570,6 +568,8 @@ implementation
 		// Destination and destination port.
 		serverAdd.addr = destination;
 		serverAdd.port = DP;
+		
+		buffLen = bufflen;
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
