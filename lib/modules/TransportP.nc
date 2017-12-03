@@ -331,7 +331,7 @@ implementation
 		return 0;
 	} // End read.
 	
-	command error_t Transport.connect(socket_t fd, socket_addr_t *addr, lspTable* Table, uint16_t bufflen)
+	command error_t Transport.connect(socket_t fd, socket_addr_t *addr, lspTable* Table, uint8_t bufflen)
 	{
 		// The SYN packet that must be sent out.
 		pack SYN;
