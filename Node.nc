@@ -197,7 +197,7 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						// Update the state of the Socket.
-						tempSocket.socketState.flag = 3;
+						tempSocket.socketState.flag = 6;
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = ESTABLISHED;
@@ -215,7 +215,27 @@ implementation
 						
 					} // End flag 2 handle.
 					
-					// If flag is 3, a SYN_ACK was received. Both sockets have established connection.
+					// Give the all clear to send the DATA.
+					else if(receivedSocket->socketState.flag == 6)
+					{
+						pack ACK;
+						
+						tempSocket = call Transport.getSocket(i);
+
+						tempSocket.socketState.flag = 3;
+						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
+						tempSocket.socketState.dest.addr = myMsg->src;
+						tempSocket.socketState.state = ESTABLISHED;
+						tempSocket.socketState.bufflen = receivedSocket->socketState.bufflen;
+						call Transport.setSocket(tempSocket.fd, tempSocket);
+
+						makePack(&ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
+					
+						call Sender.send(ACK, forwardPacketTo(&confirmedList, myMsg->src));
+						return msg;
+					}
+					
+					// If flag is 3, both sockets have established connection, and can send DATA.
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
