@@ -254,7 +254,7 @@ implementation
 					else if((receivedSocket->socketState.flag == 3) && (receivedSocket->socketState.dest.port == tempSocket.socketState.src))
 					{
 						// Temp Buffer to write onto.
-						uint8_t buff[buffLen];
+						uint8_t buff[msgLength[msgsRcvd]];
 						
 						int i;
 						
@@ -262,10 +262,10 @@ implementation
 						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
-						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", buffLen);
+						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", msgLength[msgsRcvd]);
 						
 						// Now create and send a DATA packet.
-						for(i = 0; i < buffLen; i++)
+						for(i = 0; i < msgLength[msgsRcvd]; i++)
 							buff[i] = i;
 						
 						call Transport.write(0, buff, buffLen, &confirmedList);
