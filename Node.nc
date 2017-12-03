@@ -324,6 +324,7 @@ implementation
 						
 						if(numMsgs > 1 && msgsRcvd < numMsgs)
 						{
+							dbg(TRANSPORT_CHANNEL, "Previous fragmented message received, sending next one...\n");
 							signal CommandHandler.setTestClient(SRCPM, DPM, destinationM, msgLength[msgsRcvd]);
 						}
 						
