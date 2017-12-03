@@ -173,7 +173,7 @@ implementation
 						tempSocket.bufflen = receivedSocket->bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
-						dbg(TRANSPORT_CHANNEL, "Bufflen is %d.\n", receivedSocket->bufflen);
+						dbg(TRANSPORT_CHANNEL, "Flag is %d.\n", receivedSocket->socketState.flag);
 						
 						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
