@@ -34,6 +34,8 @@ int seqNum = 1;
 
 uint8_t buffLen = 0;
 
+int numMsgs = 1;
+
 module Node
 {
 	// Main interfaces.
