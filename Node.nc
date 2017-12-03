@@ -170,10 +170,10 @@ implementation
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = SYN_RCVD;
-						tempSocket.bufflen = receivedSocket->bufflen;
+						tempSocket.bufflen = receivedSocket->socketState.bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
-						dbg(TRANSPORT_CHANNEL, "Flag is %d.\n", receivedSocket->socketState.flag);
+						dbg(TRANSPORT_CHANNEL, "Bufflen is %d.\n", receivedSocket->socketState.bufflen);
 						
 						// Make the SYN_ACK.
 						makePack(&SYN_ACK, TOS_NODE_ID, myMsg->src, myMsg->TTL, PROTOCOL_TCP, myMsg->seq, &tempSocket, (uint8_t) sizeof(tempSocket));
@@ -201,7 +201,7 @@ implementation
 						tempSocket.socketState.dest.port = receivedSocket->socketState.src;
 						tempSocket.socketState.dest.addr = myMsg->src;
 						tempSocket.socketState.state = ESTABLISHED;
-						tempSocket.bufflen = receivedSocket->bufflen;
+						tempSocket.socketState.bufflen = receivedSocket->socketState.bufflen;
 						call Transport.setSocket(tempSocket.fd, tempSocket);
 						
 						// Make the ACK.
