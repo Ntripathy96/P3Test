@@ -578,6 +578,9 @@ implementation
 		{
 			dbg(TRANSPORT_CHANNEL, "Message size larger than max buffer, fragmenting...\n");
 			tempMath = buffLen / 128.0;
+			numMsgs = ceil(tempMath);
+			
+			dbg(TRANSPORT_CHANNEL, "Number of messages that will be sent is: %d", numMsgs);
 			buffLen = 128;
 		}
 
