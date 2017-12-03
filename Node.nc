@@ -550,6 +550,8 @@ implementation
 		// The SYN packet to be sent to the server.
 		pack SYN;
 		
+		double tempMath;
+		
 		// Socket state variables.
 		socket_addr_t address; 
 		socket_addr_t serverAdd;
@@ -571,6 +573,11 @@ implementation
 		serverAdd.port = DP;
 		
 		buffLen = bufflen;
+		
+		if(buffLen > 128)
+		{
+			tempMath = buffLen / 128.0
+		}
 
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
