@@ -661,7 +661,7 @@ implementation
 
 	event void CommandHandler.setAppServer(){}
 
-	event void CommandHandler.setAppClient(uint8_t fd, char *usrnm){
+	event void CommandHandler.setAppClient(char *usrnm){
 	//bool PU; 
 	int i; 
 	i = 0; 
@@ -675,7 +675,7 @@ implementation
 		}
 	}
 	
-	event void CommandHandler.message(uint8_t fd, char *mssg){ 
+	event void CommandHandler.message(char *mssg){ 
 	int i; 
 	i = 0; 
 	dbg(GENERAL_CHANNEL, "New chat client connected with username"); 
