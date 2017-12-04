@@ -47,7 +47,7 @@ uint16_t DPM;
 uint16_t destinationM;
 
 //Project 4 Var: 
-char usrn;
+char usrn[50];
 module Node
 {
 	// Main interfaces.
@@ -661,8 +661,17 @@ implementation
 	event void CommandHandler.setAppServer(){}
 
 	event void CommandHandler.setAppClient(uint8_t fd, char *usrnm){
-	
-	
+	//bool PU; 
+	int i; 
+	i = 0; 
+	dbg(GENERAL_CHANNEL, "New chat client connected with username"); 
+	if (usrnm[i] == "\n") {
+		dbg(GENERAL_CHANNEL, "%c\n", usrnm[i]);
+		break; 
+		}
+		else{
+		dbg(GENERAL_CHANNEL, "%c", usrnm[i]);
+		}
 	}
 
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
