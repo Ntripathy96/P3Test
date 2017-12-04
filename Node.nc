@@ -46,6 +46,8 @@ uint16_t SRCPM;
 uint16_t DPM;
 uint16_t destinationM;
 
+//Project 4 Var: 
+char usrn;
 module Node
 {
 	// Main interfaces.
@@ -123,7 +125,9 @@ implementation
 
 	event void sendTimer.fired()
 	{
+	//int msgLength[10];
 		
+
 	}
 
 	event void AMControl.startDone(error_t err)
@@ -656,7 +660,10 @@ implementation
 
 	event void CommandHandler.setAppServer(){}
 
-	event void CommandHandler.setAppClient(){}
+	event void CommandHandler.setAppClient(uint8_t fd, char *usrnm){
+	
+	
+	}
 
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
 		Package->src = src;
