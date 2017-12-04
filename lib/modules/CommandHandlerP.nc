@@ -81,6 +81,31 @@ implementation{
                 dbg(COMMAND_CHANNEL, "Command Type: Close\n");
                 signal CommandHandler.ClientClose(buff[0], buff[1]);
                 break;
+                
+            case CMD_APP_SERVER:
+               dbg(COMMAND_CHANNEL, "Command Type: App Server\n");
+               signal CommandHandler.setAppServer();
+            break;
+            
+            case CMD_APP_CLIENT:
+               dbg(COMMAND_CHANNEL, "Command Type: App Client\n");
+               signal CommandHandler.setAppClient(buff[0], buff[1]);
+            break;
+            
+            case CMD_MESSAGE:
+               dbg(COMMAND_CHANNEL, "Command Type: Message\n");
+               signal CommandHandler.message(buff[0]);
+            break;
+            
+            case CMD_WHISPER:
+               dbg(COMMAND_CHANNEL, "Command Type: Whisper\n");
+               //signal CommandHandler.whisper(buff[0], buff[1]);
+            break;
+            
+            case CMD_LIST_USERS:
+               dbg(COMMAND_CHANNEL, "Command Type: Whisper\n");
+               //signal CommandHandler.listUsers();
+            break;
 
             default:
                 dbg(COMMAND_CHANNEL, "CMD_ERROR: \"%d\" does not match any known commands.\n", msg->id);
