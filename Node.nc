@@ -48,6 +48,7 @@ uint16_t destinationM;
 
 //Project 4 Var: 
 char usrn[50];
+char mssg[100];
 module Node
 {
 	// Main interfaces.
@@ -671,6 +672,19 @@ implementation
 		}
 		else{
 		dbg(GENERAL_CHANNEL, "%c", usrnm[i]);
+		}
+	}
+	
+	event void CommandHandler.message(uint8_t fd, char *mssg){ 
+	int i; 
+	i = 0; 
+	dbg(GENERAL_CHANNEL, "New chat client connected with username"); 
+	if (usrnm[i] == "\n") {
+		dbg(GENERAL_CHANNEL, "%c\n", mssg[i]);
+		break; 
+		}
+		else{
+		dbg(GENERAL_CHANNEL, "%c", mssg[i]);
 		}
 	}
 
