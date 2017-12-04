@@ -89,7 +89,7 @@ implementation{
             
             case CMD_APP_CLIENT:
                dbg(COMMAND_CHANNEL, "Command Type: App Client\n");
-               signal CommandHandler.setAppClient(buff[0], buff[1]);
+               signal CommandHandler.setAppClient(buff[0]);
             break;
             
             case CMD_MESSAGE:
