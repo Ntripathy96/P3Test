@@ -11,4 +11,5 @@ interface CommandHandler{
    event void setAppServer();
    event void setAppClient(char *usrnm);
    event void message(char* msg);
+   event void whisper(char* destination, char* msg);
 }
