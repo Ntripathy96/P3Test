@@ -276,7 +276,7 @@ implementation
 						for(i = 0; i < msgLength[msgsRcvd]; i++)
 							buff[i] = i;
 						
-						call Transport.write(tempSocket.fd, buff, buffLen, &confirmedList);
+						call Transport.write(i, buff, buffLen, &confirmedList);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
