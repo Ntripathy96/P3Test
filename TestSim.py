@@ -170,7 +170,7 @@ def main():
     
     s.runTime(15);
     
-    s.TestClient(2, 50, 80, 1, 128);
+    s.TestClient(2, 50, 80, 1, 1000);
     
     s.runTime(150);
     
