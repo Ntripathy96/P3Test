@@ -687,6 +687,7 @@ implementation
 			if(usrnm[i] == '\n')
 			{
 				username[i] = usrnm[i];
+				i++;
 				break;
 			}
 			else
@@ -757,7 +758,7 @@ implementation
 			if(msg[i] == '\n')
 			{
 				message[i] = msg[i];
-				i++
+				i++;
 				break;
 			}
 			else
