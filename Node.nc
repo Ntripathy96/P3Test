@@ -47,8 +47,9 @@ uint16_t DPM;
 uint16_t destinationM;
 
 //Project 4 Var: 
-char usrn[50];
-char mssg[100];
+char username[50];
+char message[100];
+
 module Node
 {
 	// Main interfaces.
@@ -644,7 +645,9 @@ implementation
 			call Transport.connect(0, &serverAdd, &confirmedList, msgLength[msgsRcvd]);
 		}
 	}
-    	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
+	
+    	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) 
+	{
    		 pack FIN;
    		 socketStruct temp, temp2;
    		 int i;
@@ -661,38 +664,67 @@ implementation
 
 	event void CommandHandler.setAppServer(){}
 
-	event void CommandHandler.setAppClient(char *usrnm){
-	//bool PU; 
-	int i = 0; 
-	dbg(GENERAL_CHANNEL, "New chat client connected with username"); 
-	while(1)
+	event void CommandHandler.setAppClient(char *usrnm)
 	{
-	if (usrnm[i] == "\n") {
-		dbg(GENERAL_CHANNEL, "%c\n", usrnm[i]);
-		break; 
+		// Temp socket variables.
+		socketStruct tempSocket;
+		socket_addr_t address;
+		
+		// Iterator.
+		int i = 0;
+		
+		// Allocate a socket.
+		tempSocket.fd = call Transport.socket();
+		tempSocket.socketState.dest.port = 41;
+		tempSocket.socketState.dest.addr = 1;
+		
+		address.port = 80;
+		address.addr = TOS_NODE_ID;
+		
+		while(TRUE)
+		{
+			if(usrnm[i] == '\n')
+			{
+				username[i] = usrnm[i];
+				break;
+			}
+			else
+			{
+				username[i] = usrnm[i];
+				i++;
+			}
 		}
-		else{
-		dbg(GENERAL_CHANNEL, "%c", usrnm[i]);
-		i++;
+		
+		if (call Transport.bind(fd, &address) == SUCCESS)
+		{
+			call Transport.connect(fd, &tempSocket.socketState.dest);
 		}
-	}
 	
 	}
 	
-	event void CommandHandler.message(char *mssg){ 
-	int i = 0; 
-	//dbg(GENERAL_CHANNEL, "New chat client connected with username"); 
-	while(1)
-	{
-	if (mssg[i] == "\n") {
-		dbg(GENERAL_CHANNEL, "%c\n", mssg[i]);
-		break; 
+	event void CommandHandler.message(char *mssg)
+	{ 
+		socketStruct tempSocket;
+		
+		int i = 0;
+		
+		tempSocket = call Transport.getSocket(fd);
+		
+		while(TRUE)
+		{
+			if(mssg[i] == '\n')
+			{
+				message[i] = mssg[i];
+				break;
+			}
+			else
+			{
+				message[i] = mssg[i];
+				i++;
+			}
 		}
-		else{
-		dbg(GENERAL_CHANNEL, "%c", mssg[i]);
-		i++;
-		}
-	}
+		
+		call Transport.write(tempSocket.fd, message, i, &confirmedList);
 	}
 
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
