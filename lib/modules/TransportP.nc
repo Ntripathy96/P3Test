@@ -195,8 +195,8 @@ implementation
 		{
 			tempSocket = call SocketList.get(i);
 			
-			if (fd == tempSocket.fd)
-			{
+			//if (fd == tempSocket.fd)
+			//{
 				// Take out the appropriate Socket from the list.
 				tempSocket = call SocketList.remove(i);
 				
@@ -253,7 +253,7 @@ implementation
 				
 				// It was able to write down j amount of data onto the buffer.
 				return j;
-			}
+			//}
 		}
 		
 		// Could not write down anything on the buffer.
