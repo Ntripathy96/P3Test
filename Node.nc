@@ -663,7 +663,26 @@ implementation
 		 dbg(TRANSPORT_CHANNEL, "Closed.\n");
 	}
 
-	event void CommandHandler.setAppServer(){}
+	event void CommandHandler.setAppServer()
+	{
+		// Socket State variables.
+		socket_addr_t address;
+		socket_t fd;
+		
+		dbg(TRANSPORT_CHANNEL, "Testing server...\n");
+		
+		// Set the socket state.
+		fd = call Transport.socket();
+		address.addr = TOS_NODE_ID;
+		address.port = 41;
+		
+		
+		
+		if(call Transport.bind(fd, &address) == SUCCESS && call Transport.listen(fd) == SUCCESS)
+			dbg(TRANSPORT_CHANNEL, "Socket %d is now listening.\n", fd);
+		else
+			dbg(TRANSPORT_CHANNEL, "Unable to edit socket %d.\n", fd);
+	}
 
 	event void CommandHandler.setAppClient(char *usrnm)
 	{
