@@ -697,7 +697,7 @@ implementation
 		
 		if (call Transport.bind(fd, &address) == SUCCESS)
 		{
-			call Transport.connect(fd, &tempSocket.socketState.dest);
+			call Transport.connect(tempSocket.fd, &tempSocket.socketState.dest, &confirmedList, i);
 		}
 	
 	}
