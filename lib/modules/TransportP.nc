@@ -357,8 +357,8 @@ implementation
 		// Find the next hop for the destination node and send it there.
 		for(i = 0; i < Table->entries; i++)
 		{
-			//if(Table->lspEntries[i].dest == SYN.dest)
-			//{
+			if(Table->lspEntries[i].dest == SYN.dest)
+			{
 				nextHop = 1;//Table->lspEntries[i].nextHop;
 				
 				// Modify the Socket State.
@@ -366,8 +366,8 @@ implementation
 				{
 					tempSocket = call SocketList.get(j);
 					
-					if(fd == tempSocket.fd)
-					{
+					//if(fd == tempSocket.fd)
+					//{
 						tempSocket = call SocketList.remove(j);
 						tempSocket.socketState.bufflen = bufflen;
 						tempSocket.socketState.state = SYN_SENT;
@@ -390,12 +390,12 @@ implementation
 						
 						return SUCCESS;
 						
-						break;
-					}
+						//break;
+					//}
 				}
 				
 				return SUCCESS;
-			//}
+			}
 		}
 		
 		return FAIL;
