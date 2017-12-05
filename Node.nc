@@ -737,7 +737,7 @@ implementation
 		
 		tempSocket = call Transport.getSocket(0);
 		
-		while(true)
+		while(TRUE)
 		{
 			if(destination[i] == '\n')
 			{
@@ -754,7 +754,7 @@ implementation
 		
 		while(TRUE)
 		{
-			if(mssg[i] == '\n')
+			if(msg[i] == '\n')
 			{
 				message[i] = msg[i];
 				i++
