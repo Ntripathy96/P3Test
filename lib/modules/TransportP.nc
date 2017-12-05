@@ -91,7 +91,7 @@ implementation
 			// Place the socket in the list.
 			call SocketList.pushback(tempSocket);
 			
-			dbg(TRANSPORT_CHANNEL, "Socket %d allocated.\n", tempSocket.fd);
+			dbg(TRANSPORT_CHANNEL, "Socket allocated.\n");
 			
 			// Return the fd.
 			return tempSocket.fd;
@@ -129,7 +129,7 @@ implementation
 				// Put it back in.
 				call SocketList.pushback(tempSocket);
 				
-				dbg(TRANSPORT_CHANNEL, "Socket %d bound.\n", fd);
+				dbg(TRANSPORT_CHANNEL, "Socket bound.\n");
 				
 				return SUCCESS;
 			}
