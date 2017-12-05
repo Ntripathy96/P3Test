@@ -231,7 +231,7 @@ implementation
 				
 				// Initialize the written message.
 				DATA.src = TOS_NODE_ID;
-				DATA.dest = 1;// tempSocket.socketState.dest.addr;
+				DATA.dest = tempSocket.socketState.dest.addr;
 				DATA.protocol = PROTOCOL_TCP;
 				DATA.TTL = MAX_TTL;
 				memcpy(DATA.payload, &tempSocket, (uint8_t) sizeof(tempSocket));
