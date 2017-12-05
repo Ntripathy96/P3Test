@@ -357,8 +357,8 @@ implementation
 		// Find the next hop for the destination node and send it there.
 		for(i = 0; i < Table->entries; i++)
 		{
-			if(Table->lspEntries[i].dest == SYN.dest)
-			{
+			//if(Table->lspEntries[i].dest == SYN.dest)
+			//{
 				nextHop = 1;//Table->lspEntries[i].nextHop;
 				
 				// Modify the Socket State.
@@ -395,7 +395,7 @@ implementation
 				}
 				
 				return SUCCESS;
-			}
+			//}
 		}
 		
 		return FAIL;
