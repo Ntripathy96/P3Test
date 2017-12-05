@@ -716,7 +716,7 @@ implementation
 			if(mssg[i] == '\n')
 			{
 				message[i] = mssg[i];
-				i++
+				i++;
 				break;
 			}
 			else
@@ -742,13 +742,13 @@ implementation
 			if(destination[i] == '\n')
 			{
 				dest[i] = destination[i];
-				i++
+				i++;
 				break;
 			}
 			else
 			{
 				dest[i] = destination[i];
-				i++
+				i++;
 			}
 		}
 		
