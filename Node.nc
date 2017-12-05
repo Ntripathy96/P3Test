@@ -267,7 +267,7 @@ implementation
 						int i;
 						
 						// Get the current state of the Socket.
-						//tempSocket = call Transport.getSocket(i);
+						tempSocket = call Transport.getSocket(i);
 						
 						dbg(TRANSPORT_CHANNEL, "ACK has been received, both sockets have completed three way handshake. Ready to send DATA.\n");
 						dbg(TRANSPORT_CHANNEL, "Bufflen of the DATA packet is %d.\n", msgLength[msgsRcvd]);
@@ -276,7 +276,7 @@ implementation
 						for(i = 0; i < msgLength[msgsRcvd]; i++)
 							buff[i] = i;
 						
-						call Transport.write(tempSocket.fd, buff, buffLen, &confirmedList);
+						call Transport.write(0, buff, buffLen, &confirmedList);
 						
 						// Update the state of the Socket.
 						tempSocket.socketState.state = ESTABLISHED;
@@ -641,7 +641,7 @@ implementation
 				call sendTimer.startPeriodic(1000);
 		
 			dbg(TRANSPORT_CHANNEL, "Attempting connection to port %d of node %d.\n", DP, destination);
-			call Transport.connect(fd, &serverAdd, &confirmedList, msgLength[msgsRcvd]);
+			call Transport.connect(0, &serverAdd, &confirmedList, msgLength[msgsRcvd]);
 		}
 	}
     	event void CommandHandler.ClientClose(uint16_t dest, uint16_t destPort) {
