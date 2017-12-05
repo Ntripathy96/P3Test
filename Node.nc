@@ -49,6 +49,7 @@ uint16_t destinationM;
 //Project 4 Var: 
 char username[50];
 char message[100];
+char dest[50];
 
 module Node
 {
@@ -715,6 +716,7 @@ implementation
 			if(mssg[i] == '\n')
 			{
 				message[i] = mssg[i];
+				i++
 				break;
 			}
 			else
@@ -729,7 +731,41 @@ implementation
 	
 	event void CommandHandler.whisper(char* destination, char* msg)
 	{
-	
+		socketStruct tempSocket;
+		
+		int i = 0;
+		
+		tempSocket = call Transport.getSocket(0);
+		
+		while(true)
+		{
+			if(destination[i] == '\n')
+			{
+				dest[i] = destination[i];
+				i++
+				break;
+			}
+			else
+			{
+				dest[i] = destination[i];
+				i++
+			}
+		}
+		
+		while(TRUE)
+		{
+			if(mssg[i] == '\n')
+			{
+				message[i] = msg[i];
+				i++
+				break;
+			}
+			else
+			{
+				message[i] = msg[i];
+				i++;
+			}
+		}
 	}
 
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
