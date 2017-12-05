@@ -695,7 +695,7 @@ implementation
 			}
 		}
 		
-		if (call Transport.bind(fd, &address) == SUCCESS)
+		if (call Transport.bind(tempSocket.fd, &address) == SUCCESS)
 		{
 			call Transport.connect(tempSocket.fd, &tempSocket.socketState.dest, &confirmedList, i);
 		}
@@ -708,7 +708,7 @@ implementation
 		
 		int i = 0;
 		
-		tempSocket = call Transport.getSocket(fd);
+		tempSocket = call Transport.getSocket(0);
 		
 		while(TRUE)
 		{
